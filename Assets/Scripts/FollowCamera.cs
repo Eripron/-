@@ -7,11 +7,14 @@ public class FollowCamera : MonoBehaviour
     [SerializeField] Transform target;
     [SerializeField] Vector3 offset;
     [SerializeField] float turnSpeed;
+    [SerializeField] float limitUpHeight;
+    [SerializeField] float limitDownHeight;
+
 
     Camera cam;
 
     float minView = 5f;
-    float maxView = 20f;
+    float maxView = 30f;
     [SerializeField] float viewInterval;
 
     Vector3 camPos;
@@ -31,13 +34,19 @@ public class FollowCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        Quaternion rotateX = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * turnSpeed, Vector3.up);
-        Quaternion rotateY = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * turnSpeed, Vector3.left);
+        float x = Input.GetAxis("Mouse X") * turnSpeed;
+        float y = Input.GetAxis("Mouse Y") * turnSpeed;
+
+        Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
+        Quaternion rotateY = Quaternion.AngleAxis(y, Vector3.left);
+             
 
         camPos = rotateX * rotateY * camPos;
+        Vector3 finalPos = target.position + camPos;
 
-        transform.position = target.position + camPos;
+        finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
 
+        transform.position = finalPos;
         transform.LookAt(target);
     }
 

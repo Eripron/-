@@ -27,6 +27,9 @@ public class Movement : MonoBehaviour
     float z;
     float gravity = (-9.81f * 3f);
 
+    // attack click count
+    int CountAttackClick = 0;
+
     Vector3 cameraForward;                  // 카메라가 바라보는 정면 방향 
     Vector3 direction;                      // 캐릭터 이동 방향 
     Vector3 velocity;                       // 속도 vector
@@ -41,6 +44,8 @@ public class Movement : MonoBehaviour
     bool isDash = false;
     bool isGuard = false;
     bool isControl = true;
+
+    bool isAttack = false;
 
     void Start()
     {
@@ -61,18 +66,24 @@ public class Movement : MonoBehaviour
         Move();
         Rotation(direction);
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isDash)
+        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isDash && !isAttack)
         {
             StartCoroutine(StartDashCoroutine());
         }
-        if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard)
+        else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isAttack)
         {
             StartCoroutine(StartGuardCoroutine());
+        }
+
+        if(Input.GetMouseButtonDown(0) && !isGuard && !isDash)
+        {
+            Attack();
         }
 
         Gravity();
     }
 
+   
 
     void GetInput()
     {
@@ -80,15 +91,13 @@ public class Movement : MonoBehaviour
 
         x = Input.GetAxisRaw("Horizontal");
         z = Input.GetAxisRaw("Vertical");
-
     }
     void SetCameraForwardDirection()
     {
-        cameraForward = cam.transform.localRotation * Vector3.forward;
+        cameraForward = cam.transform.rotation * Vector3.forward;
         cameraForward.y = 0;
         cameraForward = cameraForward.normalized;
     }
-
     void Move()
     {
         float accel = isAccel ? 1.5f : 1.0f;
@@ -109,39 +118,113 @@ public class Movement : MonoBehaviour
         controller.Move(direction);
     }
 
+    
+
+    void Attack()
+    {
+        isAttack = true;
+
+        StopMove();
+        
+        CountAttackClick++;
+
+        // 1st attack phase
+        if(CountAttackClick == 1)
+        {
+            // play attack 1 motion
+            anim.SetInteger("intAttackPhase", 1);
+        }
+    }
+
+    void StopMove()
+    {
+        isControl = false;
+        x = 0;
+        z = 0;
+    }
+    void StartMove()
+    {
+        isControl = true;
+    }
+
+    public void CheckAttackPhase()
+    {
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1"))
+        {
+            if(CountAttackClick > 1)
+            {
+                anim.SetInteger("intAttackPhase", 2);
+            }
+            else
+                ResetAttackPhase();
+        }
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
+        {
+            if (CountAttackClick > 2)
+            {
+                anim.SetInteger("intAttackPhase", 3);
+            }
+            else
+                ResetAttackPhase();
+        }
+        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack3"))
+        {
+            if (CountAttackClick >= 3)
+                ResetAttackPhase();
+        }
+    }
+    void ResetAttackPhase()
+    {
+        isAttack = false;
+
+        StartMove();
+
+        CountAttackClick = 0;
+        anim.SetInteger("intAttackPhase", CountAttackClick);
+    }
+
     IEnumerator StartGuardCoroutine()
     {
-        isControl = false;
+        /*
+         Guard 는 따로 몬스터가 공격시 막으면 hp를 깍지 않는 것을 구현해야 한다. 
+         */
         isGuard = true;
-        Debug.Log("가드 시작");
-        yield return new WaitForSeconds(2f);
-        Debug.Log("가드 끝");
+        StopMove();
 
-        isGuard = false;
-        isControl = true;
-    }
+        anim.SetTrigger("OnGuard");
 
-    IEnumerator StartDashCoroutine()     // 무적 구현해야함 
-    {
-        isControl = false;
-        isDash = true;
-        Debug.Log("대쉬 시작");
-        
+        yield return new WaitUntil(() => isGuard == false);
 
-        float startTime = Time.time;
-        while(Time.time < startTime + dashTime)
-        {
-            controller.Move(transform.forward * dashSpeed * Time.deltaTime);
-            yield return null;
-        }
-        
         yield return new WaitForSeconds(0.02f);
+        StartMove();
+    }
+
+    IEnumerator StartDashCoroutine()     
+    {
+        StopMove();
+        isDash = true;
+
+        anim.SetTrigger("OnDash");
+        Debug.Log("대쉬 시작");
+
+        //float startTime = Time.time;
+        //while(Time.time < startTime + dashTime)
+        //{
+        //    controller.Move(transform.forward * dashSpeed * Time.deltaTime);
+        //    yield return null;
+        //}
+        
+        yield return new WaitForSeconds(0.5f);
         Debug.Log("대쉬 끝");
-        isControl = true;
         isDash = false;
+        StartMove();
     }
 
 
+    public void OnEndGuard(string str)
+    {
+        isGuard = false;
+    }
 
     void Rotation(Vector3 dir)
     {
