@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Status : MonoBehaviour
 {
+<<<<<<< HEAD
     /*
      player, monster, boss
     - 공통 : 이름, 체력, 공격력, 방어력
@@ -32,5 +33,9 @@ public class Status : MonoBehaviour
         mp = maxMp;
         stamina = maxStamina;
     }
+=======
+
+
+>>>>>>> 25ad161bc65819a309263c14325d9b29ad887534
 
 }

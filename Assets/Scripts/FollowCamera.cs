@@ -9,12 +9,16 @@ public class FollowCamera : MonoBehaviour
     [SerializeField] float turnSpeed;
     [SerializeField] float limitUpHeight;
     [SerializeField] float limitDownHeight;
+    [SerializeField] float boundaryBottom;
 
 
     Camera cam;
 
     float minView = 5f;
     float maxView = 30f;
+
+    float bottomY;
+
     [SerializeField] float viewInterval;
 
     Vector3 camPos;
@@ -30,6 +34,16 @@ public class FollowCamera : MonoBehaviour
     private void Update()
     {
         ChangeFieldOfView();
+
+
+        Ray ray = new Ray(transform.position, Vector3.down);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            bottomY = hit.point.y;
+        }
+
+
     }
 
     void LateUpdate()
@@ -39,15 +53,21 @@ public class FollowCamera : MonoBehaviour
 
         Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
         Quaternion rotateY = Quaternion.AngleAxis(y, Vector3.left);
-             
+
 
         camPos = rotateX * rotateY * camPos;
         Vector3 finalPos = target.position + camPos;
 
         finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
 
-        transform.position = finalPos;
+        transform.position = ClampBoundary(finalPos);
         transform.LookAt(target);
+    }
+
+    Vector3 ClampBoundary(Vector3 vector)
+    {
+        vector.y = Mathf.Clamp(vector.y, bottomY + boundaryBottom, limitUpHeight);
+        return vector;
     }
 
     void ChangeFieldOfView()

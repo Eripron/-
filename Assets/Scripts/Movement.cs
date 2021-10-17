@@ -13,7 +13,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float turnSpeed;
     [SerializeField] float dashSpeed;
-    [SerializeField] float dashTime;
+    //[SerializeField] float dashTime;
 
     [SerializeField] Animator anim;
 
@@ -66,23 +66,24 @@ public class Movement : MonoBehaviour
         Move();
         Rotation(direction);
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isDash && !isAttack)
+
+        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isGuard && !isDash && !isAttack)
         {
             StartCoroutine(StartDashCoroutine());
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isAttack)
+        else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isDash && !isAttack)
         {
             StartCoroutine(StartGuardCoroutine());
         }
 
         if(Input.GetMouseButtonDown(0) && !isGuard && !isDash)
         {
+            StopMove();
             Attack();
         }
 
         Gravity();
     }
-
    
 
     void GetInput()
@@ -91,7 +92,15 @@ public class Movement : MonoBehaviour
 
         x = Input.GetAxisRaw("Horizontal");
         z = Input.GetAxisRaw("Vertical");
+
+        float accel = isAccel ? 1.5f : 1.0f;
+
+        direction = cameraForward * z * moveSpeed * accel * Time.deltaTime;
+        direction += Quaternion.Euler(0, 90, 0) * cameraForward * x * moveSpeed * accel * Time.deltaTime;
+
+        isStanding = direction != Vector3.zero ? false : true;
     }
+
     void SetCameraForwardDirection()
     {
         cameraForward = cam.transform.rotation * Vector3.forward;
@@ -100,15 +109,6 @@ public class Movement : MonoBehaviour
     }
     void Move()
     {
-        float accel = isAccel ? 1.5f : 1.0f;
-
-        // 정면 방향 계산
-        direction = cameraForward * z * moveSpeed * accel * Time.deltaTime;
-        // 측면 방향 계산
-        direction += Quaternion.Euler(0, 90, 0) * cameraForward * x * moveSpeed * accel * Time.deltaTime ;
-
-        isStanding = direction != Vector3.zero ? false : true;
-
         isWalk = (!isStanding && !isAccel) ? true : false;
         isRun = (!isStanding && isAccel) ? true : false;
 
@@ -118,13 +118,10 @@ public class Movement : MonoBehaviour
         controller.Move(direction);
     }
 
-    
 
     void Attack()
     {
         isAttack = true;
-
-        StopMove();
         
         CountAttackClick++;
 
@@ -142,6 +139,7 @@ public class Movement : MonoBehaviour
         x = 0;
         z = 0;
     }
+
     void StartMove()
     {
         isControl = true;
@@ -189,14 +187,13 @@ public class Movement : MonoBehaviour
          Guard 는 따로 몬스터가 공격시 막으면 hp를 깍지 않는 것을 구현해야 한다. 
          */
         isGuard = true;
-        StopMove();
 
         anim.SetTrigger("OnGuard");
+        StopMove();
 
         yield return new WaitUntil(() => isGuard == false);
 
-        yield return new WaitForSeconds(0.02f);
-        StartMove();
+        //yield return new WaitForSeconds(0.01f);
     }
 
     IEnumerator StartDashCoroutine()     
@@ -205,26 +202,28 @@ public class Movement : MonoBehaviour
         isDash = true;
 
         anim.SetTrigger("OnDash");
-        Debug.Log("대쉬 시작");
 
-        //float startTime = Time.time;
-        //while(Time.time < startTime + dashTime)
-        //{
-        //    controller.Move(transform.forward * dashSpeed * Time.deltaTime);
-        //    yield return null;
-        //}
-        
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log("대쉬 끝");
-        isDash = false;
-        StartMove();
+        while (isDash)
+        {
+            controller.Move(transform.forward * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.1f);
     }
 
 
     public void OnEndGuard(string str)
     {
         isGuard = false;
+        StartMove();
     }
+    public void OnEndDash()
+    {
+        isDash = false;
+        StartMove();
+    }
+
 
     void Rotation(Vector3 dir)
     {

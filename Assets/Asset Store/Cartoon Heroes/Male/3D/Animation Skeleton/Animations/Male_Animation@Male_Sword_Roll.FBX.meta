@@ -386,7 +386,11 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+<<<<<<< HEAD
       - time: 0.752
+=======
+      - time: 1
+>>>>>>> 25ad161bc65819a309263c14325d9b29ad887534
         functionName: OnEndDashEvent
         data: 
         objectReferenceParameter: {instanceID: 0}
