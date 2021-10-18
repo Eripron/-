@@ -4,89 +4,102 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 public class EnemyController : Singleton<EnemyController>
 {
-    /*
-     생성되자 마자 거리에 상관없이 플레이어를 향해 이동 & 회전
-
-    공격중에는 이동 금지 -> activation(bool)로 움직임 제한 
-
-     거리가 가까워 지면 공격모션 중에서 랜덤 공격모션으로 실행 
-     어떻게 랜덤하게 공격을 실핼할 것인가?
-     1. animation을 switch로 해서 랜덤 번호로 실행 
-     2. 이름을 배열로 가지고 있어서 랜덤 배열에서 animation을 실행한다 
-     3. animation clip을 가지고 있어서 랜덤하게 animation clip을 넣어서 실행한다. 
-
-    다음 데미지 입으면 색깔이 빨간색으로 변하면서 다시 돌아온다. 
-    
-     ? -> animation을 배열로 가지고 있어서 실행 할수있는가?
-
-     */
-
-    // 나중에 검색해서 찾아오는 걸로 
-
     [SerializeField] Transform target;
+    [SerializeField] string[] attackAnimName;
 
-    MeshRenderer[] meshs;
 
-    NavMeshAgent nav;
+    [SerializeField] Transform checkPivot;
+    [SerializeField] float r;
+    [SerializeField] LayerMask playerMask;
+
+    MeshRenderer[] meshs;                           // model 전체 색상 관리 
+    NavMeshAgent nav;                               // 이동 관련
     Rigidbody rigid;
+    Animator anim;
 
     bool activation = true;
-    bool isDamaged = false;
-
 
     bool isWalk;
+    bool isAttack;
 
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
-        meshs = GetComponentsInChildren<MeshRenderer>();
         rigid = GetComponent<Rigidbody>();
+        meshs = GetComponentsInChildren<MeshRenderer>();
+        anim = GetComponentInChildren<Animator>();
     }
 
 
     void Update()
     {
-        float distance = Vector3.Distance(target.position, transform.position);
+        if (target == null)
+            return;
 
-        Debug.Log($"activation : {activation}");
+        /*
+         플레이어를 향해 이동 
+         거리가 가까워 지면 멈추고 공격 -> 공격후 (다시 공격,  이동)
+         공격 도중 데미지를 받으면 공격 멈추고 피격당함 -> 피격당하고도 다음 모션까지 약간의 딜레이 존재 
+
+        hp가 0되면 이동을 멈추고 죽는다.
+         */
+
         if (activation)
         {
-            nav.SetDestination(target.position);
-            isWalk = true;
+            Move();
+        }
+        else
+        {
+            isWalk = false;
+        }
+        anim.SetBool("IsWalk", isWalk);
 
-            if (distance <= nav.stoppingDistance)
-            {
-                activation = false;
-                isWalk = false;
+        float distance = Vector3.Distance(target.position, transform.position);
+        if (distance <= nav.stoppingDistance)
+        {
+            if (!isAttack && CheckPlayer())
+                StartCoroutine(AttackCoroutine());
+            else
+                transform.LookAt(target.position);
 
-                Debug.Log("공격 시작");
-                Invoke("Attack", 1f);   
-            }
         }
     }
-    
 
-    // tmp func
-    void Attack()
+
+    void Move()
     {
-        Debug.Log("공격 끝");
+        isWalk = true;
+        nav.SetDestination(target.position);
+    }
+
+    IEnumerator AttackCoroutine()
+    {
+        activation = false;
+        isAttack = true;
+
+        int randomNum = new System.Random().Next(0, attackAnimName.Length);
+
+        string animName = attackAnimName[randomNum];
+        anim.Play(animName);
+
+        yield return new WaitForSeconds(2f);
+        isAttack = false;
         activation = true;
     }
 
 
     public void Damaged()
     {
-        Debug.Log("Damaged");
-
-        activation = false;
-
         StopAllCoroutines();
+
+        isAttack = false;
+        activation = false;
 
         StartCoroutine(DamagedColorChange());
         StartCoroutine(DamagedKnockBack());
+
         activation = true;
     }
 
@@ -113,8 +126,30 @@ public class EnemyController : Singleton<EnemyController>
     IEnumerator DamagedKnockBack(/*Vector3 knockBackDir*/)
     {
         Vector3 curPosition = transform.position;
-        rigid.AddForce(-transform.forward * 7f, ForceMode.Impulse);
+        rigid.AddForce(-transform.forward * 6f, ForceMode.Impulse);
         yield return null;
+    }
+
+
+    bool CheckPlayer()
+    {
+        RaycastHit hit;
+        if(Physics.SphereCast(checkPivot.position, r, Vector3.down, out hit, 3f, playerMask))
+        {
+            Debug.Log("플레이어 앞에 있음");
+            return true;
+        }
+        Debug.Log("플레이어 앞에 없음");
+        return false;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(checkPivot.position, r);
+        Vector3 endPos = checkPivot.position;
+        endPos.y -= 3f;
+        Gizmos.DrawLine(checkPivot.position, endPos);
     }
 
     void Dead()
