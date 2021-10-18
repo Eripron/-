@@ -7,11 +7,11 @@ using UnityEngine.AI;
 public class EnemyController : Singleton<EnemyController>
 {
     [SerializeField] Transform target;
+
     [SerializeField] string[] attackAnimName;
 
-
     [SerializeField] Transform checkPivot;
-    [SerializeField] float r;
+    [SerializeField] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
     MeshRenderer[] meshs;                           // model 전체 색상 관리 
@@ -19,10 +19,11 @@ public class EnemyController : Singleton<EnemyController>
     Rigidbody rigid;
     Animator anim;
 
-    bool activation = true;
+    bool activation = true;                         // 아직 쓰지는 않는다.
 
     bool isWalk;
     bool isAttack;
+
 
     void Start()
     {
@@ -38,57 +39,59 @@ public class EnemyController : Singleton<EnemyController>
         if (target == null)
             return;
 
-        /*
-         플레이어를 향해 이동 
-         거리가 가까워 지면 멈추고 공격 -> 공격후 (다시 공격,  이동)
-         공격 도중 데미지를 받으면 공격 멈추고 피격당함 -> 피격당하고도 다음 모션까지 약간의 딜레이 존재 
-
-        hp가 0되면 이동을 멈추고 죽는다.
-         */
-
         if (activation)
         {
-            Move();
-        }
-        else
-        {
-            isWalk = false;
-        }
-        anim.SetBool("IsWalk", isWalk);
+            float distance = Vector3.Distance(target.position, transform.position);
+            if (distance <= nav.stoppingDistance)
+            {
+                StopMove();
 
-        float distance = Vector3.Distance(target.position, transform.position);
-        if (distance <= nav.stoppingDistance)
-        {
-            if (!isAttack && CheckPlayer())
-                StartCoroutine(AttackCoroutine());
-            else
-                transform.LookAt(target.position);
+                if (!IsPlayerFront())
+                    RotateToPlayer();
+                else
+                {
+                    if (!isAttack)
+                        StartCoroutine(AttackCoroutine());
 
+
+                }
+            }
+            else if (distance > nav.stoppingDistance)
+            {
+                StartMove();
+            }
         }
     }
 
 
-    void Move()
+    // move
+    void StartMove()
     {
         isWalk = true;
         nav.SetDestination(target.position);
+        anim.SetBool("IsWalk", isWalk);
+    }
+    void StopMove()
+    {
+        isWalk = false;
+        nav.ResetPath();
+        anim.SetBool("IsWalk", isWalk);
     }
 
+    // attack
     IEnumerator AttackCoroutine()
     {
-        activation = false;
         isAttack = true;
 
         int randomNum = new System.Random().Next(0, attackAnimName.Length);
-
         string animName = attackAnimName[randomNum];
         anim.Play(animName);
 
-        yield return new WaitForSeconds(2f);
-        isAttack = false;
-        activation = true;
-    }
+        float waitTime = Mathf.Clamp(randomNum + 1, 1f, 3f);
+        yield return new WaitForSeconds(waitTime);
 
+        isAttack = false;
+    }
 
     public void Damaged()
     {
@@ -103,7 +106,7 @@ public class EnemyController : Singleton<EnemyController>
         activation = true;
     }
 
-
+    // 피격 효과 
     IEnumerator DamagedColorChange()
     {
         List<Color> originColor = new List<Color>();
@@ -123,6 +126,7 @@ public class EnemyController : Singleton<EnemyController>
             meshs[i].material.color = originColor[i];
         }
     }
+    // 넉백 효과 
     IEnumerator DamagedKnockBack(/*Vector3 knockBackDir*/)
     {
         Vector3 curPosition = transform.position;
@@ -131,24 +135,39 @@ public class EnemyController : Singleton<EnemyController>
     }
 
 
-    bool CheckPlayer()
+    // 적 앞에 플레이어가 있는지 없는지 판단하는 함수 
+    bool IsPlayerFront()
     {
+        bool isExist = false;
+
         RaycastHit hit;
-        if(Physics.SphereCast(checkPivot.position, r, Vector3.down, out hit, 3f, playerMask))
+        if (Physics.SphereCast(checkPivot.position, checkRadius, Vector3.down, out hit, float.MaxValue, playerMask))
         {
-            Debug.Log("플레이어 앞에 있음");
-            return true;
+            CharacterController player = hit.transform.GetComponent<CharacterController>();
+
+            if (player != null)
+                isExist = true;
         }
-        Debug.Log("플레이어 앞에 없음");
-        return false;
+
+        return isExist;
     }
+    // player를 향해 회전 
+    void RotateToPlayer()
+    {
+        Vector3 dir = target.position - transform.position;
+
+        Vector3 turnDirection = Vector3.RotateTowards(transform.forward, dir, 40f * Time.deltaTime, 0f);
+        Quaternion rotation = Quaternion.LookRotation(turnDirection);
+        transform.rotation = rotation;
+    }
+
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(checkPivot.position, r);
+        Gizmos.DrawWireSphere(checkPivot.position, checkRadius);
         Vector3 endPos = checkPivot.position;
-        endPos.y -= 3f;
+        endPos.y -= 6f;
         Gizmos.DrawLine(checkPivot.position, endPos);
     }
 
