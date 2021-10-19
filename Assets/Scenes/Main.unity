@@ -258,7 +258,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304848149}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.08999998, y: 0.38002554, z: 1.6439099}
@@ -333,7 +333,7 @@ PrefabInstance:
     - target: {fileID: 95844511793012932, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: b5ac95e0b4a4f044988fa34e32585b06, type: 2}
+      objectReference: {fileID: 9100000, guid: 6abe559371052fe4cbecfeead2a682bb, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
 --- !u!1 &588001682
@@ -688,7 +688,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 360
@@ -731,7 +731,7 @@ MonoBehaviour:
   - Attack2
   - Attack3
   checkPivot: {fileID: 1248593979}
-  r: 1.5
+  checkRadius: 3
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -996,7 +996,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1248593978}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.39, z: 2}
+  m_LocalPosition: {x: 0, y: 6, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 907161035}
@@ -1197,6 +1197,44 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5875463021036923477, guid: 28d38750b3b0c3745aa40f879f26fd4a, type: 3}
   m_PrefabInstance: {fileID: 5875463019119377837}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1931409602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1668188202801692, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
+  m_PrefabInstance: {fileID: 326373955}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1931409605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931409602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnSendEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSendEvent2:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSendEvent3:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 907161038}
+        m_TargetAssemblyTypeName: EnemyController, Assembly-CSharp
+        m_MethodName: OnDamagedEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1972191804 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4927973787200604, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}

@@ -19,11 +19,14 @@ public class EnemyController : Singleton<EnemyController>
     Rigidbody rigid;
     Animator anim;
 
+    // tmp
+    int count = 0;
+
     bool activation = true;                         // 아직 쓰지는 않는다.
 
     bool isWalk;
     bool isAttack;
-
+    bool isDamaged = false;
 
     void Start()
     {
@@ -52,8 +55,6 @@ public class EnemyController : Singleton<EnemyController>
                 {
                     if (!isAttack)
                         StartCoroutine(AttackCoroutine());
-
-
                 }
             }
             else if (distance > nav.stoppingDistance)
@@ -95,13 +96,40 @@ public class EnemyController : Singleton<EnemyController>
 
     public void Damaged()
     {
-        StopAllCoroutines();
-
-        isAttack = false;
         activation = false;
+
+        StopMove();
+        StopAllCoroutines();
+        anim.Rebind();
+
+        count++;
+        Debug.Log(count);
+        if (count >= 5)
+        {
+            Dead();
+            return;
+        }
+
+        Debug.Log("damaged");
+        StartCoroutine(DamagedCoroutine());
+    }
+    public void OnDamagedEnd()
+    {
+        isDamaged = false;
+    }
+
+    IEnumerator DamagedCoroutine()
+    {
+        isAttack = false;
+
+        isDamaged = true;
+        anim.SetTrigger("OnDamaged");
 
         StartCoroutine(DamagedColorChange());
         StartCoroutine(DamagedKnockBack());
+
+        yield return new WaitUntil(() => isDamaged == false);
+        yield return new WaitForSeconds(0.3f);
 
         activation = true;
     }
@@ -126,11 +154,12 @@ public class EnemyController : Singleton<EnemyController>
             meshs[i].material.color = originColor[i];
         }
     }
+
     // 넉백 효과 
     IEnumerator DamagedKnockBack(/*Vector3 knockBackDir*/)
     {
         Vector3 curPosition = transform.position;
-        rigid.AddForce(-transform.forward * 6f, ForceMode.Impulse);
+        rigid.AddForce(-transform.forward * 5f, ForceMode.Impulse);
         yield return null;
     }
 
@@ -174,6 +203,8 @@ public class EnemyController : Singleton<EnemyController>
     void Dead()
     {
         // play dead animation 
+        Debug.Log("die");
+        anim.SetTrigger("OnDie");
     }
 
 }

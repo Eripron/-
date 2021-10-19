@@ -221,7 +221,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public void OnEndGuard(string str)
+    public void OnEndGuard()
     {
         isGuard = false;
         StartMove();
