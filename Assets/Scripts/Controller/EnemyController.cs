@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : Singleton<EnemyController>
+public class EnemyController : MonoBehaviour
 {
+    // tmp 
+    int hp = 10000;
+
     [SerializeField] Transform target;
 
     [SerializeField] string[] attackAnimName;
@@ -18,9 +21,6 @@ public class EnemyController : Singleton<EnemyController>
     NavMeshAgent nav;                               // 이동 관련
     Rigidbody rigid;
     Animator anim;
-
-    // tmp
-    int count = 0;
 
     bool activation = true;                         // 아직 쓰지는 않는다.
 
@@ -35,7 +35,6 @@ public class EnemyController : Singleton<EnemyController>
         meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
     }
-
 
     void Update()
     {
@@ -83,6 +82,7 @@ public class EnemyController : Singleton<EnemyController>
     IEnumerator AttackCoroutine()
     {
         isAttack = true;
+        Debug.Log("attack");
 
         int randomNum = new System.Random().Next(0, attackAnimName.Length);
         string animName = attackAnimName[randomNum];
@@ -94,7 +94,7 @@ public class EnemyController : Singleton<EnemyController>
         isAttack = false;
     }
 
-    public void Damaged()
+    public void Damaged(int damage)
     {
         activation = false;
 
@@ -102,15 +102,16 @@ public class EnemyController : Singleton<EnemyController>
         StopAllCoroutines();
         anim.Rebind();
 
-        count++;
-        Debug.Log(count);
-        if (count >= 5)
+        hp -= damage;
+        Debug.Log($"damaged : {damage} => HP : {hp}");
+
+
+        if (hp <= 0)
         {
             Dead();
             return;
         }
 
-        Debug.Log("damaged");
         StartCoroutine(DamagedCoroutine());
     }
     public void OnDamagedEnd()
@@ -178,6 +179,7 @@ public class EnemyController : Singleton<EnemyController>
                 isExist = true;
         }
 
+        Debug.Log(isExist);
         return isExist;
     }
     // player를 향해 회전 
@@ -202,9 +204,42 @@ public class EnemyController : Singleton<EnemyController>
 
     void Dead()
     {
-        // play dead animation 
-        Debug.Log("die");
         anim.SetTrigger("OnDie");
+
+        BoxCollider col = GetComponent<BoxCollider>();
+        col.enabled = false;
+
+        rigid.velocity = Vector3.zero;
+
+        StartCoroutine(DisappearCoroutine());
+        //gameObject.SetActive(false);
+    }
+
+    // 구현해야 한다.
+    IEnumerator DisappearCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("사라지기 시작");
+        float duration = 2f;
+
+        float startTime = Time.time;
+        float endTime = startTime + duration;
+        float elapsedTime = 0f;
+
+        while(Time.time <= endTime)
+        {
+            elapsedTime = Time.time - startTime;
+
+            foreach (MeshRenderer mesh in meshs)
+            {
+                Color changeAlpha = mesh.material.color;
+                Debug.Log($"{elapsedTime / duration}");
+                changeAlpha.a -= (elapsedTime/ duration);
+                mesh.material.color = changeAlpha;
+            }
+            yield return null;
+        }
     }
 
 }

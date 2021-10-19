@@ -64,12 +64,6 @@ public class Movement : MonoBehaviour
         GroundCheck();
         SetCameraForwardDirection();
 
-        // tmp
-        if (Input.GetMouseButtonDown(1))
-            EnemyController.Instance.Damaged();
-        // ----------------------------------------- 
-
-
         if (isControl)
             SetCharacterDirection();
 
