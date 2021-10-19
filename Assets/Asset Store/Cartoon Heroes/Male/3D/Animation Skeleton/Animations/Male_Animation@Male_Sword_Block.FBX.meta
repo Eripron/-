@@ -391,7 +391,7 @@ ModelImporter:
       events:
       - time: 1
         functionName: OnEventSend
-        data: endGuard
+        data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0

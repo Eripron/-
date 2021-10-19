@@ -387,7 +387,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.752
-        functionName: OnEndDashEvent
+        functionName: OnEventSend3
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

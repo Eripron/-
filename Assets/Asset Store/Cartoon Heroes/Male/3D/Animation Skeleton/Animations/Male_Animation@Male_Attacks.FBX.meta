@@ -393,7 +393,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: AnimEvent
+        functionName: OnEventSend2
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -429,7 +429,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: AnimEvent
+        functionName: OnEventSend2
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -465,7 +465,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: AnimEvent
+        functionName: OnEventSend2
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
