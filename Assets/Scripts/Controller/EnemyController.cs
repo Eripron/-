@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
     // tmp 
-    int hp = 10000;
+    int hp = 1000;
 
     [SerializeField] Transform target;
 
@@ -112,14 +112,15 @@ public class EnemyController : MonoBehaviour
         isAttack = false;
     }
 
+
     public void Damaged(int damage)
     {
         activation = false;
 
+        StopAllCoroutines();
         ResetToOriginColor();
 
         StopMove();
-        StopAllCoroutines();
         anim.Rebind();
 
         hp -= damage;

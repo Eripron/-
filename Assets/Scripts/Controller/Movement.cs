@@ -43,6 +43,7 @@ public class Movement : MonoBehaviour
     bool isGuard = false;
     bool isControl = true;
     bool isAttack = false;
+    bool isDamaged = false;
 
     void Start()
     {
@@ -65,32 +66,69 @@ public class Movement : MonoBehaviour
         SetCameraForwardDirection();
 
         if (isControl)
-            SetCharacterDirection();
+            SetCharacterDirection();            // == get input
 
-        if (!isAttack)
-            Move();
-        else
-            controller.Move(transform.forward * Time.deltaTime * 1.1f);
+        Move();
 
         Rotation(direction);
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isGuard && !isDash && !isAttack)
+        if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
             StartCoroutine(StartDashCoroutine());
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isDash && !isAttack)
+        else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
             StartCoroutine(StartGuardCoroutine());
         }
 
-        if(Input.GetMouseButtonDown(0) && !isGuard && !isDash)
+        if(Input.GetMouseButtonDown(0) && !isGuard && !isDash && !isDamaged)
         {
             //StopMove();
             Attack();
         }
 
         Gravity();
+    }
+
+
+    public void Damaged(int damage)
+    {
+        StopAllCoroutines();
+
+        isDamaged = true;
+        isAttack = false;
+        isDash = false;
+        isGuard = false;
+        ResetAttackPhase();
+
+        StopMove();
+
+        //anim.Rebind();
+        anim.SetTrigger("OnDamaged");
+
+        Debug.Log($"{damage}의 데미지를 입음");
+        //if (hp <= 0)
+        //{
+        //    Dead();
+        //    return;
+        //}
+
+        StartCoroutine(DamagedCoroutine());
+    }
+    IEnumerator DamagedCoroutine()
+    {
+        
+
+        yield return new WaitUntil(() => isDamaged == false);
+        yield return new WaitForSeconds(0.1f);
+
+        StartMove();
+    }
+
+    public void OnEndDamage()
+    {
+        isDamaged = false;
     }
 
     void SetCharacterDirection()
@@ -121,20 +159,18 @@ public class Movement : MonoBehaviour
         anim.SetBool("IsWalk", isWalk);
         anim.SetBool("IsRun", isRun);
 
-        controller.Move(direction);
+        if (!isAttack && !isDamaged)
+            controller.Move(direction);
     }
 
     void Attack()
     {
-        isAttack = true;
         StopMove();
-
         CountAttackClick++;
 
-        // 1st attack phase
-        if(CountAttackClick == 1)
+        if(CountAttackClick >= 1 && !isAttack)
         {
-            // play attack 1 motion
+            isAttack = true;
             anim.SetInteger("intAttackPhase", 1);
         }
     }
@@ -142,6 +178,8 @@ public class Movement : MonoBehaviour
     void StopMove()
     {
         isControl = false;
+        isWalk = false;
+        isRun = false;
         x = 0;
         z = 0;
     }
@@ -157,7 +195,6 @@ public class Movement : MonoBehaviour
             if(CountAttackClick > 1)
             {
                 StartMove();
-                CountAttackClick = 0;
                 anim.SetInteger("intAttackPhase", 2);
             }
             else
@@ -165,7 +202,7 @@ public class Movement : MonoBehaviour
         }
         else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
         {
-            if (CountAttackClick > 0)
+            if (CountAttackClick > 2)
             {
                 StartMove();
                 anim.SetInteger("intAttackPhase", 3);
@@ -175,18 +212,20 @@ public class Movement : MonoBehaviour
         }
         else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack3"))
         {
-            if (CountAttackClick > 0)
+            if (CountAttackClick >= 0)
+            {
                 ResetAttackPhase();
+                StartMove();
+            }
         }
     }
+
     void ResetAttackPhase()
     {
         isAttack = false;
 
-        StartMove();
-
+        anim.SetInteger("intAttackPhase", 0);
         CountAttackClick = 0;
-        anim.SetInteger("intAttackPhase", CountAttackClick);
     }
 
     IEnumerator StartGuardCoroutine()

@@ -9,7 +9,7 @@ public class EventSender : MonoBehaviour
     public UnityEvent OnSendEvent;
     public UnityEvent OnSendEvent2;
     public UnityEvent OnSendEvent3;
-
+    public UnityEvent OnSendEvent4;
     public void OnEventSend()
     {
         OnSendEvent?.Invoke();
@@ -21,5 +21,9 @@ public class EventSender : MonoBehaviour
     public void OnEventSend3()
     {
         OnSendEvent3?.Invoke();
+    }
+    public void OnEventSend4()
+    {
+        OnSendEvent4?.Invoke();
     }
 }
