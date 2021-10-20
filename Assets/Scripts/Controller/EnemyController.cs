@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class EnemyController : MonoBehaviour
 {
     // tmp 
@@ -17,10 +18,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
-    MeshRenderer[] meshs;                           // model 전체 색상 관리 
     NavMeshAgent nav;                               // 이동 관련
     Rigidbody rigid;
     Animator anim;
+
+    List<Material> matList = new List<Material>();
+
+    MeshRenderer[] meshs;                           // model 전체 색상 관리 
+    SkinnedMeshRenderer[] skinMeshs;
+
+    List<Color> originColor = new List<Color>();
+
 
     bool activation = true;                         // 아직 쓰지는 않는다.
 
@@ -32,8 +40,19 @@ public class EnemyController : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
-        meshs = GetComponentsInChildren<MeshRenderer>();
         anim = GetComponentInChildren<Animator>();
+
+        meshs = GetComponentsInChildren<MeshRenderer>();
+        skinMeshs = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (MeshRenderer m in meshs)
+            matList.Add(m.material);
+        foreach (SkinnedMeshRenderer sm in skinMeshs)
+            matList.Add(sm.material);
+
+        foreach (SkinnedMeshRenderer mesh in skinMeshs)
+            originColor.Add(mesh.material.color);
+
     }
 
     void Update()
@@ -82,7 +101,6 @@ public class EnemyController : MonoBehaviour
     IEnumerator AttackCoroutine()
     {
         isAttack = true;
-        Debug.Log("attack");
 
         int randomNum = new System.Random().Next(0, attackAnimName.Length);
         string animName = attackAnimName[randomNum];
@@ -98,13 +116,15 @@ public class EnemyController : MonoBehaviour
     {
         activation = false;
 
+        ResetToOriginColor();
+
         StopMove();
         StopAllCoroutines();
         anim.Rebind();
 
         hp -= damage;
-        Debug.Log($"damaged : {damage} => HP : {hp}");
 
+        StartCoroutine(DamagedColorChange());
 
         if (hp <= 0)
         {
@@ -114,6 +134,7 @@ public class EnemyController : MonoBehaviour
 
         StartCoroutine(DamagedCoroutine());
     }
+
     public void OnDamagedEnd()
     {
         isDamaged = false;
@@ -126,7 +147,6 @@ public class EnemyController : MonoBehaviour
         isDamaged = true;
         anim.SetTrigger("OnDamaged");
 
-        StartCoroutine(DamagedColorChange());
         StartCoroutine(DamagedKnockBack());
 
         yield return new WaitUntil(() => isDamaged == false);
@@ -138,9 +158,8 @@ public class EnemyController : MonoBehaviour
     // 피격 효과 
     IEnumerator DamagedColorChange()
     {
-        List<Color> originColor = new List<Color>();
 
-        foreach(MeshRenderer mesh in meshs)
+        foreach (SkinnedMeshRenderer mesh in skinMeshs)
         {
             originColor.Add(mesh.material.color);
             Color changeColor = Color.red;
@@ -150,11 +169,17 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(0.05f);
 
-        for (int i = 0; i < meshs.Length; i++)
+        ResetToOriginColor();
+    }
+
+    void ResetToOriginColor()
+    {
+        for (int i = 0; i < skinMeshs.Length; i++)
         {
-            meshs[i].material.color = originColor[i];
+            skinMeshs[i].material.color = originColor[i];
         }
     }
+
 
     // 넉백 효과 
     IEnumerator DamagedKnockBack(/*Vector3 knockBackDir*/)
@@ -179,7 +204,6 @@ public class EnemyController : MonoBehaviour
                 isExist = true;
         }
 
-        Debug.Log(isExist);
         return isExist;
     }
     // player를 향해 회전 
@@ -206,40 +230,40 @@ public class EnemyController : MonoBehaviour
     {
         anim.SetTrigger("OnDie");
 
+        // 충돌 방지 
         BoxCollider col = GetComponent<BoxCollider>();
         col.enabled = false;
 
+        // 죽고나서 움직임 발생 x
         rigid.velocity = Vector3.zero;
 
         StartCoroutine(DisappearCoroutine());
-        //gameObject.SetActive(false);
     }
 
     // 구현해야 한다.
     IEnumerator DisappearCoroutine()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
-        Debug.Log("사라지기 시작");
-        float duration = 2f;
+        float time = 2f;
 
-        float startTime = Time.time;
-        float endTime = startTime + duration;
-        float elapsedTime = 0f;
-
-        while(Time.time <= endTime)
+        while(time > 0f)
         {
-            elapsedTime = Time.time - startTime;
 
-            foreach (MeshRenderer mesh in meshs)
+            Color originColor = meshs[0].material.color;
+            originColor.a = time / 2f;
+            for(int i=0; i<meshs.Length; i++)
             {
-                Color changeAlpha = mesh.material.color;
-                Debug.Log($"{elapsedTime / duration}");
-                changeAlpha.a -= (elapsedTime/ duration);
-                mesh.material.color = changeAlpha;
+                meshs[i].material.color = originColor;
+                yield return null;
             }
-            yield return null;
+
+            time -= Time.deltaTime;
         }
+
+        // 사라 지는것을 확인 
+        //gameObject.SetActive(false);
+
     }
 
 }
