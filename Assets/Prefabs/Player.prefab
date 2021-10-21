@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 304848150}
   - component: {fileID: 304848151}
+  - component: {fileID: 808527513}
   m_Layer: 7
   m_Name: SwordArea
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304848149}
   m_LocalRotation: {x: -0.04859637, y: 0.10142637, z: 0.78165454, w: -0.61348784}
-  m_LocalPosition: {x: -0.10463497, y: -0.1085491, z: 0.013989847}
+  m_LocalPosition: {x: -0.103, y: 0.074, z: 0.19}
   m_LocalScale: {x: 0.49999994, y: 0.49999967, z: 0.4999998}
   m_Children: []
   m_Father: {fileID: 5874656168918759193}
@@ -42,8 +43,20 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.08999997, y: 0.3800275, z: 1.8690736}
-  m_Center: {x: -0.24995402, y: 0.025017615, z: 1.2545949}
+  m_Size: {x: 0.6728607, y: 0.6, z: 3.999998}
+  m_Center: {x: -0.007179924, y: 0.0000030406654, z: 2.3560896}
+--- !u!114 &808527513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304848149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff98c168d78e61f4abb1eab8a1640297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5875463019204317126
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +147,7 @@ MonoBehaviour:
   groundRadius: 0.5
   moveSpeed: 10
   turnSpeed: 40
-  dashSpeed: 2
+  dashSpeed: 15
   anim: {fileID: 5826002648657575909}
 --- !u!1 &5875463020957259084
 GameObject:
@@ -253,6 +266,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnSendEvent4:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5875463019204317122}
+        m_TargetAssemblyTypeName: Movement, Assembly-CSharp
+        m_MethodName: OnEndDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSendEvent5:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &5875463019402772419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -822,7 +853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4532250632830336, guid: 60e8218091f83244c9bf9c8c2569a009, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0.049999952
       objectReference: {fileID: 0}
     - target: {fileID: 4532250632830336, guid: 60e8218091f83244c9bf9c8c2569a009, type: 3}
       propertyPath: m_LocalPosition.z

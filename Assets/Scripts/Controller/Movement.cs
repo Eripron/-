@@ -91,20 +91,18 @@ public class Movement : MonoBehaviour
         Gravity();
     }
 
+    
 
     public void Damaged(int damage)
     {
         StopAllCoroutines();
+        StopMove();
 
         isDamaged = true;
-        isAttack = false;
         isDash = false;
         isGuard = false;
         ResetAttackPhase();
 
-        StopMove();
-
-        //anim.Rebind();
         anim.SetTrigger("OnDamaged");
 
         Debug.Log($"{damage}의 데미지를 입음");
@@ -118,11 +116,7 @@ public class Movement : MonoBehaviour
     }
     IEnumerator DamagedCoroutine()
     {
-        
-
         yield return new WaitUntil(() => isDamaged == false);
-        yield return new WaitForSeconds(0.1f);
-
         StartMove();
     }
 
@@ -159,7 +153,7 @@ public class Movement : MonoBehaviour
         anim.SetBool("IsWalk", isWalk);
         anim.SetBool("IsRun", isRun);
 
-        if (!isAttack && !isDamaged)
+        if (!isAttack && !isDamaged && !isDash && !isGuard)
             controller.Move(direction);
     }
 
@@ -178,14 +172,16 @@ public class Movement : MonoBehaviour
     void StopMove()
     {
         isControl = false;
-        isWalk = false;
-        isRun = false;
+        isStanding = true;
+
         x = 0;
         z = 0;
     }
+
     void StartMove()
     {
         isControl = true;
+        SetCharacterDirection();
     }
 
     public void CheckAttackPhase()
@@ -230,15 +226,13 @@ public class Movement : MonoBehaviour
 
     IEnumerator StartGuardCoroutine()
     {
-        /*
-         Guard 는 따로 몬스터가 공격시 막으면 hp를 깍지 않는 것을 구현해야 한다. 
-         */
+        StopMove();
         isGuard = true;
 
         anim.SetTrigger("OnGuard");
-        StopMove();
 
         yield return new WaitUntil(() => isGuard == false);
+        StartMove();
     }
     IEnumerator StartDashCoroutine()     
     {
@@ -252,17 +246,16 @@ public class Movement : MonoBehaviour
             controller.Move(transform.forward * dashSpeed * Time.deltaTime);
             yield return null;
         }
+        StartMove();
     }
 
     public void OnEndGuard()
     {
         isGuard = false;
-        StartMove();
     }
     public void OnEndDash()
     {
         isDash = false;
-        StartMove();
     }
 
 

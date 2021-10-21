@@ -151,7 +151,7 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DamagedKnockBack());
 
         yield return new WaitUntil(() => isDamaged == false);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.7f);
 
         activation = true;
     }
@@ -241,7 +241,6 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DisappearCoroutine());
     }
 
-    // 구현해야 한다.
     IEnumerator DisappearCoroutine()
     {
         yield return new WaitForSeconds(2f);

@@ -6,6 +6,8 @@ using UnityEngine.Events;
 
 public class EventSender : MonoBehaviour
 {
+    [SerializeField] GameObject target;
+
     public UnityEvent OnSendEvent;
     public UnityEvent OnSendEvent2;
     public UnityEvent OnSendEvent3;
@@ -26,4 +28,11 @@ public class EventSender : MonoBehaviour
     {
         OnSendEvent4?.Invoke();
     }
+
+    public void ChangeTag(string tagName)
+    {
+        Debug.Log(tagName);
+        target.tag = tagName;
+    }
+
 }
