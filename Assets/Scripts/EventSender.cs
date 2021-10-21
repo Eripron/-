@@ -35,4 +35,13 @@ public class EventSender : MonoBehaviour
         target.tag = tagName;
     }
 
+    public void GetUpPlayer()
+    {
+        Movement player = target.GetComponent<Movement>();
+        if (player == null)
+            return;
+
+        Debug.Log("call reset");
+        player.AllReset();
+    }
 }

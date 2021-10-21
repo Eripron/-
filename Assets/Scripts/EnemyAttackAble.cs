@@ -6,15 +6,20 @@ public class EnemyAttackAble : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
-        {
-            Debug.Log("Player Damaged");
-            Movement player = other.GetComponent<Movement>();
+        Movement player = other.GetComponent<Movement>();
 
-            if (player != null)
-                player.Damaged(10);
+        if (player == null)
+            return;
+
+        if (other.gameObject.tag == "Player")
+        {
+            player.Damaged(10);
+        }
+        else if (other.gameObject.tag == "Defence")
+        {
+            Debug.Log("방어 성공");
+            player.OnBlockAttack();
         }
     }
-
 
 }

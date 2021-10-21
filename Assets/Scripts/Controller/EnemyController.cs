@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
     // tmp 
-    int hp = 1000;
+    int hp = 40;
 
     [SerializeField] Transform target;
 

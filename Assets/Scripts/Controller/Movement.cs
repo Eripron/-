@@ -2,8 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum LAYER
+{
+    LAYER_PLAYER = 7,
+    LAYER_DEAD = 8,
+}
+
 public class Movement : MonoBehaviour
 {
+    // tmp  ------------------------------------------------
+    int hp = 50;
+    int aliveCount = 2;
+    //------------------------------------------------------
     public SkinnedMeshRenderer[] meshs;
 
     [Header("Ground Check")]
@@ -44,6 +54,7 @@ public class Movement : MonoBehaviour
     bool isControl = true;
     bool isAttack = false;
     bool isDamaged = false;
+    bool isAlive = true;
 
     void Start()
     {
@@ -62,6 +73,15 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
+        if (!isAlive && aliveCount > 0 && Input.GetKeyDown(KeyCode.R))
+        {
+            isAlive = true;
+            PlayerGetUp(30);
+        }
+
+        if (!isAlive)
+            return;
+
         GroundCheck();
         SetCameraForwardDirection();
 
@@ -84,14 +104,12 @@ public class Movement : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0) && !isGuard && !isDash && !isDamaged)
         {
-            //StopMove();
             Attack();
         }
 
         Gravity();
     }
 
-    
 
     public void Damaged(int damage)
     {
@@ -106,11 +124,11 @@ public class Movement : MonoBehaviour
         anim.SetTrigger("OnDamaged");
 
         Debug.Log($"{damage}의 데미지를 입음");
-        //if (hp <= 0)
-        //{
-        //    Dead();
-        //    return;
-        //}
+        if ((hp -= damage) <= 0)
+        {
+            Dead();
+            return;
+        }
 
         StartCoroutine(DamagedCoroutine());
     }
@@ -119,6 +137,20 @@ public class Movement : MonoBehaviour
         yield return new WaitUntil(() => isDamaged == false);
         StartMove();
     }
+
+    void Dead()
+    {
+        // control 방지 
+        isAlive = false;
+        // 죽었는데도 다시 죽는 모션 방지 
+        controller.detectCollisions = false;
+
+        gameObject.layer = (int)LAYER.LAYER_DEAD;
+
+        // animation play
+        anim.SetTrigger("OnDead");
+    }
+
 
     public void OnEndDamage()
     {
@@ -228,12 +260,17 @@ public class Movement : MonoBehaviour
     {
         StopMove();
         isGuard = true;
-
         anim.SetTrigger("OnGuard");
 
         yield return new WaitUntil(() => isGuard == false);
         StartMove();
     }
+
+    public void OnBlockAttack()
+    {
+        anim.SetTrigger("OnGuardHit");
+    }
+
     IEnumerator StartDashCoroutine()     
     {
         StopMove();
@@ -277,6 +314,39 @@ public class Movement : MonoBehaviour
     {
         isGround = Physics.CheckSphere(groundPivot.position, groundRadius, groundMask);
     }                                                   // ground check
+
+
+    // 외부에서 호출하기만 하면 됨
+    void PlayerGetUp(int _hp)
+    {
+        // 체력 회복 인데 확인차 code
+        hp = _hp;
+        aliveCount--;
+
+        Debug.Log($"남은 횟수 : {aliveCount} / 체력 : {hp}");
+
+        anim.SetTrigger("OnAlive");
+    }
+
+    IEnumerator ResetCoroutine()
+    {
+        isControl = true;
+        isDamaged = false;
+        isDash = false;
+        isGuard = false;
+        ResetAttackPhase();
+        controller.detectCollisions = true;
+
+        yield return new WaitForSeconds(2f);
+
+        Debug.Log("change layer");
+        gameObject.layer = (int)LAYER.LAYER_PLAYER;
+    }
+
+    public void AllReset()
+    {
+        StartCoroutine(ResetCoroutine());
+    }
 
     private void OnDrawGizmosSelected()
     {
