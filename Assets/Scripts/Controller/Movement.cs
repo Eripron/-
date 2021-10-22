@@ -10,11 +10,10 @@ enum LAYER
 
 public class Movement : MonoBehaviour
 {
-    // tmp  ------------------------------------------------
-    int hp = 50;
-    int aliveCount = 2;
-    //------------------------------------------------------
     public SkinnedMeshRenderer[] meshs;
+
+    // tmp
+    [SerializeField] Status status;
 
     [Header("Ground Check")]
     [SerializeField] Transform groundPivot;
@@ -73,10 +72,10 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive && aliveCount > 0 && Input.GetKeyDown(KeyCode.R))
+        if (!isAlive && status.AliveCount > 0 && Input.GetKeyDown(KeyCode.R))
         {
             isAlive = true;
-            PlayerGetUp(30);
+            status.PlayerGetUp();
         }
 
         if (!isAlive)
@@ -89,6 +88,9 @@ public class Movement : MonoBehaviour
             SetCharacterDirection();            // == get input
 
         Move();
+
+        if (isAttack)
+            controller.Move(transform.forward * Time.deltaTime * 1.2f);
 
         Rotation(direction);
 
@@ -124,7 +126,8 @@ public class Movement : MonoBehaviour
         anim.SetTrigger("OnDamaged");
 
         Debug.Log($"{damage}의 데미지를 입음");
-        if ((hp -= damage) <= 0)
+        status.OnDamaged(damage);
+        if (status.Hp <= 0)
         {
             Dead();
             return;
@@ -132,6 +135,7 @@ public class Movement : MonoBehaviour
 
         StartCoroutine(DamagedCoroutine());
     }
+
     IEnumerator DamagedCoroutine()
     {
         yield return new WaitUntil(() => isDamaged == false);
@@ -177,6 +181,7 @@ public class Movement : MonoBehaviour
         cameraForward.y = 0;
         cameraForward = cameraForward.normalized;
     }
+
     void Move()
     {
         isWalk = (!isStanding && !isAccel) ? true : false;
@@ -317,14 +322,8 @@ public class Movement : MonoBehaviour
 
 
     // 외부에서 호출하기만 하면 됨
-    void PlayerGetUp(int _hp)
+    public void OnAliveAnimation()
     {
-        // 체력 회복 인데 확인차 code
-        hp = _hp;
-        aliveCount--;
-
-        Debug.Log($"남은 횟수 : {aliveCount} / 체력 : {hp}");
-
         anim.SetTrigger("OnAlive");
     }
 
