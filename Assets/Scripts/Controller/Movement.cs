@@ -8,12 +8,12 @@ enum LAYER
     LAYER_DEAD = 8,
 }
 
+[RequireComponent(typeof(PlayerStatus))]
 public class Movement : MonoBehaviour
 {
+    // tmp  ------------------------------------------------
+    //------------------------------------------------------
     public SkinnedMeshRenderer[] meshs;
-
-    // tmp
-    [SerializeField] Status status;
 
     [Header("Ground Check")]
     [SerializeField] Transform groundPivot;
@@ -25,10 +25,16 @@ public class Movement : MonoBehaviour
     [SerializeField] float turnSpeed;
     [SerializeField] float dashSpeed;
 
-    [SerializeField] Animator anim;
+    [Header("Status")]
+    [SerializeField] int dashStaminaUsage;
+    [SerializeField] int attackStaminaUsage;
+
+    Animator anim;
 
     CharacterController controller;
     Camera cam;
+
+    PlayerStatus status;
 
 
     float x;                    
@@ -36,6 +42,7 @@ public class Movement : MonoBehaviour
     float gravity = (-9.81f * 3f);
 
     int CountAttackClick = 0;
+    
 
     Vector3 cameraForward;                  // 카메라가 바라보는 정면 방향 
     Vector3 direction;                      // 캐릭터 이동 방향 
@@ -57,11 +64,12 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
+        anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         cam = Camera.main;
-
-        
+        status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
+
         /*
         foreach (SkinnedMeshRenderer c in meshs)
         {
@@ -72,10 +80,12 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if (!isAlive && status.AliveCount > 0 && Input.GetKeyDown(KeyCode.R))
+        if (!isAlive && status.isEnoughfLife() && Input.GetKeyDown(KeyCode.R))
         {
             isAlive = true;
-            status.PlayerGetUp();
+
+            status.UseLife();
+            PlayerGetUp(status.MaxHp);
         }
 
         if (!isAlive)
@@ -89,29 +99,34 @@ public class Movement : MonoBehaviour
 
         Move();
 
-        if (isAttack)
-            controller.Move(transform.forward * Time.deltaTime * 1.2f);
+        if(isAttack)
+            controller.Move(transform.forward * Time.deltaTime * 1.5f);
 
         Rotation(direction);
 
 
         if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
-            StartCoroutine(StartDashCoroutine());
+            if (status.IsEnoughfStamina(dashStaminaUsage))
+            {
+                StartCoroutine(StartDashCoroutine());
+                status.UseStamina(10);
+            }
+            else
+                Debug.Log("스테미나 부족");
         }
         else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
             StartCoroutine(StartGuardCoroutine());
         }
 
-        if(Input.GetMouseButtonDown(0) && !isGuard && !isDash && !isDamaged)
+        if((Input.GetKeyDown(KeyCode.K) || Input.GetMouseButtonDown(0)) && !isGuard && !isDash && !isDamaged)
         {
             Attack();
         }
 
         Gravity();
     }
-
 
     public void Damaged(int damage)
     {
@@ -125,12 +140,10 @@ public class Movement : MonoBehaviour
 
         anim.SetTrigger("OnDamaged");
 
-        Debug.Log($"{damage}의 데미지를 입음");
         status.OnDamaged(damage);
-        if (status.Hp <= 0)
+        if(status.Hp <= 0)
         {
             Dead();
-            return;
         }
 
         StartCoroutine(DamagedCoroutine());
@@ -144,17 +157,13 @@ public class Movement : MonoBehaviour
 
     void Dead()
     {
-        // control 방지 
         isAlive = false;
-        // 죽었는데도 다시 죽는 모션 방지 
         controller.detectCollisions = false;
 
         gameObject.layer = (int)LAYER.LAYER_DEAD;
 
-        // animation play
         anim.SetTrigger("OnDead");
     }
-
 
     public void OnEndDamage()
     {
@@ -181,7 +190,6 @@ public class Movement : MonoBehaviour
         cameraForward.y = 0;
         cameraForward = cameraForward.normalized;
     }
-
     void Move()
     {
         isWalk = (!isStanding && !isAccel) ? true : false;
@@ -196,15 +204,23 @@ public class Movement : MonoBehaviour
 
     void Attack()
     {
-        StopMove();
         CountAttackClick++;
 
-        if(CountAttackClick >= 1 && !isAttack)
+        if(isControl)
+            StopMove();
+
+        if (CountAttackClick >= 1 && !isAttack && status.IsEnoughfStamina(attackStaminaUsage))
         {
             isAttack = true;
             anim.SetInteger("intAttackPhase", 1);
+            status.UseStamina(attackStaminaUsage);
+        }
+        else
+        {
+            StartMove();
         }
     }
+
 
     void StopMove()
     {
@@ -214,7 +230,6 @@ public class Movement : MonoBehaviour
         x = 0;
         z = 0;
     }
-
     void StartMove()
     {
         isControl = true;
@@ -225,20 +240,25 @@ public class Movement : MonoBehaviour
     {
         if(anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1"))
         {
-            if(CountAttackClick > 1)
+            if(CountAttackClick > 1 && status.IsEnoughfStamina(attackStaminaUsage))
             {
                 StartMove();
+                CountAttackClick = 0;
                 anim.SetInteger("intAttackPhase", 2);
+
+                status.UseStamina(attackStaminaUsage);
             }
             else
                 ResetAttackPhase();
         }
         else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
         {
-            if (CountAttackClick > 2)
+            if (CountAttackClick > 0 && status.IsEnoughfStamina(attackStaminaUsage))
             {
                 StartMove();
                 anim.SetInteger("intAttackPhase", 3);
+
+                status.UseStamina(attackStaminaUsage);
             }
             else
                 ResetAttackPhase();
@@ -248,17 +268,26 @@ public class Movement : MonoBehaviour
             if (CountAttackClick >= 0)
             {
                 ResetAttackPhase();
-                StartMove();
             }
         }
     }
 
     void ResetAttackPhase()
     {
-        isAttack = false;
-
-        anim.SetInteger("intAttackPhase", 0);
         CountAttackClick = 0;
+        anim.SetInteger("intAttackPhase", 0);
+
+
+        if(!isDamaged)
+            StartMove();
+
+        StartCoroutine(ResetAttack());
+    }
+
+    IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(0.05f);
+        isAttack = false;
     }
 
     IEnumerator StartGuardCoroutine()
@@ -300,7 +329,6 @@ public class Movement : MonoBehaviour
         isDash = false;
     }
 
-
     void Rotation(Vector3 dir)
     {
         Vector3 turnDirection = Vector3.RotateTowards(transform.forward, dir, turnSpeed * Time.deltaTime, 0f);
@@ -322,8 +350,9 @@ public class Movement : MonoBehaviour
 
 
     // 외부에서 호출하기만 하면 됨
-    public void OnAliveAnimation()
+    void PlayerGetUp(int _hp)
     {
+        status.AddHp(_hp);
         anim.SetTrigger("OnAlive");
     }
 

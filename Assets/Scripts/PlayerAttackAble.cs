@@ -2,19 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerAttackAble : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log($"{name} attack to {other.name}");
+    [SerializeField] float attackRadius;
+    [SerializeField] Transform startAttackPivot;
+    [SerializeField] Transform endAttackPivot;
+    [SerializeField] LayerMask enemyLayer;
 
-        if(other.gameObject.tag == "Enemy")
+    PlayerStatus playerStatus;
+
+    // 검색한 적 저장
+    List<EnemyController> enemys = new List<EnemyController>();
+
+
+    void Start()
+    {
+        playerStatus = GetComponentInParent<PlayerStatus>();     
+    }
+
+    public void OnCheckEnemyInAttackArea()
+    {
+        Collider[] colliders = Physics.OverlapCapsule(startAttackPivot.position, endAttackPivot.position, attackRadius, enemyLayer);
+
+        foreach(Collider col in colliders)
         {
-            EnemyController enemy = other.GetComponent<EnemyController>();
-            if (enemy != null)
-                enemy.Damaged(10);
+            EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+
+            if (enemy == null)
+            {
+                enemy = col.gameObject.GetComponentInParent<EnemyController>();
+                if (enemy == null)
+                    continue;
+            }
+
+            if (!enemys.Contains(enemy))
+                enemys.Add(enemy);
+        }
+    }
+
+    public void OnDamagedToEnemy()
+    {
+        foreach(EnemyController enemy in enemys)
+        {
+            if (enemy == null)
+                continue;
+
+            // temp
+            enemy.Damaged(playerStatus.AttackPower);
         }
 
+        enemys.Clear();
     }
+    
 }

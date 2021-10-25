@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
+[RequireComponent(typeof(EnemyStatus))]
 public class EnemyController : MonoBehaviour
 {
-    // tmp 
-    int hp = 40;
 
-    [SerializeField] Transform target;
+    Transform target;
 
     [SerializeField] string[] attackAnimName;
 
@@ -21,6 +19,8 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent nav;                               // 이동 관련
     Rigidbody rigid;
     Animator anim;
+
+    EnemyStatus enemyStatus;
 
     List<Material> matList = new List<Material>();
 
@@ -38,9 +38,12 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        target = FindObjectOfType<PlayerStatus>().transform;
+
         nav = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        enemyStatus = GetComponent<EnemyStatus>();
 
         meshs = GetComponentsInChildren<MeshRenderer>();
         skinMeshs = GetComponentsInChildren<SkinnedMeshRenderer>();
@@ -123,11 +126,11 @@ public class EnemyController : MonoBehaviour
         StopMove();
         anim.Rebind();
 
-        hp -= damage;
+        enemyStatus.OnDamaged(damage);
 
         StartCoroutine(DamagedColorChange());
 
-        if (hp <= 0)
+        if (enemyStatus.Hp <= 0)
         {
             Dead();
             return;

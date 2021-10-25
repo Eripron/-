@@ -10,53 +10,43 @@ public class Status : MonoBehaviour
 
     - player만 
         : maxMp, maxStamina, aliveCount, movement, 
-
      */
 
-    [SerializeField] Movement player;
-
-    [SerializeField] new string name;
+    [SerializeField] string characterName;
 
     [SerializeField] int maxHp;
-    
 
     [SerializeField] int attackPower;
     [SerializeField] int defensePower;
 
-    [SerializeField] int aliveCount;
-
     int hp;
-    int mp;
-    int stamina;
 
+    public int MaxHp => maxHp;
     public int Hp { get { return hp; } }
-    public int AliveCount => aliveCount;
+    public int AttackPower => attackPower;
+    public int DefecsePower => defensePower;
 
-    void Start()
-    {
-        InitStatus();
-    }
 
-    void InitStatus()
+
+    protected void InitStatus()
     {
         hp = maxHp;
-        //mp = maxMp;
-        //stamina = maxStamina;
     }
 
-    // 데미지를 받으면 hp값 조정 
+    void SetName(string name)
+    {
+        characterName = name;
+    }
+
+    public void AddHp(int _hp)
+    {
+        hp = Mathf.Clamp(hp += _hp, 0, maxHp);
+    }
+
     public void OnDamaged(int damage)
     {
-        hp = Mathf.Clamp(hp -= damage, 0, maxHp);
+        hp = Mathf.Clamp((hp -= damage), 0, maxHp);
     }
+    
 
-    public void PlayerGetUp()
-    {
-        // 체력 회복 인데 확인차 code
-        hp = maxHp;
-        aliveCount--;
-
-        Debug.Log($"남은 횟수 : {aliveCount} / 체력 : {hp}");
-        player.OnAliveAnimation();
-    }
 }

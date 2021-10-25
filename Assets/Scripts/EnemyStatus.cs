@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class EnemyStatus : Status
 {
+    void Start()
+    {
+        InitStatus();
+    }
 
-
-
+    new void InitStatus()
+    {
+        base.InitStatus();
+    }
 
 }

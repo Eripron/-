@@ -7,11 +7,15 @@ using UnityEngine.Events;
 public class EventSender : MonoBehaviour
 {
     [SerializeField] GameObject target;
+    [SerializeField] PlayerAttackAble attackAble;
 
     public UnityEvent OnSendEvent;
     public UnityEvent OnSendEvent2;
     public UnityEvent OnSendEvent3;
     public UnityEvent OnSendEvent4;
+
+    bool isCheck;
+
     public void OnEventSend()
     {
         OnSendEvent?.Invoke();
@@ -29,6 +33,14 @@ public class EventSender : MonoBehaviour
         OnSendEvent4?.Invoke();
     }
 
+    void Update()
+    {
+        if (isCheck)
+        {
+            attackAble.OnCheckEnemyInAttackArea();
+        }
+    }
+
     public void ChangeTag(string tagName)
     {
         Debug.Log(tagName);
@@ -44,4 +56,16 @@ public class EventSender : MonoBehaviour
         Debug.Log("call reset");
         player.AllReset();
     }
+
+    public void OnStartCheckEnemyInAttack()
+    {
+        isCheck = true;
+    }
+
+    public void OnEndCheckEnemyInAttack()
+    {
+        isCheck = false;
+        attackAble.OnDamagedToEnemy();
+    }
+
 }
