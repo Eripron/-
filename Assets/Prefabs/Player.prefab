@@ -230,7 +230,8 @@ MonoBehaviour:
   moveSpeed: 10
   turnSpeed: 40
   dashSpeed: 15
-  anim: {fileID: 5826002648657575909}
+  dashStaminaUsage: 10
+  attackStaminaUsage: 2
 --- !u!114 &1351178689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,11 +1021,6 @@ GameObject:
 --- !u!4 &5879955579705918019 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4532250632830336, guid: 60e8218091f83244c9bf9c8c2569a009, type: 3}
-  m_PrefabInstance: {fileID: 5875463019402772419}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &5826002648657575909 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 95640976257318950, guid: 60e8218091f83244c9bf9c8c2569a009, type: 3}
   m_PrefabInstance: {fileID: 5875463019402772419}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5874656168918759193 stripped

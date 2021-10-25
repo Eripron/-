@@ -195,11 +195,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08bd80bdc4f1ac942a5003b8a8755c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  attackAnimName:
-  - Attack1
-  - Attack2
-  - Attack3
+  animationClips:
+  - {fileID: 7400000, guid: dd7688abaf03dbd48809a1be53c39d6b, type: 2}
+  - {fileID: 7400000, guid: 306c1c174c09d4e4cbd0ffb1e348f3a4, type: 2}
+  - {fileID: 7400000, guid: 0b5317cd74b199343852f710421154a3, type: 2}
   checkPivot: {fileID: 1314390196481118246}
   checkRadius: 2
   playerMask:
@@ -218,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Enemy1
-  maxHp: 100
+  maxHp: 50
   attackPower: 10
   defensePower: 5
 --- !u!1 &1314390196481118247

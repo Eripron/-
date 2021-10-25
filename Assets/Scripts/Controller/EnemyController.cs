@@ -7,26 +7,35 @@ using UnityEngine.AI;
 [RequireComponent(typeof(EnemyStatus))]
 public class EnemyController : MonoBehaviour
 {
+    // 손봐야 하는 부분 적의 이동이랑 공격 거리 설정 
 
-    Transform target;
+    /*
+     보스 vs 일반 몹 차이 
+    
+    Boss -> 1. 일정 데미지 이상 => knock down
+         -> 2. 포효하는 모션 추가 
+         -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
+     */
 
-    [SerializeField] string[] attackAnimName;
+    // to attack 
+    [SerializeField] AnimationClip[] animationClips;
+    string[] attackAnimName;
 
+    [Header("Check Player")]
     [SerializeField] Transform checkPivot;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
-    NavMeshAgent nav;                               // 이동 관련
-    Rigidbody rigid;
-    Animator anim;
+    
+    Transform target;                               // player transform
+    NavMeshAgent nav;                               // AI
+    Rigidbody rigid;                                // Rigid
+    Animator anim;                                  // Animator
+    EnemyStatus enemyStatus;                        // Enemy Status
 
-    EnemyStatus enemyStatus;
-
-    List<Material> matList = new List<Material>();
-
-    MeshRenderer[] meshs;                           // model 전체 색상 관리 
+    // for Color Change
     SkinnedMeshRenderer[] skinMeshs;
-
+    List<Material> matList = new List<Material>();
     List<Color> originColor = new List<Color>();
 
 
@@ -36,26 +45,10 @@ public class EnemyController : MonoBehaviour
     bool isAttack;
     bool isDamaged = false;
 
+
     void Start()
     {
-        target = FindObjectOfType<PlayerStatus>().transform;
-
-        nav = GetComponent<NavMeshAgent>();
-        rigid = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
-        enemyStatus = GetComponent<EnemyStatus>();
-
-        meshs = GetComponentsInChildren<MeshRenderer>();
-        skinMeshs = GetComponentsInChildren<SkinnedMeshRenderer>();
-
-        foreach (MeshRenderer m in meshs)
-            matList.Add(m.material);
-        foreach (SkinnedMeshRenderer sm in skinMeshs)
-            matList.Add(sm.material);
-
-        foreach (SkinnedMeshRenderer mesh in skinMeshs)
-            originColor.Add(mesh.material.color);
-
+        Init();
     }
 
     void Update()
@@ -84,7 +77,28 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+    void Init()
+    {
+        target = FindObjectOfType<PlayerStatus>().transform;
+        nav = GetComponent<NavMeshAgent>();
+        rigid = GetComponent<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
+        enemyStatus = GetComponent<EnemyStatus>();
 
+        skinMeshs = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (SkinnedMeshRenderer mesh in skinMeshs)
+        {
+            matList.Add(mesh.material);
+            originColor.Add(mesh.material.color);
+        }
+
+        attackAnimName = new string[animationClips.Length];
+        for (int i = 0; i < animationClips.Length; i++)
+        {
+            attackAnimName[i] = animationClips[i].name;
+        }
+    }
 
     // move
     void StartMove()
@@ -115,7 +129,8 @@ public class EnemyController : MonoBehaviour
         isAttack = false;
     }
 
-
+    // 수정해야 하는 부분 
+    // 보스랑 일반 몹이랑 다른 부분이다 
     public void Damaged(int damage)
     {
         activation = false;
@@ -146,6 +161,7 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator DamagedCoroutine()
     {
+        // 일반 몹만 해당함 
         isAttack = false;
 
         isDamaged = true;
@@ -159,36 +175,30 @@ public class EnemyController : MonoBehaviour
         activation = true;
     }
 
-    // 피격 효과 
+    // 피격 색 변화  ( boss & normal )
     IEnumerator DamagedColorChange()
     {
+        Color damagedColor = Color.red;
 
-        foreach (SkinnedMeshRenderer mesh in skinMeshs)
+        foreach (Material mat in matList)
         {
-            originColor.Add(mesh.material.color);
-            Color changeColor = Color.red;
-            changeColor.a = 0.3f;
-            mesh.material.color = changeColor;
+            damagedColor.a = 0.1f;
+            mat.color = damagedColor;
         }
-
         yield return new WaitForSeconds(0.05f);
 
         ResetToOriginColor();
     }
-
     void ResetToOriginColor()
     {
-        for (int i = 0; i < skinMeshs.Length; i++)
-        {
-            skinMeshs[i].material.color = originColor[i];
-        }
+        for (int i = 0; i < matList.Count; i++)
+            matList[i].color = originColor[i];
     }
 
 
-    // 넉백 효과 
-    IEnumerator DamagedKnockBack(/*Vector3 knockBackDir*/)
+    // knock back ( only normal )
+    IEnumerator DamagedKnockBack()
     {
-        Vector3 curPosition = transform.position;
         rigid.AddForce(-transform.forward * 5f, ForceMode.Impulse);
         yield return null;
     }
@@ -242,27 +252,13 @@ public class EnemyController : MonoBehaviour
         rigid.velocity = Vector3.zero;
 
         StartCoroutine(DisappearCoroutine());
+
     }
 
     IEnumerator DisappearCoroutine()
     {
         yield return new WaitForSeconds(2f);
 
-        float time = 2f;
-
-        while(time > 0f)
-        {
-
-            Color originColor = meshs[0].material.color;
-            originColor.a = time / 2f;
-            for(int i=0; i<meshs.Length; i++)
-            {
-                meshs[i].material.color = originColor;
-                yield return null;
-            }
-
-            time -= Time.deltaTime;
-        }
 
         // 사라 지는것을 확인 
         //gameObject.SetActive(false);
