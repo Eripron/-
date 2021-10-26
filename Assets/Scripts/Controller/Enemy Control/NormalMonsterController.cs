@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NormalMonsterController : EnemyController
 {
+    
 
     void Start()
     {
@@ -15,27 +16,39 @@ public class NormalMonsterController : EnemyController
         if (target == null)
             return;
 
+        if (!isAttack && isAlive)
+            RotateToPlayer();
+
         if (activation)
         {
             float distance = Vector3.Distance(target.position, transform.position);
+            // 거리에 따라 행동 나뉘어짐
             if (distance <= nav.stoppingDistance)
             {
                 StopMove();
 
-                if (!IsPlayerFront() && !isAttack)
-                    RotateToPlayer();
+                int random = new System.Random().Next(0, 100);
+                Debug.Log(random);
+                // 확률에 따라 공격 or 대기 
+                if (random < attackPercentage && !isAttack)
+                {
+                    if (IsPlayerFront())
+                        StartCoroutine(AttackCoroutine());
+                }
                 else
                 {
-                    StartCoroutine(AttackCoroutine());
+                    StartCoroutine(WaitSomeCoroutine());
                 }
             }
-            else if (distance > nav.stoppingDistance)
+            else
             {
                 StartMove();
             }
         }
 
     }
+
+    
 
     new void Init()
     {
@@ -71,6 +84,10 @@ public class NormalMonsterController : EnemyController
 
     public override void Dead()
     {
+        isAlive = false;
+        rigid.velocity = Vector3.zero;
+        activation = false;
+
         anim.SetTrigger("OnDie");
 
         // 충돌 방지 
@@ -78,7 +95,6 @@ public class NormalMonsterController : EnemyController
         col.enabled = false;
 
         // 죽고나서 움직임 발생 x
-        rigid.velocity = Vector3.zero;
 
         StartCoroutine(DisappearCoroutine());
 
@@ -86,25 +102,24 @@ public class NormalMonsterController : EnemyController
 
     IEnumerator DamagedCoroutine()
     {
-        // 일반 몹만 해당함 
         isAttack = false;
-
         isDamaged = true;
+
         anim.SetTrigger("OnDamaged");
 
         StartCoroutine(DamagedKnockBack());
 
         yield return new WaitUntil(() => isDamaged == false);
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.6f);
 
         activation = true;
     }
 
     IEnumerator DamagedKnockBack()
     {
-        Debug.Log("call back ");
         rigid.AddForce(-transform.forward * 10f, ForceMode.Impulse);
         yield return null;
     }
+
 
 }

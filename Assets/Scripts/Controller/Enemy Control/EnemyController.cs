@@ -32,7 +32,10 @@ public class EnemyController : MonoBehaviour, IDamaged
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
-    
+    [Header("Attack")]
+    [SerializeField]
+    [Range(0, 100)] protected int attackPercentage;
+
     protected Transform target;                               // player transform
     protected NavMeshAgent nav;                               // AI
     protected Rigidbody rigid;                                // Rigid
@@ -45,11 +48,13 @@ public class EnemyController : MonoBehaviour, IDamaged
     List<Color> originColor = new List<Color>();
 
 
-    protected bool activation = true;                         
+    protected bool activation = true;
+    protected bool isAlive = true;
     protected bool isWalk;
     protected bool isAttack;
     protected bool isDamaged = false;
 
+    protected float stopDistance;
     
     protected void Init()
     {
@@ -73,22 +78,22 @@ public class EnemyController : MonoBehaviour, IDamaged
             attackAnimName[i] = animationClips[i].name;
         }
 
-        float stopDistance = checkPivot.position.z - transform.position.z;
-        nav.stoppingDistance = stopDistance * 1.5f;
+        stopDistance = (checkPivot.position.z - transform.position.z) + checkRadius;
+        Debug.Log(stopDistance);
+        nav.stoppingDistance = stopDistance;
     }
 
     // move
     protected void StartMove()
     {
         nav.SetDestination(target.position);
-
         SetWalk(true);
     }
+
     protected void StopMove()
     {
-        rigid.velocity = Vector3.zero;
-
         nav.ResetPath();
+        rigid.velocity = Vector3.zero;
 
         SetWalk(false);
     }
@@ -103,15 +108,26 @@ public class EnemyController : MonoBehaviour, IDamaged
     protected IEnumerator AttackCoroutine()
     {
         isAttack = true;
+        activation = false;
 
         int randomNum = new System.Random().Next(0, attackAnimName.Length);
         string animName = attackAnimName[randomNum];
         anim.Play(animName);
 
-        float waitTime = Mathf.Clamp(randomNum + 1, 1f, 3f);
+        int waitTime = new System.Random().Next(2, 4);
+        Debug.Log($"waitTime : {waitTime}");
         yield return new WaitForSeconds(waitTime);
 
         isAttack = false;
+        activation = true;
+    }
+
+    protected IEnumerator WaitSomeCoroutine()
+    {
+        activation = false;
+        Debug.Log("Some Waiting");
+        yield return new WaitForSeconds(2f);
+        activation = true;
     }
 
     // 수정해야 하는 부분 
@@ -172,7 +188,7 @@ public class EnemyController : MonoBehaviour, IDamaged
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(checkPivot.position, checkRadius);
         Vector3 endPos = checkPivot.position;
-        endPos.y -= 10f;
+        endPos.y -= 15f;
         Gizmos.DrawLine(checkPivot.position, endPos);
     }
    

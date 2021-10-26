@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossController : EnemyController
+public class BossController : EnemyController, IDamaged
 {
     void Start()
     {
@@ -14,6 +14,9 @@ public class BossController : EnemyController
         if (target == null)
             return;
 
+        if(!isAttack)
+            RotateToPlayer();
+
         if (activation)
         {
             float distance = Vector3.Distance(target.position, transform.position);
@@ -21,20 +24,14 @@ public class BossController : EnemyController
             {
                 StopMove();
 
-                if (!IsPlayerFront())
-                    RotateToPlayer();
-                else
-                {
-                    Debug.Log("attack");
+                if (!isAttack && IsPlayerFront())
                     StartCoroutine(AttackCoroutine());
-                }
             }
             else if (distance > nav.stoppingDistance)
             {
                 StartMove();
             }
         }
-
     }
 
 
