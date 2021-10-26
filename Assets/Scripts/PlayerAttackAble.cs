@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAttackAble : MonoBehaviour
 {
+    [Header("Attack")]
     [SerializeField] float attackRadius;
     [SerializeField] Transform startAttackPivot;
     [SerializeField] Transform endAttackPivot;
@@ -12,8 +13,7 @@ public class PlayerAttackAble : MonoBehaviour
     PlayerStatus playerStatus;
 
     // 검색한 적 저장
-    List<EnemyController> enemys = new List<EnemyController>();
-
+    List<IDamaged> enemys = new List<IDamaged>();
 
     void Start()
     {
@@ -26,11 +26,11 @@ public class PlayerAttackAble : MonoBehaviour
 
         foreach(Collider col in colliders)
         {
-            EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+            IDamaged enemy = col.gameObject.GetComponent<IDamaged>();
 
             if (enemy == null)
             {
-                enemy = col.gameObject.GetComponentInParent<EnemyController>();
+                enemy = col.gameObject.GetComponentInParent<IDamaged>();
                 if (enemy == null)
                     continue;
             }
@@ -42,12 +42,11 @@ public class PlayerAttackAble : MonoBehaviour
 
     public void OnDamagedToEnemy()
     {
-        foreach(EnemyController enemy in enemys)
+        foreach(IDamaged enemy in enemys)
         {
             if (enemy == null)
                 continue;
 
-            // temp
             enemy.Damaged(playerStatus.AttackPower);
         }
 

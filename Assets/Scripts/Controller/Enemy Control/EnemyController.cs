@@ -4,8 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+interface IDamaged
+{
+    void Damaged(int _damage);
+    void Dead();
+}
+
 [RequireComponent(typeof(EnemyStatus))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamaged
 {
     // 손봐야 하는 부분 적의 이동이랑 공격 거리 설정 
 
@@ -22,16 +28,16 @@ public class EnemyController : MonoBehaviour
     string[] attackAnimName;
 
     [Header("Check Player")]
-    [SerializeField] Transform checkPivot;
+    [SerializeField] protected Transform checkPivot;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
     
-    Transform target;                               // player transform
-    NavMeshAgent nav;                               // AI
-    Rigidbody rigid;                                // Rigid
-    Animator anim;                                  // Animator
-    EnemyStatus enemyStatus;                        // Enemy Status
+    protected Transform target;                               // player transform
+    protected NavMeshAgent nav;                               // AI
+    protected Rigidbody rigid;                                // Rigid
+    protected Animator anim;                                  // Animator
+    protected EnemyStatus enemyStatus;                        // Enemy Status
 
     // for Color Change
     SkinnedMeshRenderer[] skinMeshs;
@@ -39,45 +45,13 @@ public class EnemyController : MonoBehaviour
     List<Color> originColor = new List<Color>();
 
 
-    bool activation = true;                         // 아직 쓰지는 않는다.
+    protected bool activation = true;                         
+    protected bool isWalk;
+    protected bool isAttack;
+    protected bool isDamaged = false;
 
-    bool isWalk;
-    bool isAttack;
-    bool isDamaged = false;
-
-
-    void Start()
-    {
-        Init();
-    }
-
-    void Update()
-    {
-        if (target == null)
-            return;
-
-        if (activation)
-        {
-            float distance = Vector3.Distance(target.position, transform.position);
-            if (distance <= nav.stoppingDistance)
-            {
-                StopMove();
-
-                if (!IsPlayerFront())
-                    RotateToPlayer();
-                else
-                {
-                    if (!isAttack)
-                        StartCoroutine(AttackCoroutine());
-                }
-            }
-            else if (distance > nav.stoppingDistance)
-            {
-                StartMove();
-            }
-        }
-    }
-    void Init()
+    
+    protected void Init()
     {
         target = FindObjectOfType<PlayerStatus>().transform;
         nav = GetComponent<NavMeshAgent>();
@@ -98,24 +72,35 @@ public class EnemyController : MonoBehaviour
         {
             attackAnimName[i] = animationClips[i].name;
         }
+
+        float stopDistance = checkPivot.position.z - transform.position.z;
+        nav.stoppingDistance = stopDistance * 1.5f;
     }
 
     // move
-    void StartMove()
+    protected void StartMove()
     {
-        isWalk = true;
         nav.SetDestination(target.position);
-        anim.SetBool("IsWalk", isWalk);
+
+        SetWalk(true);
     }
-    void StopMove()
+    protected void StopMove()
     {
-        isWalk = false;
+        rigid.velocity = Vector3.zero;
+
         nav.ResetPath();
+
+        SetWalk(false);
+    }
+
+    void SetWalk(bool _isWalk)
+    {
+        isWalk = _isWalk;
         anim.SetBool("IsWalk", isWalk);
     }
 
     // attack
-    IEnumerator AttackCoroutine()
+    protected IEnumerator AttackCoroutine()
     {
         isAttack = true;
 
@@ -131,52 +116,10 @@ public class EnemyController : MonoBehaviour
 
     // 수정해야 하는 부분 
     // 보스랑 일반 몹이랑 다른 부분이다 
-    public void Damaged(int damage)
-    {
-        activation = false;
 
-        StopAllCoroutines();
-        ResetToOriginColor();
-
-        StopMove();
-        anim.Rebind();
-
-        enemyStatus.OnDamaged(damage);
-
-        StartCoroutine(DamagedColorChange());
-
-        if (enemyStatus.Hp <= 0)
-        {
-            Dead();
-            return;
-        }
-
-        StartCoroutine(DamagedCoroutine());
-    }
-
-    public void OnDamagedEnd()
-    {
-        isDamaged = false;
-    }
-
-    IEnumerator DamagedCoroutine()
-    {
-        // 일반 몹만 해당함 
-        isAttack = false;
-
-        isDamaged = true;
-        anim.SetTrigger("OnDamaged");
-
-        StartCoroutine(DamagedKnockBack());
-
-        yield return new WaitUntil(() => isDamaged == false);
-        yield return new WaitForSeconds(0.7f);
-
-        activation = true;
-    }
 
     // 피격 색 변화  ( boss & normal )
-    IEnumerator DamagedColorChange()
+    protected IEnumerator DamagedColorChange()
     {
         Color damagedColor = Color.red;
 
@@ -189,23 +132,16 @@ public class EnemyController : MonoBehaviour
 
         ResetToOriginColor();
     }
-    void ResetToOriginColor()
+    protected void ResetToOriginColor()
     {
         for (int i = 0; i < matList.Count; i++)
             matList[i].color = originColor[i];
     }
 
 
-    // knock back ( only normal )
-    IEnumerator DamagedKnockBack()
-    {
-        rigid.AddForce(-transform.forward * 5f, ForceMode.Impulse);
-        yield return null;
-    }
-
 
     // 적 앞에 플레이어가 있는지 없는지 판단하는 함수 
-    bool IsPlayerFront()
+    protected bool IsPlayerFront()
     {
         bool isExist = false;
 
@@ -221,7 +157,7 @@ public class EnemyController : MonoBehaviour
         return isExist;
     }
     // player를 향해 회전 
-    void RotateToPlayer()
+    protected void RotateToPlayer()
     {
         Vector3 dir = target.position - transform.position;
 
@@ -236,33 +172,25 @@ public class EnemyController : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(checkPivot.position, checkRadius);
         Vector3 endPos = checkPivot.position;
-        endPos.y -= 6f;
+        endPos.y -= 10f;
         Gizmos.DrawLine(checkPivot.position, endPos);
     }
+   
 
-    void Dead()
-    {
-        anim.SetTrigger("OnDie");
-
-        // 충돌 방지 
-        BoxCollider col = GetComponent<BoxCollider>();
-        col.enabled = false;
-
-        // 죽고나서 움직임 발생 x
-        rigid.velocity = Vector3.zero;
-
-        StartCoroutine(DisappearCoroutine());
-
-    }
-
-    IEnumerator DisappearCoroutine()
+    protected IEnumerator DisappearCoroutine()
     {
         yield return new WaitForSeconds(2f);
 
-
-        // 사라 지는것을 확인 
+        // 미구현 
         //gameObject.SetActive(false);
-
     }
 
+    public virtual void Damaged(int _damage)
+    {
+        Debug.Log("Call Parent Damaged");
+    }
+    public virtual void Dead()
+    {
+        Debug.Log("Call Parent Dead");
+    }
 }
