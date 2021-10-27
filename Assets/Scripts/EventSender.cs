@@ -46,7 +46,6 @@ public class EventSender : MonoBehaviour
         Debug.Log(tagName);
         target.tag = tagName;
     }
-
     public void GetUpPlayer()
     {
         Movement player = target.GetComponent<Movement>();
@@ -56,12 +55,10 @@ public class EventSender : MonoBehaviour
         Debug.Log("call reset");
         player.AllReset();
     }
-
     public void OnStartCheckEnemyInAttack()
     {
         isCheck = true;
     }
-
     public void OnEndCheckEnemyInAttack()
     {
         isCheck = false;

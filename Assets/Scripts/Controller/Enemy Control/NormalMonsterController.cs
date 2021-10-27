@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NormalMonsterController : EnemyController
 {
-    
+    bool isGoToBack = false;
 
     void Start()
     {
@@ -13,42 +13,48 @@ public class NormalMonsterController : EnemyController
 
     void Update()
     {
-        if (target == null)
+        if (target == null || !isAlive)
             return;
 
-        if (!isAttack && isAlive)
+        float distance = Vector3.Distance(target.position, transform.position);
+        bool isFar = (distance > nav.stoppingDistance) ? true : false;
+
+        // 공격중이 아니고 가깝다면 플레이어를 향해 회전 
+        if (!isAttack && !isFar && !isDamaged)
             RotateToPlayer();
 
         if (activation)
         {
-            float distance = Vector3.Distance(target.position, transform.position);
-            // 거리에 따라 행동 나뉘어짐
-            if (distance <= nav.stoppingDistance)
+            if (!isFar)
             {
                 StopMove();
 
-                int random = new System.Random().Next(0, 100);
-                Debug.Log(random);
-                // 확률에 따라 공격 or 대기 
-                if (random < attackPercentage && !isAttack)
+                float percentage = Random.Range(0, 100);
+                if (percentage < attackPercentage && !isAttack)
                 {
-                    if (IsPlayerFront())
-                        StartCoroutine(AttackCoroutine());
+                    StartCoroutine(AttackCoroutine());
                 }
                 else
                 {
                     StartCoroutine(WaitSomeCoroutine());
                 }
             }
-            else
+            else if (isFar)
             {
                 StartMove();
             }
         }
-
+        
     }
 
-    
+    void FixedUpdate()
+    {
+        if (!isAlive || isDamaged)
+            return;
+
+        if(isWait)
+            transform.position = Vector3.MoveTowards(transform.position, waitDir, Time.deltaTime * 1.8f);
+    }
 
     new void Init()
     {
@@ -58,6 +64,7 @@ public class NormalMonsterController : EnemyController
     public override void Damaged(int _damage)
     {
         activation = false;
+        isWait = false;
 
         StopAllCoroutines();
         ResetToOriginColor();
@@ -68,7 +75,6 @@ public class NormalMonsterController : EnemyController
         enemyStatus.OnDamaged(_damage);
 
         StartCoroutine(DamagedColorChange());
-
         if (enemyStatus.Hp <= 0)
         {
             Dead();
@@ -85,12 +91,12 @@ public class NormalMonsterController : EnemyController
     public override void Dead()
     {
         isAlive = false;
+
         rigid.velocity = Vector3.zero;
         activation = false;
 
         anim.SetTrigger("OnDie");
 
-        // 충돌 방지 
         BoxCollider col = GetComponent<BoxCollider>();
         col.enabled = false;
 
@@ -102,15 +108,15 @@ public class NormalMonsterController : EnemyController
 
     IEnumerator DamagedCoroutine()
     {
-        isAttack = false;
         isDamaged = true;
+        isAttack = false;
 
         anim.SetTrigger("OnDamaged");
 
         StartCoroutine(DamagedKnockBack());
 
         yield return new WaitUntil(() => isDamaged == false);
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.7f);
 
         activation = true;
     }
@@ -121,5 +127,53 @@ public class NormalMonsterController : EnemyController
         yield return null;
     }
 
+    protected IEnumerator WaitSomeCoroutine()
+    {
+        Debug.Log("waiting....");
 
+        activation = false;
+        isGoToBack = true;
+        yield return new WaitForSeconds(1f);
+
+        float random = Random.Range(0, 7);
+        switch (random)
+        {
+            case 0:
+                waitDir = (-transform.forward) + transform.right;
+                break;
+            case 1:
+                waitDir = (-transform.right);
+                break;
+            case 2:
+                waitDir = (-transform.forward) + (-transform.right);
+                break;
+            case 3:
+                waitDir = transform.right;
+                break;
+            case 4:
+            case 5:
+            case 6:
+                waitDir = (-transform.forward);
+                break;
+        }
+        waitDir = transform.position + waitDir * 1.5f;
+        waitDir.y = 0;
+
+        isWait = true;
+
+        anim.SetTrigger("OnBackMove");
+
+        yield return new WaitUntil(() => isGoToBack == false);
+
+        waitDir = Vector3.zero;
+
+        isWait = false;
+        activation = true;
+    }
+
+    // 뒤로 이동이 끝나면 호출 
+    public void OnEndGoToBack()
+    {
+        isGoToBack = false;
+    }
 }

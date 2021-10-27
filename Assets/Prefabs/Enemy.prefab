@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.2770689, y: 0.4606423, z: 1.7362024}
-  m_Center: {x: -0.12944719, y: -0.09123051, z: 0.8431254}
+  m_Size: {x: 0.6879862, y: 0.58141756, z: 1.9186139}
+  m_Center: {x: -0.13725561, y: -0.08110681, z: 0.9343226}
 --- !u!114 &284818221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,14 +73,26 @@ MonoBehaviour:
   attackAble: {fileID: 0}
   OnSendEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1734603099}
+        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
+        m_MethodName: OnEndGoToBack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnSendEvent2:
     m_PersistentCalls:
       m_Calls: []
   OnSendEvent3:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1314390194677183955}
+      - m_Target: {fileID: 1734603099}
         m_TargetAssemblyTypeName: EnemyController, Assembly-CSharp
         m_MethodName: OnDamagedEnd
         m_Mode: 1
@@ -107,8 +119,8 @@ GameObject:
   - component: {fileID: 1314390194677183959}
   - component: {fileID: 1314390194677183952}
   - component: {fileID: 1314390194677183953}
-  - component: {fileID: 1314390194677183955}
   - component: {fileID: 1111475504035422213}
+  - component: {fileID: 1734603099}
   m_Layer: 9
   m_Name: Enemy
   m_TagString: Enemy
@@ -175,7 +187,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 500
-  m_StoppingDistance: 6
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -183,27 +195,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1314390194677183955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314390194677183956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08bd80bdc4f1ac942a5003b8a8755c02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationClips:
-  - {fileID: 7400000, guid: dd7688abaf03dbd48809a1be53c39d6b, type: 2}
-  - {fileID: 7400000, guid: 306c1c174c09d4e4cbd0ffb1e348f3a4, type: 2}
-  - {fileID: 7400000, guid: 0b5317cd74b199343852f710421154a3, type: 2}
-  checkPivot: {fileID: 1314390196481118246}
-  checkRadius: 2
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!114 &1111475504035422213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +211,29 @@ MonoBehaviour:
   maxHp: 50
   attackPower: 10
   defensePower: 5
+--- !u!114 &1734603099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314390194677183956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b26381917b090c548b624bc0d6b799ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 10
+  animationClips:
+  - {fileID: 7400000, guid: dd7688abaf03dbd48809a1be53c39d6b, type: 2}
+  - {fileID: 7400000, guid: 306c1c174c09d4e4cbd0ffb1e348f3a4, type: 2}
+  - {fileID: 7400000, guid: 0b5317cd74b199343852f710421154a3, type: 2}
+  checkPivot: {fileID: 1314390196481118246}
+  checkRadius: 2
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  attackPercentage: 30
 --- !u!1 &1314390196481118247
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +258,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314390196481118247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: 3}
+  m_LocalPosition: {x: 0, y: 6, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1314390194677183958}
@@ -821,6 +835,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6abe559371052fe4cbecfeead2a682bb, type: 2}
+    - target: {fileID: 95844511793012932, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
 --- !u!1 &1312882710274134082 stripped

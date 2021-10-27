@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +21,9 @@ public class EnemyController : MonoBehaviour, IDamaged
          -> 2. 포효하는 모션 추가 
          -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
      */
+
+    [SerializeField] float rotateSpeed;
+
 
     // to attack 
     [SerializeField] AnimationClip[] animationClips;
@@ -49,22 +51,26 @@ public class EnemyController : MonoBehaviour, IDamaged
 
 
     protected bool activation = true;
-    protected bool isAlive = true;
     protected bool isWalk;
     protected bool isAttack;
     protected bool isDamaged = false;
-
+    protected bool isWait = false;
+    protected bool isAlive = true;
     protected float stopDistance;
-    
+
+    protected Vector3 waitDir = Vector3.zero;
+
+
     protected void Init()
     {
-        target = FindObjectOfType<PlayerStatus>().transform;
-        nav = GetComponent<NavMeshAgent>();
-        rigid = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
+        target      = FindObjectOfType<PlayerStatus>().transform;
+
+        nav         = GetComponent<NavMeshAgent>();
+        rigid       = GetComponent<Rigidbody>();
         enemyStatus = GetComponent<EnemyStatus>();
 
-        skinMeshs = GetComponentsInChildren<SkinnedMeshRenderer>();
+        anim        = GetComponentInChildren<Animator>();
+        skinMeshs   = GetComponentsInChildren<SkinnedMeshRenderer>();
 
         foreach (SkinnedMeshRenderer mesh in skinMeshs)
         {
@@ -74,12 +80,10 @@ public class EnemyController : MonoBehaviour, IDamaged
 
         attackAnimName = new string[animationClips.Length];
         for (int i = 0; i < animationClips.Length; i++)
-        {
             attackAnimName[i] = animationClips[i].name;
-        }
+
 
         stopDistance = (checkPivot.position.z - transform.position.z) + checkRadius;
-        Debug.Log(stopDistance);
         nav.stoppingDistance = stopDistance;
     }
 
@@ -89,15 +93,12 @@ public class EnemyController : MonoBehaviour, IDamaged
         nav.SetDestination(target.position);
         SetWalk(true);
     }
-
     protected void StopMove()
     {
-        nav.ResetPath();
         rigid.velocity = Vector3.zero;
-
+        nav.ResetPath();
         SetWalk(false);
     }
-
     void SetWalk(bool _isWalk)
     {
         isWalk = _isWalk;
@@ -114,25 +115,13 @@ public class EnemyController : MonoBehaviour, IDamaged
         string animName = attackAnimName[randomNum];
         anim.Play(animName);
 
-        int waitTime = new System.Random().Next(2, 4);
-        Debug.Log($"waitTime : {waitTime}");
+        int waitTime = Random.Range(2, 4);
         yield return new WaitForSeconds(waitTime);
 
         isAttack = false;
         activation = true;
     }
-
-    protected IEnumerator WaitSomeCoroutine()
-    {
-        activation = false;
-        Debug.Log("Some Waiting");
-        yield return new WaitForSeconds(2f);
-        activation = true;
-    }
-
-    // 수정해야 하는 부분 
-    // 보스랑 일반 몹이랑 다른 부분이다 
-
+    
 
     // 피격 색 변화  ( boss & normal )
     protected IEnumerator DamagedColorChange()
@@ -153,7 +142,6 @@ public class EnemyController : MonoBehaviour, IDamaged
         for (int i = 0; i < matList.Count; i++)
             matList[i].color = originColor[i];
     }
-
 
 
     // 적 앞에 플레이어가 있는지 없는지 판단하는 함수 
@@ -177,28 +165,19 @@ public class EnemyController : MonoBehaviour, IDamaged
     {
         Vector3 dir = target.position - transform.position;
 
-        Vector3 turnDirection = Vector3.RotateTowards(transform.forward, dir, 40f * Time.deltaTime, 0f);
+        Vector3 turnDirection = Vector3.RotateTowards(transform.forward, dir, rotateSpeed * Time.deltaTime, 0f);
         Quaternion rotation = Quaternion.LookRotation(turnDirection);
         transform.rotation = rotation;
     }
 
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(checkPivot.position, checkRadius);
-        Vector3 endPos = checkPivot.position;
-        endPos.y -= 15f;
-        Gizmos.DrawLine(checkPivot.position, endPos);
-    }
    
 
     protected IEnumerator DisappearCoroutine()
     {
         yield return new WaitForSeconds(2f);
 
-        // 미구현 
-        //gameObject.SetActive(false);
+        // tmp 
+        gameObject.SetActive(false);
     }
 
     public virtual void Damaged(int _damage)
@@ -208,5 +187,13 @@ public class EnemyController : MonoBehaviour, IDamaged
     public virtual void Dead()
     {
         Debug.Log("Call Parent Dead");
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(checkPivot.position, checkRadius);
+        Vector3 endPos = checkPivot.position;
+        endPos.y -= 15f;
+        Gizmos.DrawLine(checkPivot.position, endPos);
     }
 }

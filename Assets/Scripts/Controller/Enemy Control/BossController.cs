@@ -14,26 +14,36 @@ public class BossController : EnemyController, IDamaged
         if (target == null)
             return;
 
-        if(!isAttack)
+        if (!isAttack)
             RotateToPlayer();
 
         if (activation)
         {
             float distance = Vector3.Distance(target.position, transform.position);
+            // 거리에 따라 행동 나뉘어짐
             if (distance <= nav.stoppingDistance)
             {
                 StopMove();
 
-                if (!isAttack && IsPlayerFront())
-                    StartCoroutine(AttackCoroutine());
+                int random = new System.Random().Next(0, 100);
+                Debug.Log(random);
+
+                // 확률에 따라 공격 or 대기 
+                if (random < attackPercentage && !isAttack)
+                {
+                    if (IsPlayerFront())
+                        StartCoroutine(AttackCoroutine());
+                }
+                else
+                {
+                }
             }
-            else if (distance > nav.stoppingDistance)
+            else
             {
                 StartMove();
             }
         }
     }
-
 
     new void Init()
     {

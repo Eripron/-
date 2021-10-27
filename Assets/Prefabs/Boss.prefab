@@ -69,7 +69,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 453238220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.67, z: 2.86}
+  m_LocalPosition: {x: 0, y: 4, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2957874221732933537}
@@ -3641,13 +3641,15 @@ GameObject:
   - component: {fileID: 244026658}
   - component: {fileID: 244026657}
   - component: {fileID: 244026655}
+  - component: {fileID: 426201799}
+  - component: {fileID: 426201800}
   m_Layer: 9
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2957874221732933537
 Transform:
   m_ObjectHideFlags: 0
@@ -3708,7 +3710,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2957874221732770753}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7717491947fe13041bf42dcc47b17719, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -3727,7 +3729,7 @@ NavMeshAgent:
   m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 500
+  m_AngularSpeed: 360
   m_StoppingDistance: 6
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -3736,6 +3738,46 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &426201799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957874221732770753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 613f7e443c723684aa7ae01e3da7c795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClips:
+  - {fileID: 7400000, guid: ea1a89e53c382554b9d5f44aeca50bc5, type: 2}
+  - {fileID: 7400000, guid: 2692da065f6b1dd4284aa9bc6faa547e, type: 2}
+  - {fileID: 7400000, guid: 03ae46c759dcf7848871fd9f261ebc8b, type: 2}
+  - {fileID: 7400000, guid: ecb75eb1f2acae140a3036b30665bc0a, type: 2}
+  - {fileID: 7400000, guid: feaab7a2236dc7941853ebe63b21a2ce, type: 2}
+  checkPivot: {fileID: 453238221}
+  checkRadius: 4
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  attackPercentage: 50
+--- !u!114 &426201800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957874221732770753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dfc33056388542479969a0da2f2a8a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: Boss
+  maxHp: 10000
+  attackPower: 20
+  defensePower: 10
 --- !u!1 &2957874221732770755
 GameObject:
   m_ObjectHideFlags: 0
@@ -4450,7 +4492,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2957874221732770789}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7717491947fe13041bf42dcc47b17719, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.0044757035
