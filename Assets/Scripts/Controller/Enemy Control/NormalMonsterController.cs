@@ -6,6 +6,8 @@ public class NormalMonsterController : EnemyController
 {
     bool isGoToBack = false;
 
+    Coroutine coWaitMoment;
+
     void Start()
     {
         Init();
@@ -16,8 +18,7 @@ public class NormalMonsterController : EnemyController
         if (target == null || !isAlive)
             return;
 
-        float distance = Vector3.Distance(target.position, transform.position);
-        bool isFar = (distance > nav.stoppingDistance) ? true : false;
+        CheckDistanceToPlayer();
 
         // 공격중이 아니고 가깝다면 플레이어를 향해 회전 
         if (!isAttack && !isFar && !isDamaged)
@@ -32,11 +33,15 @@ public class NormalMonsterController : EnemyController
                 float percentage = Random.Range(0, 100);
                 if (percentage < attackPercentage && !isAttack)
                 {
-                    StartCoroutine(AttackCoroutine());
+                    if(IsPlayerFront())
+                        StartCoroutine(AttackCoroutine());
                 }
                 else
                 {
-                    StartCoroutine(WaitSomeCoroutine());
+                    if (coWaitMoment != null)
+                        StopCoroutine(coWaitMoment);
+
+                    coWaitMoment = StartCoroutine(WaitSomeCoroutine());
                 }
             }
             else if (isFar)
@@ -63,57 +68,46 @@ public class NormalMonsterController : EnemyController
 
     public override void Damaged(int _damage)
     {
+        base.Damaged(_damage);
+
         activation = false;
         isWait = false;
-
-        StopAllCoroutines();
-        ResetToOriginColor();
 
         StopMove();
         anim.Rebind();
 
         enemyStatus.OnDamaged(_damage);
 
-        StartCoroutine(DamagedColorChange());
         if (enemyStatus.Hp <= 0)
         {
             Dead();
             return;
         }
 
-        StartCoroutine(DamagedCoroutine());
+        StartCoroutine(DamagedAnimCoroutine());
     }
-    public void OnDamagedEnd()
+    public void OnEndDamagedAnim()
     {
         isDamaged = false;
     }
-
     public override void Dead()
     {
-        isAlive = false;
+        base.Dead();
 
-        rigid.velocity = Vector3.zero;
-        activation = false;
-
-        anim.SetTrigger("OnDie");
+        if (coWaitMoment != null)
+            StopCoroutine(coWaitMoment);
 
         BoxCollider col = GetComponent<BoxCollider>();
         col.enabled = false;
-
-        // 죽고나서 움직임 발생 x
-
-        StartCoroutine(DisappearCoroutine());
-
     }
 
-    IEnumerator DamagedCoroutine()
+    // damaged coroutine
+    IEnumerator DamagedAnimCoroutine()
     {
         isDamaged = true;
         isAttack = false;
 
         anim.SetTrigger("OnDamaged");
-
-        StartCoroutine(DamagedKnockBack());
 
         yield return new WaitUntil(() => isDamaged == false);
         yield return new WaitForSeconds(0.7f);
@@ -121,16 +115,9 @@ public class NormalMonsterController : EnemyController
         activation = true;
     }
 
-    IEnumerator DamagedKnockBack()
-    {
-        rigid.AddForce(-transform.forward * 10f, ForceMode.Impulse);
-        yield return null;
-    }
-
+    // wait coroutine
     protected IEnumerator WaitSomeCoroutine()
     {
-        Debug.Log("waiting....");
-
         activation = false;
         isGoToBack = true;
         yield return new WaitForSeconds(1f);
@@ -164,7 +151,6 @@ public class NormalMonsterController : EnemyController
         anim.SetTrigger("OnBackMove");
 
         yield return new WaitUntil(() => isGoToBack == false);
-
         waitDir = Vector3.zero;
 
         isWait = false;

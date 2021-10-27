@@ -11,7 +11,6 @@ enum LAYER
 [RequireComponent(typeof(PlayerStatus))]
 public class Movement : MonoBehaviour
 {
-    [SerializeField] NormalMonsterController enemy;
 
     // tmp  ------------------------------------------------
     //------------------------------------------------------
@@ -82,11 +81,6 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.N))
-        {
-            enemy.Damaged(10);
-        }
-
         if (!isAlive && status.isEnoughfLife() && Input.GetKeyDown(KeyCode.R))
         {
             isAlive = true;

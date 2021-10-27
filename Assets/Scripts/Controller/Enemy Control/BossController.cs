@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BossController : EnemyController, IDamaged
 {
+
     void Start()
     {
         Init();
@@ -11,42 +12,57 @@ public class BossController : EnemyController, IDamaged
 
     void Update()
     {
-        if (target == null)
+        if (target == null || !isAlive)
             return;
 
-        if (!isAttack)
+        CheckDistanceToPlayer();
+
+        if (!isAttack && !isFar)
             RotateToPlayer();
 
         if (activation)
         {
-            float distance = Vector3.Distance(target.position, transform.position);
-            // 거리에 따라 행동 나뉘어짐
-            if (distance <= nav.stoppingDistance)
+            if (!isFar)
             {
                 StopMove();
 
-                int random = new System.Random().Next(0, 100);
-                Debug.Log(random);
-
-                // 확률에 따라 공격 or 대기 
-                if (random < attackPercentage && !isAttack)
+                float percentage = Random.Range(0, 100);
+                if (percentage < attackPercentage && !isAttack)
                 {
-                    if (IsPlayerFront())
-                        StartCoroutine(AttackCoroutine());
+                    StartCoroutine(AttackCoroutine());
                 }
                 else
                 {
+                    StartCoroutine(IntimidateCoroutine());
                 }
             }
-            else
+            else if (isFar)
             {
                 StartMove();
             }
         }
     }
 
+    
+
     new void Init()
     {
         base.Init();
+    }
+
+    public override void Damaged(int _damage)
+    {
+        base.Damaged(_damage);
+    }
+
+    public override void Dead()
+    {
+        base.Dead();
+        Debug.Log("dead");
+    }
+
+    IEnumerator IntimidateCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
     }
 }

@@ -16,14 +16,11 @@ public class EnemyController : MonoBehaviour, IDamaged
 
     /*
      보스 vs 일반 몹 차이 
-    
-    Boss -> 1. 일정 데미지 이상 => knock down
-         -> 2. 포효하는 모션 추가 
-         -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
+
+     Boss -> 1. 일정 데미지 이상 => knock down
+          -> 2. 포효하는 모션 추가 
+          -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
      */
-
-    [SerializeField] float rotateSpeed;
-
 
     // to attack 
     [SerializeField] AnimationClip[] animationClips;
@@ -37,6 +34,9 @@ public class EnemyController : MonoBehaviour, IDamaged
     [Header("Attack")]
     [SerializeField]
     [Range(0, 100)] protected int attackPercentage;
+
+    [Header("Move")]
+    [SerializeField] float rotateSpeed;
 
     protected Transform target;                               // player transform
     protected NavMeshAgent nav;                               // AI
@@ -53,13 +53,15 @@ public class EnemyController : MonoBehaviour, IDamaged
     protected bool activation = true;
     protected bool isWalk;
     protected bool isAttack;
-    protected bool isDamaged = false;
     protected bool isWait = false;
     protected bool isAlive = true;
+    protected bool isFar;
+
     protected float stopDistance;
+    protected bool isDamaged = false;
+
 
     protected Vector3 waitDir = Vector3.zero;
-
 
     protected void Init()
     {
@@ -72,6 +74,8 @@ public class EnemyController : MonoBehaviour, IDamaged
         anim        = GetComponentInChildren<Animator>();
         skinMeshs   = GetComponentsInChildren<SkinnedMeshRenderer>();
 
+        damagedColorWait = new WaitForSeconds(0.05f);
+
         foreach (SkinnedMeshRenderer mesh in skinMeshs)
         {
             matList.Add(mesh.material);
@@ -82,9 +86,9 @@ public class EnemyController : MonoBehaviour, IDamaged
         for (int i = 0; i < animationClips.Length; i++)
             attackAnimName[i] = animationClips[i].name;
 
-
-        stopDistance = (checkPivot.position.z - transform.position.z) + checkRadius;
+        stopDistance = (checkPivot.localPosition.z - transform.position.z) + checkRadius;
         nav.stoppingDistance = stopDistance;
+        Debug.Log($"stop distance : {stopDistance}");
     }
 
     // move
@@ -104,6 +108,11 @@ public class EnemyController : MonoBehaviour, IDamaged
         isWalk = _isWalk;
         anim.SetBool("IsWalk", isWalk);
     }
+    protected void CheckDistanceToPlayer()
+    {
+        float distance = Vector3.Distance(target.position, transform.position);
+        isFar = (distance > nav.stoppingDistance) ? true : false;
+    }
 
     // attack
     protected IEnumerator AttackCoroutine()
@@ -121,28 +130,6 @@ public class EnemyController : MonoBehaviour, IDamaged
         isAttack = false;
         activation = true;
     }
-    
-
-    // 피격 색 변화  ( boss & normal )
-    protected IEnumerator DamagedColorChange()
-    {
-        Color damagedColor = Color.red;
-
-        foreach (Material mat in matList)
-        {
-            damagedColor.a = 0.1f;
-            mat.color = damagedColor;
-        }
-        yield return new WaitForSeconds(0.05f);
-
-        ResetToOriginColor();
-    }
-    protected void ResetToOriginColor()
-    {
-        for (int i = 0; i < matList.Count; i++)
-            matList[i].color = originColor[i];
-    }
-
 
     // 적 앞에 플레이어가 있는지 없는지 판단하는 함수 
     protected bool IsPlayerFront()
@@ -158,6 +145,8 @@ public class EnemyController : MonoBehaviour, IDamaged
                 isExist = true;
         }
 
+        Debug.Log($"존재 ? {isExist}");
+
         return isExist;
     }
     // player를 향해 회전 
@@ -170,24 +159,62 @@ public class EnemyController : MonoBehaviour, IDamaged
         transform.rotation = rotation;
     }
 
-   
-
     protected IEnumerator DisappearCoroutine()
     {
         yield return new WaitForSeconds(2f);
-
         // tmp 
         gameObject.SetActive(false);
     }
 
+
+
+    // 묶을수 있는 거는 한번에 묶어서 신경 안쓰도록 하는게 좋다.
+    Coroutine coDamagedColor;
+    WaitForSeconds damagedColorWait;
+        
+    IEnumerator DamagedColor()
+    {
+        Color damagedColor = Color.red;
+        foreach (Material mat in matList)
+        {
+            damagedColor.a = 0.1f;
+            mat.color = damagedColor;
+        }
+        yield return damagedColorWait;
+
+        ResetToOriginColor();
+    }
+    private void ResetToOriginColor()
+    {
+        for (int i = 0; i < matList.Count; i++)
+            matList[i].color = originColor[i];
+    }
     public virtual void Damaged(int _damage)
     {
         Debug.Log("Call Parent Damaged");
-    }
+
+        // 피격 색 변화  ( boss & normal )
+        // change color when damaged.
+        if (coDamagedColor != null)
+            StopCoroutine(coDamagedColor);
+
+        coDamagedColor = StartCoroutine(DamagedColor());
+    }   
+
     public virtual void Dead()
     {
         Debug.Log("Call Parent Dead");
+        isAlive = false;
+
+        anim.Rebind();
+        anim.SetTrigger("OnDie");
+
+        rigid.velocity = Vector3.zero;
+
+        ResetToOriginColor();
+        StartCoroutine(DisappearCoroutine());
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;

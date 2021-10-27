@@ -93,8 +93,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1734603099}
-        m_TargetAssemblyTypeName: EnemyController, Assembly-CSharp
-        m_MethodName: OnDamagedEnd
+        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
+        m_MethodName: OnEndDamagedAnim
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -223,7 +223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b26381917b090c548b624bc0d6b799ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 10
   animationClips:
   - {fileID: 7400000, guid: dd7688abaf03dbd48809a1be53c39d6b, type: 2}
   - {fileID: 7400000, guid: 306c1c174c09d4e4cbd0ffb1e348f3a4, type: 2}
@@ -233,7 +232,8 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 30
+  attackPercentage: 0
+  rotateSpeed: 10
 --- !u!1 &1314390196481118247
 GameObject:
   m_ObjectHideFlags: 0
