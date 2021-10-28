@@ -7,11 +7,17 @@ public class BossController : EnemyController, IDamaged
 
     bool isIntimidate = false;
     bool isKnockDown = false;
+
+    int moveCount = 0;
+    float originSpeed;
+
     float accumulatedDamage = 0f;
 
     void Start()
     {
         Init();
+
+        originSpeed = nav.speed;
     }
 
     void Update()
@@ -20,6 +26,7 @@ public class BossController : EnemyController, IDamaged
             return;
 
         CheckDistanceToPlayer();
+        SetSpeed();
 
         if (!isAttack && !isFar && !isIntimidate && !isKnockDown)
             RotateToPlayer();
@@ -28,34 +35,58 @@ public class BossController : EnemyController, IDamaged
         {
             if (!isFar)
             {
-                StopMove();
+                nav.speed = originSpeed;
 
                 if (!IsPlayerFront())
                 {
                     RotateToPlayer(true);
                 }
-
-                float percentage = Random.Range(0, 100);
-                if (percentage < attackPercentage && !isAttack)
-                {
-                    StartCoroutine(AttackCoroutine());
-                }
                 else
                 {
-                    StartCoroutine(IntimidateAnimCoroutine());
+                    float percentage = Random.Range(0, 100);
+                    if (percentage < attackPercentage && !isAttack)
+                    {
+                        StartCoroutine(AttackCoroutine());
+                    }
+                    else
+                    {
+                        StartCoroutine(IntimidateAnimCoroutine());
+                    }
                 }
             }
             else if (isFar)
             {
-                StartMove();
+                if(moveCount >= 3000)
+                {
+                    moveCount = 0;
+                    StartCoroutine(IntimidateAnimCoroutine());
+                }
+                else
+                {
+                    StartMove();
+                    moveCount++;
+                }
             }
         }
     }
     
-
     new void Init()
     {
         base.Init();
+    }
+
+    void SetSpeed()
+    {
+        if(moveCount >= 1000)
+        {
+            nav.speed = originSpeed * 1.5f;
+        }
+        else if(moveCount >= 2000)
+        {
+            nav.speed = originSpeed * 2f;
+        }
+        else
+            nav.speed = originSpeed;
     }
 
     public override void Damaged(int _damage)
@@ -101,6 +132,8 @@ public class BossController : EnemyController, IDamaged
     // À§Çù °ü·Ã
     IEnumerator IntimidateAnimCoroutine()
     {
+        StopMove();
+
         activation = false;
         isIntimidate = true;
 

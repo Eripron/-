@@ -121,6 +121,8 @@ public class EnemyController : MonoBehaviour, IDamaged
     // attack
     protected IEnumerator AttackCoroutine()
     {
+        StopMove();
+
         isAttack = true;
         activation = false;
 
@@ -143,14 +145,19 @@ public class EnemyController : MonoBehaviour, IDamaged
         RaycastHit hit;
         if (Physics.SphereCast(checkPivot.position, checkRadius, Vector3.down, out hit, float.MaxValue, playerMask))
         {
-            CharacterController player = hit.transform.GetComponent<CharacterController>();
-
-            if(Physics.Raycast(new Ray(checkPivot2.position, transform.forward), float.MaxValue, playerMask))
+            Movement player = hit.transform.GetComponent<Movement>();
+            RaycastHit hit2;
+            if(Physics.Raycast(checkPivot2.position, transform.forward, out hit2, float.MaxValue))
             {
-                if (player != null)
+                Movement player2 = hit2.transform.GetComponent<Movement>();
+                if (player != null && player2 != null)
                     isExist = true;
+                else
+                    return false;
             }
         }
+
+        Debug.Log($"존재여부 : {isExist}");
 
         return isExist;
     }
