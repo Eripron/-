@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: player1
-  maxHp: 40
+  maxHp: 10000
   attackPower: 10
   defensePower: 10
   player: {fileID: 5875463019204317122}

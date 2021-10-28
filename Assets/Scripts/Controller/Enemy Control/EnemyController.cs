@@ -22,13 +22,16 @@ public class EnemyController : MonoBehaviour, IDamaged
           -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
      */
 
+    Collider[] colliders;
+
     // to attack 
     [SerializeField] AnimationClip[] animationClips;
     string[] attackAnimName;
 
     [Header("Check Player")]
     [SerializeField] protected Transform checkPivot;
-    [SerializeField] float checkRadius;
+    [SerializeField] Transform checkPivot2;
+    [SerializeField] [Range(0f, 10f)] float checkRadius;
     [SerializeField] LayerMask playerMask;
 
     [Header("Attack")]
@@ -73,6 +76,7 @@ public class EnemyController : MonoBehaviour, IDamaged
 
         anim        = GetComponentInChildren<Animator>();
         skinMeshs   = GetComponentsInChildren<SkinnedMeshRenderer>();
+        colliders   = GetComponentsInChildren<Collider>();
 
         damagedColorWait = new WaitForSeconds(0.05f);
 
@@ -86,9 +90,9 @@ public class EnemyController : MonoBehaviour, IDamaged
         for (int i = 0; i < animationClips.Length; i++)
             attackAnimName[i] = animationClips[i].name;
 
-        stopDistance = (checkPivot.localPosition.z - transform.position.z) + checkRadius;
+
+        stopDistance = (checkPivot.localPosition.z) + checkRadius;
         nav.stoppingDistance = stopDistance;
-        Debug.Log($"stop distance : {stopDistance}");
     }
 
     // move
@@ -141,33 +145,30 @@ public class EnemyController : MonoBehaviour, IDamaged
         {
             CharacterController player = hit.transform.GetComponent<CharacterController>();
 
-            if (player != null)
-                isExist = true;
+            if(Physics.Raycast(new Ray(checkPivot2.position, transform.forward), float.MaxValue, playerMask))
+            {
+                if (player != null)
+                    isExist = true;
+            }
         }
-
-        Debug.Log($"존재 ? {isExist}");
 
         return isExist;
     }
     // player를 향해 회전 
-    protected void RotateToPlayer()
+    protected void RotateToPlayer(bool fastAngle = false)
     {
         Vector3 dir = target.position - transform.position;
+        Vector3 turnDirection;
+        if (fastAngle)
+            turnDirection = Vector3.RotateTowards(transform.forward, dir, 270f * Time.deltaTime, 0f);
+        else
+            turnDirection = Vector3.RotateTowards(transform.forward, dir, rotateSpeed * Time.deltaTime, 0f);
 
-        Vector3 turnDirection = Vector3.RotateTowards(transform.forward, dir, rotateSpeed * Time.deltaTime, 0f);
         Quaternion rotation = Quaternion.LookRotation(turnDirection);
         transform.rotation = rotation;
     }
 
-    protected IEnumerator DisappearCoroutine()
-    {
-        yield return new WaitForSeconds(2f);
-        // tmp 
-        gameObject.SetActive(false);
-    }
-
-
-
+    // **************************
     // 묶을수 있는 거는 한번에 묶어서 신경 안쓰도록 하는게 좋다.
     Coroutine coDamagedColor;
     WaitForSeconds damagedColorWait;
@@ -191,7 +192,6 @@ public class EnemyController : MonoBehaviour, IDamaged
     }
     public virtual void Damaged(int _damage)
     {
-        Debug.Log("Call Parent Damaged");
 
         // 피격 색 변화  ( boss & normal )
         // change color when damaged.
@@ -199,12 +199,16 @@ public class EnemyController : MonoBehaviour, IDamaged
             StopCoroutine(coDamagedColor);
 
         coDamagedColor = StartCoroutine(DamagedColor());
-    }   
+
+        enemyStatus.OnDamaged(_damage);
+    }
 
     public virtual void Dead()
     {
-        Debug.Log("Call Parent Dead");
         isAlive = false;
+
+        foreach (var col in colliders)
+            col.enabled = false;
 
         anim.Rebind();
         anim.SetTrigger("OnDie");
@@ -212,7 +216,6 @@ public class EnemyController : MonoBehaviour, IDamaged
         rigid.velocity = Vector3.zero;
 
         ResetToOriginColor();
-        StartCoroutine(DisappearCoroutine());
     }
 
     private void OnDrawGizmosSelected()
@@ -222,5 +225,7 @@ public class EnemyController : MonoBehaviour, IDamaged
         Vector3 endPos = checkPivot.position;
         endPos.y -= 15f;
         Gizmos.DrawLine(checkPivot.position, endPos);
+
+        Gizmos.DrawLine(checkPivot2.position, transform.forward * 20f);
     }
 }

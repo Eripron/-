@@ -70,13 +70,12 @@ public class NormalMonsterController : EnemyController
     {
         base.Damaged(_damage);
 
+        // normal only
         activation = false;
         isWait = false;
 
         StopMove();
         anim.Rebind();
-
-        enemyStatus.OnDamaged(_damage);
 
         if (enemyStatus.Hp <= 0)
         {
@@ -97,8 +96,13 @@ public class NormalMonsterController : EnemyController
         if (coWaitMoment != null)
             StopCoroutine(coWaitMoment);
 
-        BoxCollider col = GetComponent<BoxCollider>();
-        col.enabled = false;
+        StartCoroutine(DisappearCoroutine());
+    }
+
+    IEnumerator DisappearCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 
     // damaged coroutine
