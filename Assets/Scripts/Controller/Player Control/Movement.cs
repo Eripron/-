@@ -4,6 +4,7 @@ using UnityEngine;
 
 enum LAYER
 {
+    LAYER_GROUND = 6,
     LAYER_PLAYER = 7,
     LAYER_DEAD = 8,
 }

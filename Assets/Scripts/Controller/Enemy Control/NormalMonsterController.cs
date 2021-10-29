@@ -5,6 +5,7 @@ using UnityEngine;
 public class NormalMonsterController : EnemyController
 {
     bool isGoToBack = false;
+    int layer;
 
     Coroutine coWaitMoment;
 

@@ -22,6 +22,8 @@ public class EnemyController : MonoBehaviour, IDamaged
           -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
      */
 
+    [SerializeField] bool isBoss;
+
     Collider[] colliders;
 
     // to attack 
@@ -32,6 +34,7 @@ public class EnemyController : MonoBehaviour, IDamaged
     [SerializeField] protected Transform checkPivot;
     [SerializeField] Transform checkPivot2;
     [SerializeField] [Range(0f, 10f)] float checkRadius;
+    [SerializeField] [Range(0f, 10f)] float checkRadius2;
     [SerializeField] LayerMask playerMask;
 
     [Header("Attack")]
@@ -130,12 +133,18 @@ public class EnemyController : MonoBehaviour, IDamaged
         string animName = attackAnimName[randomNum];
         anim.Play(animName);
 
-        int waitTime = Random.Range(2, 4);
+        int waitTime;
+        if(isBoss)
+            waitTime = Random.Range(4, 6);
+        else
+            waitTime = Random.Range(2, 4);
+
         yield return new WaitForSeconds(waitTime);
 
         isAttack = false;
         activation = true;
     }
+
 
     // 적 앞에 플레이어가 있는지 없는지 판단하는 함수 
     protected bool IsPlayerFront()
@@ -143,21 +152,20 @@ public class EnemyController : MonoBehaviour, IDamaged
         bool isExist = false;
 
         RaycastHit hit;
+        RaycastHit hit2;
+
         if (Physics.SphereCast(checkPivot.position, checkRadius, Vector3.down, out hit, float.MaxValue, playerMask))
         {
-            Movement player = hit.transform.GetComponent<Movement>();
-            RaycastHit hit2;
-            if(Physics.Raycast(checkPivot2.position, transform.forward, out hit2, float.MaxValue))
+            PlayerStatus p1 = hit.transform.GetComponent<PlayerStatus>();
+
+            if (Physics.SphereCast(checkPivot2.position, checkRadius2, checkPivot2.forward, out hit2, float.MaxValue))
             {
-                Movement player2 = hit2.transform.GetComponent<Movement>();
-                if (player != null && player2 != null)
+                PlayerStatus p2 = hit2.transform.GetComponent<PlayerStatus>();
+
+                if (p1 != null && p2 != null)
                     isExist = true;
-                else
-                    return false;
             }
         }
-
-        Debug.Log($"존재여부 : {isExist}");
 
         return isExist;
     }
@@ -167,7 +175,7 @@ public class EnemyController : MonoBehaviour, IDamaged
         Vector3 dir = target.position - transform.position;
         Vector3 turnDirection;
         if (fastAngle)
-            turnDirection = Vector3.RotateTowards(transform.forward, dir, 270f * Time.deltaTime, 0f);
+            turnDirection = Vector3.RotateTowards(transform.forward, dir, 1000f * Time.deltaTime, 0f);
         else
             turnDirection = Vector3.RotateTowards(transform.forward, dir, rotateSpeed * Time.deltaTime, 0f);
 
@@ -233,6 +241,8 @@ public class EnemyController : MonoBehaviour, IDamaged
         endPos.y -= 15f;
         Gizmos.DrawLine(checkPivot.position, endPos);
 
-        Gizmos.DrawLine(checkPivot2.position, transform.forward * 20f);
+        Gizmos.DrawWireSphere(checkPivot2.position, checkRadius2);
     }
+
+   
 }

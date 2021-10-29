@@ -7,11 +7,15 @@ public class BossController : EnemyController, IDamaged
 
     bool isIntimidate = false;
     bool isKnockDown = false;
+    bool isCheck = false;
+
 
     int moveCount = 0;
     float originSpeed;
 
     float accumulatedDamage = 0f;
+
+    Coroutine CoAttack;
 
     void Start()
     {
@@ -28,6 +32,8 @@ public class BossController : EnemyController, IDamaged
         CheckDistanceToPlayer();
         SetSpeed();
 
+        Debug.Log(activation);
+
         if (!isAttack && !isFar && !isIntimidate && !isKnockDown)
             RotateToPlayer();
 
@@ -35,30 +41,26 @@ public class BossController : EnemyController, IDamaged
         {
             if (!isFar)
             {
+                moveCount = 0;
                 nav.speed = originSpeed;
 
-                if (!IsPlayerFront())
+                RotateToPlayer(true);
+
+                float percentage = Random.Range(0, 100);
+                if (percentage < attackPercentage && !isAttack)
                 {
-                    RotateToPlayer(true);
+                    CoAttack = StartCoroutine(AttackCoroutine());
                 }
                 else
                 {
-                    float percentage = Random.Range(0, 100);
-                    if (percentage < attackPercentage && !isAttack)
-                    {
-                        StartCoroutine(AttackCoroutine());
-                    }
-                    else
-                    {
-                        StartCoroutine(IntimidateAnimCoroutine());
-                    }
+                    StartCoroutine(IntimidateAnimCoroutine());
                 }
             }
             else if (isFar)
             {
-                if(moveCount >= 3000)
+                if (moveCount == 5000 && !isCheck)
                 {
-                    moveCount = 0;
+                    isCheck = true;
                     StartCoroutine(IntimidateAnimCoroutine());
                 }
                 else
@@ -77,16 +79,18 @@ public class BossController : EnemyController, IDamaged
 
     void SetSpeed()
     {
-        if(moveCount >= 1000)
+        if(moveCount >= 5000)
         {
-            nav.speed = originSpeed * 1.5f;
+            nav.speed = originSpeed * 4f;
         }
-        else if(moveCount >= 2000)
+        else if(moveCount >= 2500)
+        {
+            nav.speed = originSpeed * 3f;
+        }
+        else if(moveCount >= 1500)
         {
             nav.speed = originSpeed * 2f;
         }
-        else
-            nav.speed = originSpeed;
     }
 
     public override void Damaged(int _damage)
@@ -97,9 +101,15 @@ public class BossController : EnemyController, IDamaged
         // 데미지 받은양이 일정 이상이라면 다운 모션 
         if(accumulatedDamage >= enemyStatus.MaxHp / 2 && enemyStatus.Hp > 0)
         {
-            Debug.Log("down");
+            if (CoAttack != null)
+            {
+                StopCoroutine(CoAttack);
+                isAttack = false;
+            }
+
             StartCoroutine(KnockDownCoroutine());
             accumulatedDamage = 0f;
+            return;
         }
 
         if (enemyStatus.Hp <= 0)
@@ -112,23 +122,24 @@ public class BossController : EnemyController, IDamaged
     public override void Dead()
     {
         base.Dead();
-        
     }
+    // 넉다운
     IEnumerator KnockDownCoroutine()
     {
         activation = false;
         isKnockDown = true;
+
         anim.SetTrigger("OnKnockDown");
         yield return new WaitUntil(() => isKnockDown == false);
 
-        yield return new WaitForSeconds(2f);
         activation = true;
     }
     public void OnEndKnockDown()
     {
+        Debug.Log("call");
         isKnockDown = false;
-        activation = true;
     }
+
     // 위협 관련
     IEnumerator IntimidateAnimCoroutine()
     {
@@ -146,4 +157,5 @@ public class BossController : EnemyController, IDamaged
     {
         isIntimidate = false;
     }
+
 }
