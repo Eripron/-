@@ -72,12 +72,6 @@ public class Movement : MonoBehaviour
         status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        /*
-        foreach (SkinnedMeshRenderer c in meshs)
-        {
-            c.material.color = Color.red;
-        }
-        */
     }
 
     void Update()
@@ -377,6 +371,7 @@ public class Movement : MonoBehaviour
     {
         StartCoroutine(ResetCoroutine());
     }
+
 
     private void OnDrawGizmosSelected()
     {

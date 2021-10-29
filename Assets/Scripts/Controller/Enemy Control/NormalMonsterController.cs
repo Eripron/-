@@ -156,9 +156,10 @@ public class NormalMonsterController : EnemyController
         anim.SetTrigger("OnBackMove");
 
         yield return new WaitUntil(() => isGoToBack == false);
-        waitDir = Vector3.zero;
-
         isWait = false;
+
+        waitDir = Vector3.zero;
+        yield return new WaitForSeconds(3f);
         activation = true;
     }
 

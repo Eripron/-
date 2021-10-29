@@ -106,9 +106,9 @@ public class EnemyController : MonoBehaviour, IDamaged
     }
     protected void StopMove()
     {
+        SetWalk(false);
         rigid.velocity = Vector3.zero;
         nav.ResetPath();
-        SetWalk(false);
     }
     void SetWalk(bool _isWalk)
     {

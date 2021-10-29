@@ -26,6 +26,7 @@ public class EnemyAttackAble : MonoBehaviour
         {
             player.OnBlockAttack();
         }
+
     }
 
 }
