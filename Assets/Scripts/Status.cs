@@ -14,15 +14,35 @@ public class Status : MonoBehaviour
 
     [SerializeField] string characterName;
 
-    [SerializeField] int maxHp;
-
     [SerializeField] int attackPower;
     [SerializeField] int defensePower;
 
+    [SerializeField] int maxHp;
+
     int hp;
 
+    // player ÀÎ°¡?
+    bool isPlayer = false;
+
+    public string Name => characterName;
     public int MaxHp => maxHp;
-    public int Hp { get { return hp; } }
+    public virtual int Hp
+    {
+        get 
+        { 
+            return hp; 
+        }
+        private set
+        {
+            hp = Mathf.Clamp(value, 0, maxHp);
+
+            if(isPlayer)
+            {
+                Debug.Log("call hp set");
+                StatusUiManager.Instance.SetHpUI(hp, MaxHp);
+            }
+        }
+    }
     public int AttackPower => attackPower;
     public int DefecsePower => defensePower;
 
@@ -30,7 +50,13 @@ public class Status : MonoBehaviour
 
     protected void InitStatus()
     {
-        hp = maxHp;
+        Movement player = GetComponent<Movement>();
+        if (player != null)
+        {
+            isPlayer = true;
+        }
+
+        Hp = maxHp;
     }
 
     void SetName(string name)
@@ -40,13 +66,13 @@ public class Status : MonoBehaviour
 
     public void AddHp(int _hp)
     {
-        hp = Mathf.Clamp(hp += _hp, 0, maxHp);
+        Hp += _hp;
     }
 
     public void OnDamaged(int damage)
     {
-        hp = Mathf.Clamp((hp -= damage), 0, maxHp);
+        Hp -= damage;
     }
-    
+
 
 }

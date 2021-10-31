@@ -208,9 +208,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Enemy1
-  maxHp: 50
-  attackPower: 10
+  attackPower: 100
   defensePower: 5
+  maxHp: 50
 --- !u!114 &1734603099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 40
+  attackPercentage: 0
   rotateSpeed: 10
 --- !u!1 &1314390196481118247
 GameObject:

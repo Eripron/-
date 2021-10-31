@@ -4,23 +4,44 @@ using UnityEngine;
 
 public class PlayerStatus : Status
 {
-    [SerializeField] Movement player;
+    // 사용하나 ?
+    Movement player;
 
-    [SerializeField] int maxMp;
+    [SerializeField] int maxSP;
     [SerializeField] int maxStamina;
 
     [SerializeField] int aliveCount;        // 살아날수 있는 횟수 
 
+    StatusUiManager statusUIManager;
 
-    int mp;
+    int sp;
     int stamina;
 
     bool isCheckStamina;
     bool isCharging;
 
 
-    public int Mp{ get { return mp; } }
-    public int Stamina { get { return stamina; } }
+    public int SP
+    { 
+        get { return sp; }
+        private set
+        {
+            sp = Mathf.Clamp(value, 0, maxSP);
+            statusUIManager.SetSpUI(sp, maxSP);
+        }
+    }
+    public int Stamina 
+    { get 
+        { 
+            return stamina; 
+        }
+        private set 
+        {
+            stamina = Mathf.Clamp(value, 0, maxStamina);
+
+            statusUIManager.SetStaminaUI(stamina, maxStamina);
+        }
+    }
     public int AliveCount { get { return aliveCount; } }
 
 
@@ -46,24 +67,28 @@ public class PlayerStatus : Status
     {
         base.InitStatus();
 
-        mp = maxMp;
-        stamina = maxStamina;
+        statusUIManager = StatusUiManager.Instance;
+
+        SP = 0;
+        Stamina = maxStamina;
     }
 
     // stamina 사용과 회복 
     public void UseStamina(int usage)
     {
-        stamina = Mathf.Clamp(stamina - usage, 0, maxStamina);
+        Stamina -= usage;
         isCharging = false;
     }
     public bool IsEnoughfStamina(int usage)
     {
         return (stamina - usage) >= 0;
     }
+
+    WaitForSeconds staminaWaitTime = new WaitForSeconds(0.02f);
     IEnumerator RecoverStaminaCoroutine()
     {
         int beforeStamina = stamina;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.7f);
         int afterStamina = stamina;
 
         if (beforeStamina == afterStamina)
@@ -74,8 +99,8 @@ public class PlayerStatus : Status
                 if (!isCharging)
                     break;
 
-                stamina = Mathf.Clamp(stamina += 1, 0, maxStamina);
-                yield return new WaitForSeconds(0.02f);
+                Stamina += 1;
+                yield return staminaWaitTime;
             }
         }
 
@@ -94,20 +119,22 @@ public class PlayerStatus : Status
 
 
     // 마나 사용 (스킬사용시 마나 소비)
-    bool IsEnoughfMp(int usage)
+    bool IsEnoughfSp(int usage)
     {
-        return (mp - usage) >= 0;
+        return (sp - usage) >= 0;
     }
-    void AddMp(int _mp)
+    public void AddSp(int _sp)
     {
-        mp += _mp;
-        if (mp > maxMp)
-            mp = maxMp;
+        SP += _sp;
+        if (sp > maxSP)
+            SP = maxSP;
     }
-    void UseMp(int usage)
+    void UseSp(int usage)
     {
-        mp -= usage;
-        if (mp < 0)
-            mp = 0;
+        SP -= usage;
+        if (sp < 0)
+            SP = 0;
     }
+
+
 }

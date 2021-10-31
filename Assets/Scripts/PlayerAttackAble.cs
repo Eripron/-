@@ -48,6 +48,7 @@ public class PlayerAttackAble : MonoBehaviour
                 continue;
 
             enemy.Damaged(playerStatus.AttackPower);
+            playerStatus.AddSp(4);
         }
 
         enemys.Clear();

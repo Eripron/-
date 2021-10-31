@@ -228,12 +228,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: player1
-  maxHp: 10000
   attackPower: 10
   defensePower: 10
-  player: {fileID: 5875463019204317122}
-  maxMp: 100
-  maxStamina: 100
+  maxHp: 6000
+  maxSP: 1250
+  maxStamina: 200
   aliveCount: 3
 --- !u!1 &5875463020957259084
 GameObject:
