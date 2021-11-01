@@ -21,8 +21,21 @@ public class PlayerStatus : Status
     bool isCharging;
 
 
+
+    public override int Hp
+    {
+        get => base.Hp;
+        set
+        {
+            base.Hp = value;
+            StatusUiManager.Instance.SetHpUI(hp, MaxHp);
+        }
+    }
+
+
+
     public int SP
-    { 
+    {
         get { return sp; }
         private set
         {
@@ -30,12 +43,13 @@ public class PlayerStatus : Status
             statusUIManager.SetSpUI(sp, maxSP);
         }
     }
-    public int Stamina 
-    { get 
-        { 
-            return stamina; 
+    public int Stamina
+    {
+        get
+        {
+            return stamina;
         }
-        private set 
+        private set
         {
             stamina = Mathf.Clamp(value, 0, maxStamina);
 
@@ -52,9 +66,9 @@ public class PlayerStatus : Status
 
     void Update()
     {
-        if(stamina < maxStamina)
+        if (stamina < maxStamina)
         {
-            if(!isCheckStamina)
+            if (!isCheckStamina)
             {
                 isCheckStamina = true;
                 StartCoroutine(RecoverStaminaCoroutine());
@@ -68,7 +82,6 @@ public class PlayerStatus : Status
         base.InitStatus();
 
         statusUIManager = StatusUiManager.Instance;
-
         SP = 0;
         Stamina = maxStamina;
     }
@@ -94,7 +107,7 @@ public class PlayerStatus : Status
         if (beforeStamina == afterStamina)
         {
             isCharging = true;
-            while(stamina < maxStamina)
+            while (stamina < maxStamina)
             {
                 if (!isCharging)
                     break;
@@ -136,5 +149,9 @@ public class PlayerStatus : Status
             SP = 0;
     }
 
+    public override void OnDamaged(int damage)
+    {
+        Hp -= damage;
+    }
 
 }

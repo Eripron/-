@@ -32,7 +32,6 @@ public class BossController : EnemyController, IDamaged
         CheckDistanceToPlayer();
         SetSpeed();
 
-        Debug.Log(activation);
 
         if (!isAttack && !isFar && !isIntimidate && !isKnockDown)
             RotateToPlayer();
@@ -136,7 +135,6 @@ public class BossController : EnemyController, IDamaged
     }
     public void OnEndKnockDown()
     {
-        Debug.Log("call");
         isKnockDown = false;
     }
 

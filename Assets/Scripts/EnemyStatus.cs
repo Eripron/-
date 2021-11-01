@@ -4,21 +4,29 @@ using UnityEngine;
 
 public class EnemyStatus : Status
 {
-    bool isBoss = false;
 
+    public override int Hp 
+    { 
+        get => base.Hp;
+        set 
+        { 
+            base.Hp = value;
+            BossHpUIManager.Instance.SetBossHpGage(hp);
+        } 
+    }
 
 
     void Start()
     {
-        InitStatus();
-
         BossController boss = GetComponent<BossController>();
         if (boss != null)
         {
-            isBoss = true;
-
+            BossHpUIManager.Instance.OnInit(this);
         }
+
+        InitStatus();
     }
+
 
     new void InitStatus()
     {
