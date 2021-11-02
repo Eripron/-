@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class EnemyStatus : Status
 {
+    BossHpUIManager bossHpUI;
+
+    bool isBoss = false;
+
 
     public override int Hp 
     { 
@@ -11,7 +15,6 @@ public class EnemyStatus : Status
         set 
         { 
             base.Hp = value;
-            BossHpUIManager.Instance.SetBossHpGage(hp);
         } 
     }
 
@@ -21,7 +24,10 @@ public class EnemyStatus : Status
         BossController boss = GetComponent<BossController>();
         if (boss != null)
         {
-            BossHpUIManager.Instance.OnInit(this);
+            isBoss = true;
+
+            bossHpUI = BossHpUIManager.Instance;
+            bossHpUI.OnInit(this);
         }
 
         InitStatus();
@@ -33,4 +39,16 @@ public class EnemyStatus : Status
         base.InitStatus();
     }
 
+    public override void OnDamaged(int damage)
+    {
+        base.OnDamaged(damage);
+
+        if (isBoss)
+        {
+            bossHpUI.OnDamaged(damage);
+        }
+    }
+
+
 }
+

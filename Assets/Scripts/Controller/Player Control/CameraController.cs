@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     Camera cam;
 
     float minView = 5f;
-    float maxView = 30f;
+    float maxView = 50f;
 
     float bottomY;
 

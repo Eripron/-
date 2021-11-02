@@ -122,6 +122,9 @@ public class BossController : EnemyController, IDamaged
     {
         base.Dead();
     }
+
+    
+
     // ³Ë´Ù¿î
     IEnumerator KnockDownCoroutine()
     {

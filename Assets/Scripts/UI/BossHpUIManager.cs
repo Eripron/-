@@ -24,107 +24,152 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
     [SerializeField] Image backGageImage;
 
     [Header("ETC")]
+    [SerializeField] GameObject bossHpWindow;
     [SerializeField] Text bossNameText;
     [SerializeField] Text hpCountText;
-    [SerializeField] float smoothSpeed;
+    [SerializeField] float lerpSpeed;
 
-    EnemyStatus boss;
 
-    // 보스 하나의 hp 게이지의 양 
-    float oneBarHp;
+    EnemyStatus bossInfo;
+
+    
+    float maxHpAmountOfOneBar;             // 보스 체력바 하나의 최대 체력 양 
+    float curHpAmountOfOneBar;          // 현재 보스 체력바의 체력 양 
+    float receivedDamage = 0.0f;
+
+    int remainHpBarCount;
+    int colorChangeCount;
+
+   
+
 
     new void Awake()
     {
         base.Awake();
-        gameObject.SetActive(false);
+        SetActivation(false);
     }
+
     void Update()
     {
-
+        DrawHP();
     }
 
+    // 체력바 초기화 
     public void OnInit(EnemyStatus _boss)
     {
-        OnSetActivation(true);
+        SetActivation(true);
 
-        boss = _boss;
+        bossInfo = _boss;
 
-        SetBossNameText(boss.Name);
-        oneBarHp = boss.MaxHp / 10;
+        SetBossNameText(bossInfo.Name);
 
+        maxHpAmountOfOneBar = bossInfo.MaxHp / 10;
+        curHpAmountOfOneBar = maxHpAmountOfOneBar;
+
+        colorChangeCount = 0;
+        HpBarColorChange(colorChangeCount);
+
+        remainHpBarCount = 10;
+        SetRemainHpBarCountText(remainHpBarCount);
     }
 
-
-    // boss hp 활성화 / 비활성화 
-    void OnSetActivation(bool _activation)
+    void DrawHP()
     {
-        this.gameObject.SetActive(_activation);
+        if (receivedDamage <= 0.0f)
+            return;
+
+        // 한 프레임당 깍아야 하는 양 
+        float cutAmount = Time.deltaTime * lerpSpeed;
+
+        curHpAmountOfOneBar -= cutAmount;
+        receivedDamage -= cutAmount;
+
+        if (curHpAmountOfOneBar < 0.0f)
+        {
+            curHpAmountOfOneBar = maxHpAmountOfOneBar + curHpAmountOfOneBar;
+            frontGageImage.fillAmount = 1f;
+            HpBarColorChange(++colorChangeCount);
+            SetRemainHpBarCountText(--remainHpBarCount);
+
+            if (remainHpBarCount <= 0)
+            {
+                SetActivation(false);
+                StartCoroutine(TimeDelayCoroutine());
+            }
+        }
+
+        frontGageImage.fillAmount = Mathf.Lerp(frontGageImage.fillAmount,
+                                               curHpAmountOfOneBar / maxHpAmountOfOneBar,
+                                               cutAmount);
     }
 
+    void SetRemainHpBarCountText(int count)
+    {
+        if (count <= 1)
+            hpCountText.text = string.Empty;
+        else
+            hpCountText.text = "x " + count;
+    }
+    void HpBarColorChange(int hpCount)
+    {
+        switch(hpCount)
+        {
+            case 0:
+            case 1:
+            case 2:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Green];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkGreen];
+                break;
+            case 3:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Green];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkYellow];
+                break;
+            case 4:
+            case 5:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Yellow];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkYellow];
+                break;
+            case 6:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Yellow];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkRed];
+                break;
+            case 7:
+            case 8:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Red];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkRed];
+                break;
+            case 9:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Red];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
+                break;
+            case 10:
+                frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
+                backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
+                break;
+        }
+    }
 
+   
     // set boss name
     void SetBossNameText(string bossName)
     {
         bossNameText.text = bossName;
     }
-
-    public void SetBossHpGage(int _hp)
+    // boss hp 활성화 / 비활성화 
+    void SetActivation(bool _activation)
     {
-        float count = _hp / oneBarHp;
-        float remainHp = _hp % oneBarHp;
-        float remainHpPercent;
-
-        // set hp count text
-        if(count < 1)
-            hpCountText.text = string.Empty;
-        else
-            hpCountText.text = "x " + ((int)count).ToString();
-
-        // set hp fillamount
-        if (remainHp == 0f)
-            remainHpPercent = 1f;
-        else
-            remainHpPercent = remainHp / oneBarHp;
-        
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        frontGageImage.fillAmount = Mathf.Lerp(frontGageImage.fillAmount, remainHpPercent, Time.deltaTime * smoothSpeed);
-
-        // set hp color
-        if (count >=  7f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Green];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkGreen];
-        }
-        else if(count > 6f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Green];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkYellow];
-        }
-        else if(count >= 4f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Yellow];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkYellow];
-        }
-        else if(count > 3f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Yellow];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkRed];
-        }
-        else if(count >= 1f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Red];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.DarkRed];
-        }
-        else if(count > 0f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.Red];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
-        }
-        else if(count <= 0f)
-        {
-            frontGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
-            backGageImage.color = hpGageColors[(int)HP_GAGE_COLOR.None];
-        }
+        bossHpWindow.SetActive(_activation);
     }
 
+    public void OnDamaged(float damage)
+    {
+        // 보스가 받은 데미지 양 
+        receivedDamage += damage;
+    }
+    IEnumerator TimeDelayCoroutine()
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSeconds(3f);
+        Time.timeScale = 1f;
+    }
 }
