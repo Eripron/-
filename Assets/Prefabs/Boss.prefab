@@ -3922,7 +3922,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2957874221732933537
 Transform:
   m_ObjectHideFlags: 0
@@ -3974,10 +3974,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 1.1265564
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0.05883249}
 --- !u!54 &244026658
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4042,7 +4042,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 100
+  attackPercentage: 80
   rotateSpeed: 20
 --- !u!114 &426201800
 MonoBehaviour:
@@ -4056,10 +4056,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfc33056388542479969a0da2f2a8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Boss
-  maxHp: 1000
-  attackPower: 20
+  characterName: "\uCF78\uD14C\uC774\uB77D"
+  attackPower: 33
   defensePower: 10
+  maxHp: 1000
 --- !u!1 &2957874221732770755
 GameObject:
   m_ObjectHideFlags: 0

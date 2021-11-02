@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class DamageTextUIManager : Singleton<DamageTextUIManager>
 {
-    [SerializeField] DamageText textPrefab;
-    [SerializeField] int initCount;
+    [SerializeField] DamageText textPrefab;             // text prefab
+    [SerializeField] int initCount;                     // 최초 생성 갯수 
 
-    Stack<DamageText> storage;
+    Stack<DamageText> storage;                          // 저장소 
+
 
     void Start()
     {
@@ -24,18 +25,28 @@ public class DamageTextUIManager : Singleton<DamageTextUIManager>
     {
         DamageText text = Instantiate(textPrefab, transform);
         text.gameObject.SetActive(false);
+
+        text.Return(ReturnText);
+
         storage.Push(text);
     }
 
-    // 가져오기 
+
     public DamageText GetDamageText()
     {
         if (storage.Count <= 0)
             CreateText();
 
-        storage.Peek().gameObject.SetActive(true);
         return storage.Pop();
     }
 
+
+    public void ReturnText(DamageText text)
+    {
+        if (storage.Contains(text))
+            return;
+
+        storage.Push(text);
+    }
 
 }

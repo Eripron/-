@@ -80,7 +80,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 254
 --- !u!114 &4896060097128304664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,3 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a1e8463370c3541a33d155f6ec18a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageText: {fileID: 4896060097128304663}
+  speed: 200
+  duration: 0.2

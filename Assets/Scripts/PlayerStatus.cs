@@ -21,7 +21,6 @@ public class PlayerStatus : Status
     bool isCharging;
 
 
-
     public override int Hp
     {
         get => base.Hp;

@@ -47,8 +47,12 @@ public class PlayerAttackAble : MonoBehaviour
             if (enemy == null)
                 continue;
 
-            enemy.Damaged(playerStatus.AttackPower);
-            playerStatus.AddSp(4);
+            // 공격력 범위 
+            int ranPower = Random.Range(playerStatus.AttackPower - playerStatus.AttackPower / 3, playerStatus.AttackPower + playerStatus.AttackPower / 3);
+            enemy.Damaged(ranPower);
+
+            DamageTextUIManager.Instance.GetDamageText().OnInit(ranPower, enemy.GetEnemyPos());
+            playerStatus.AddSp(ranPower / 8);
         }
 
         enemys.Clear();

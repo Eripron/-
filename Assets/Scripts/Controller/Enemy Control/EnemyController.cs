@@ -7,21 +7,12 @@ interface IDamaged
 {
     void Damaged(int _damage);
     void Dead();
+    Vector3 GetEnemyPos();
 }
 
 [RequireComponent(typeof(EnemyStatus))]
 public class EnemyController : MonoBehaviour, IDamaged
 {
-    // 손봐야 하는 부분 적의 이동이랑 공격 거리 설정 
-
-    /*
-     보스 vs 일반 몹 차이 
-
-     Boss -> 1. 일정 데미지 이상 => knock down
-          -> 2. 포효하는 모션 추가 
-          -> ** 피격시 색 변화는 있지만 뒤로 넉백은 없음 
-     */
-
     [SerializeField] bool isBoss;
 
     Collider[] colliders;
@@ -50,6 +41,8 @@ public class EnemyController : MonoBehaviour, IDamaged
     protected Animator anim;                                  // Animator
     protected EnemyStatus enemyStatus;                        // Enemy Status
 
+    Transform _transform;
+
     // for Color Change
     SkinnedMeshRenderer[] skinMeshs;
     List<Material> matList = new List<Material>();
@@ -71,6 +64,8 @@ public class EnemyController : MonoBehaviour, IDamaged
 
     protected void Init()
     {
+        _transform = this.transform;
+
         target      = FindObjectOfType<PlayerStatus>().transform;
 
         nav         = GetComponent<NavMeshAgent>();
@@ -207,7 +202,6 @@ public class EnemyController : MonoBehaviour, IDamaged
     }
     public virtual void Damaged(int _damage)
     {
-
         // 피격 색 변화  ( boss & normal )
         // change color when damaged.
         if (coDamagedColor != null)
@@ -244,5 +238,12 @@ public class EnemyController : MonoBehaviour, IDamaged
         Gizmos.DrawWireSphere(checkPivot2.position, checkRadius2);
     }
 
-   
+    public Vector3 GetEnemyPos()
+    {
+        Vector3 aroundPos = new Vector3(_transform.position.x + Random.Range(0, 2),
+            _transform.position.y + Random.Range(0, 2),
+            _transform.position.z + Random.Range(0, 2));
+
+        return aroundPos;
+    }
 }
