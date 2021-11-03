@@ -4,9 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Floor
+  - Wall
+  - OuterCorner
+  - Room
   - Enemy
-  - Defence
-  - Dead
   layers:
   - Default
   - TransparentFX
@@ -15,9 +17,9 @@ TagManager:
   - Water
   - UI
   - Ground
-  - Player
-  - Dead
-  - Enemy
+  - 
+  - 
+  - 
   - 
   - 
   - 
