@@ -131,14 +131,10 @@ public class NormalMonsterController : EnemyController
         switch (random)
         {
             case 0:
-                waitDir = (-transform.forward) + transform.right;
-                break;
             case 1:
                 waitDir = (-transform.right);
                 break;
             case 2:
-                waitDir = (-transform.forward) + (-transform.right);
-                break;
             case 3:
                 waitDir = transform.right;
                 break;

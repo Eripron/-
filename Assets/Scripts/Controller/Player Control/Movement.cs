@@ -372,7 +372,6 @@ public class Movement : MonoBehaviour
         StartCoroutine(ResetCoroutine());
     }
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

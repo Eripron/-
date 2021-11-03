@@ -33,7 +33,7 @@ public class DamageText : MonoBehaviour
         this.transform.position = Camera.main.WorldToScreenPoint(worldPos);
         damageText.text = ((int)_damage).ToString();
 
-        damageText.fontSize = Random.Range(35, 50);
+        damageText.fontSize = Random.Range(25, 40);
 
         gameObject.SetActive(true);
     }
