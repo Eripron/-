@@ -9,6 +9,7 @@ TagManager:
   - OuterCorner
   - Room
   - Enemy
+  - Defence
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Player
+  - Dead
   - 
   - 
   - 
