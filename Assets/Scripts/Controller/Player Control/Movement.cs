@@ -10,7 +10,7 @@ enum LAYER
 }
 
 [RequireComponent(typeof(PlayerStatus))]
-public class Movement : MonoBehaviour
+public class Movement : Singleton<Movement>
 {
 
     // tmp  ------------------------------------------------
@@ -63,7 +63,12 @@ public class Movement : MonoBehaviour
     bool isAttack = false;
     bool isDamaged = false;
     bool isAlive = true;
+    bool isActive = true;
 
+    new void Awake()
+    {
+        base.Awake(); 
+    }
     void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -76,6 +81,7 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
+
         if (!isAlive && status.isEnoughfLife() && Input.GetKeyDown(KeyCode.R))
         {
             isAlive = true;
@@ -84,7 +90,7 @@ public class Movement : MonoBehaviour
             PlayerGetUp(status.MaxHp);
         }
 
-        if (!isAlive)
+        if (!isAlive || !isActive)
             return;
 
         GroundCheck();
@@ -122,6 +128,16 @@ public class Movement : MonoBehaviour
         }
 
         Gravity();
+    }
+
+    public void SetActive(bool _isActive)
+    {
+        if (!_isActive)
+            StopMove();
+        else
+            StartMove();
+
+        isActive = _isActive;
     }
 
     public void Damaged(int damage)
@@ -220,6 +236,7 @@ public class Movement : MonoBehaviour
 
     void StopMove()
     {
+
         isControl = false;
         isStanding = true;
 
@@ -363,8 +380,13 @@ public class Movement : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        Debug.Log("change layer");
         gameObject.layer = (int)LAYER.LAYER_PLAYER;
+    }
+
+    public void TeleportToPosition(Vector3 destination, Quaternion rotation)
+    {
+        transform.position = destination;
+        transform.rotation = rotation;
     }
 
     public void AllReset()

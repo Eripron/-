@@ -14,8 +14,8 @@ public class CameraController : MonoBehaviour
 
     Camera cam;
 
-    float minView = 5f;
-    float maxView = 50f;
+    float minView = 10f;
+    float maxView = 45f;
 
     float bottomY;
 
@@ -23,31 +23,36 @@ public class CameraController : MonoBehaviour
 
     Vector3 camPos;
 
+    bool isControl = true;
+
     void Start()
     {
         cam = Camera.main;
         cam.fieldOfView = maxView;
 
-        camPos = target.position + offset;
+        camPos = offset;
     }
 
     private void Update()
     {
-        ChangeFieldOfView();
+        if (!isControl)
+            return;
 
+        ChangeFieldOfView();
 
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
-        if(Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit))
         {
             bottomY = hit.point.y;
         }
-
-
     }
 
     void LateUpdate()
     {
+        if (!isControl)
+            return;
+
         float x = Input.GetAxis("Mouse X") * turnSpeed;
         float y = Input.GetAxis("Mouse Y") * turnSpeed;
 
@@ -56,7 +61,8 @@ public class CameraController : MonoBehaviour
 
 
         camPos = rotateX * rotateY * camPos;
-        Vector3 finalPos = target.position + camPos;
+
+        Vector3 finalPos = camPos + target.position;
 
         finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
 
@@ -68,6 +74,11 @@ public class CameraController : MonoBehaviour
     {
         vector.y = Mathf.Clamp(vector.y, bottomY + boundaryBottom, limitUpHeight);
         return vector;
+    }
+
+    public void SetCameraControlState(bool state)
+    {
+        isControl = state;
     }
 
     void ChangeFieldOfView()

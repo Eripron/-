@@ -7,15 +7,27 @@ public class NormalMonsterController : EnemyController
     bool isGoToBack = false;
     int layer;
 
+    bool isGenerated = false;
+
     Coroutine coWaitMoment;
 
     void Start()
     {
         Init();
+        StartCoroutine(CreatedWaitTimeCoroutine());
+    }
+
+    IEnumerator CreatedWaitTimeCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        isGenerated = true;
     }
 
     void Update()
     {
+        if (!isGenerated)
+            return;
+
         if (target == null || !isAlive)
             return;
 
@@ -94,6 +106,12 @@ public class NormalMonsterController : EnemyController
     {
         base.Dead();
 
+        EnemyGenerator generator = GetComponentInParent<EnemyGenerator>();
+        if(generator != null)
+        {
+            generator.OnChangeEnemyCount(this);
+        }
+
         if (coWaitMoment != null)
             StopCoroutine(coWaitMoment);
 
@@ -160,6 +178,10 @@ public class NormalMonsterController : EnemyController
     }
 
     // 뒤로 이동이 끝나면 호출 
+
+
+
+
     public void OnEndGoToBack()
     {
         isGoToBack = false;
