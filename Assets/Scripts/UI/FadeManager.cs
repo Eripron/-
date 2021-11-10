@@ -14,6 +14,8 @@ public class FadeManager : Singleton<FadeManager>
     //
     CameraController mainCam;
 
+    System.Action DelOnEvent;
+
     public bool isFading = false;
 
     new void Awake()
@@ -25,7 +27,7 @@ public class FadeManager : Singleton<FadeManager>
     }
 
     [ContextMenu("Fade")]
-    public void FadeIn(bool isLoading = true)
+    public void FadeIn(bool isLoading = true, System.Action func = null)
     {
         // 페이딩 중이라면 실행 x
         if (isFading)
@@ -33,13 +35,19 @@ public class FadeManager : Singleton<FadeManager>
 
         isFading = true;
 
+        if (func != null)
+        {
+            DelOnEvent += func;
+            Debug.Log("함수 추가");
+        }
+
         // fade 중에는 플레이어 이동 불가로 만듬 
         player.SetActive(false);
 
-        StartCoroutine(FadeInCoroutine(isLoading));
+        StartCoroutine(FadeInCoroutine(isLoading, func));
     }
 
-    IEnumerator FadeInCoroutine(bool isLoading)
+    IEnumerator FadeInCoroutine(bool isLoading, System.Action func)
     {
         float duration = 2f;
         float startTime = 0f;
@@ -67,12 +75,21 @@ public class FadeManager : Singleton<FadeManager>
         yield return new WaitForSeconds(1f);
         isFading = false;
 
-        FadeOut();
+        FadeOut(func);
     }
 
 
-    public void FadeOut()
+    public void FadeOut(System.Action func)
     {
+        Debug.Log("함수 콜");
+        DelOnEvent?.Invoke();
+
+        if (func != null)
+        {
+            DelOnEvent -= func;
+            Debug.Log("함수 빼기");
+        }
+
         StartCoroutine(FadeOutCoroutine());
     }
 

@@ -130,7 +130,7 @@ public class EnemyController : MonoBehaviour, IDamaged
 
         int waitTime;
         if(isBoss)
-            waitTime = Random.Range(4, 6);
+            waitTime = Random.Range(3, 5);
         else
             waitTime = Random.Range(2, 4);
 

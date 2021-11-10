@@ -133,7 +133,10 @@ public class Movement : Singleton<Movement>
     public void SetActive(bool _isActive)
     {
         if (!_isActive)
+        {
             StopMove();
+            anim.Rebind();
+        }
         else
             StartMove();
 
@@ -234,11 +237,12 @@ public class Movement : Singleton<Movement>
     }
 
 
-    void StopMove()
+    public void StopMove()
     {
-
         isControl = false;
         isStanding = true;
+
+        //anim.Rebind();
 
         x = 0;
         z = 0;
