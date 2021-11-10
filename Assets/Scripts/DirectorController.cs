@@ -11,12 +11,11 @@ public class DirectorController : MonoBehaviour
     화면 페이딩 -> 캐릭터 ui 등 꺼야하는 ui를 끄고 캐릭터를 끈다. 켜야하는건 켜야한다.
     -> timeline 재생 -> 끝나면 캐릭터 다시 반전 
      */
-
     [SerializeField] GameObject[] offObjects;
     [SerializeField] GameObject[] onObjects;
 
     PlayableDirector director;
-
+    
     bool isContacted = false;
 
     void Start()
@@ -33,9 +32,19 @@ public class DirectorController : MonoBehaviour
             if (director != null && other.gameObject.CompareTag("Player"))
             {
                 FadeManager.Instance.FadeIn(false, SwitchObject);
+                ColseAllPortal();
             }
         }
     }
+
+    void ColseAllPortal()
+    {
+        // 보스 컷신 뜨면 현재 열려있는 모든 포탈을 닫는다.
+        Portal[] portals = FindObjectsOfType<Portal>();
+        foreach (Portal portal in portals)
+            portal.SetPortal(true);
+    }
+
 
     void SwitchObject()
     {
@@ -57,7 +66,6 @@ public class DirectorController : MonoBehaviour
     {
         yield return new WaitUntil(() => director.state != PlayState.Playing);
 
-        Debug.Log("call coroutine");    
         foreach (var ob in offObjects)
             ob.SetActive(_state);
 

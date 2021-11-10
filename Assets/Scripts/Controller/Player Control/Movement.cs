@@ -136,6 +136,7 @@ public class Movement : Singleton<Movement>
         {
             StopMove();
             anim.Rebind();
+            PlayerStateReset();
         }
         else
             StartMove();
@@ -373,7 +374,7 @@ public class Movement : Singleton<Movement>
         anim.SetTrigger("OnAlive");
     }
 
-    IEnumerator ResetCoroutine()
+    void PlayerStateReset()
     {
         isControl = true;
         isDamaged = false;
@@ -381,6 +382,11 @@ public class Movement : Singleton<Movement>
         isGuard = false;
         ResetAttackPhase();
         controller.detectCollisions = true;
+    }
+
+    IEnumerator ResetCoroutine()
+    {
+        PlayerStateReset();
 
         yield return new WaitForSeconds(2f);
 

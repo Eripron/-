@@ -13,20 +13,23 @@ public class Portal : MonoBehaviour
     [SerializeField] Color[] portalColor;
     [SerializeField] new SpriteRenderer renderer;
 
+
+    // [SerializeField] 나중에 지우면 됩니다 ---------------------------
     // 이 포탈이 포함되어 있는 맵 object
-    [SerializeField] GameObject containedRegion;
+     RegionInfo containedRegion;
 
     // 이 포탈이 연결된 다음 포탈 
-    [SerializeField] Portal destination;
+     [SerializeField] Portal destination;
      BoxCollider col;
 
 
     // 상태 체크 
     //bool isLock = false;
 
-    void Start()
+    void Awake()
     {
-        col = GetComponent<BoxCollider>();     
+        col = GetComponent<BoxCollider>();
+        containedRegion = GetComponentInParent<RegionInfo>();
     }
 
     public void SetPortal(bool _isLock)
@@ -47,20 +50,18 @@ public class Portal : MonoBehaviour
 
     public void OpenRegion()
     {
-        containedRegion.SetActive(true);
+        containedRegion.OnOpenRegion();
     }
     public void CloseRegion()
     {
-        containedRegion.SetActive(false);
+        containedRegion.OnCloseRegion();
     }
-
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag.Equals("Player"))
         {
-            FadeManager.Instance.FadeIn();
-            Invoke("Teleport", 2f);
+            FadeManager.Instance.FadeIn(true, Teleport);
         }
     }
 

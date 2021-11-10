@@ -10,10 +10,17 @@ public class MinimapCameraContoller : MonoBehaviour
     Transform _transform;
     Movement player;
 
+
+    Camera thisCam;
+
+
+
     void Start()
     {
         _transform = this.transform;
         player = Movement.Instance;
+
+        thisCam = GetComponent<Camera>();
     }
 
     void LateUpdate()
@@ -21,6 +28,11 @@ public class MinimapCameraContoller : MonoBehaviour
         float x = player.transform.position.x;
         float z = player.transform.position.z;
         _transform.position = new Vector3(x, offsetY, z);
+    }
+
+    public void OnSetCameraFieldOfView(float viewValue)
+    {
+        thisCam.fieldOfView = viewValue;
     }
 
 
