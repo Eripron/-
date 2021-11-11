@@ -29,7 +29,7 @@ public class PlayerStatus : Status
             base.Hp = value;
             if(Hp <= 0)
             {
-                deadUiManager.AddDeadPlayer(transform.position);
+                deadUiManager.SetTarget(transform);
                 deadUiManager.SetDeadUI(true, aliveCount);
             }
 

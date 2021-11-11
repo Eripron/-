@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    /*
+     camera 벽 뚫기 막기 
+    
+     raycast hit point를 사용할거임 
+     */
+
+
     [SerializeField] Transform target;
-    [SerializeField] Vector3 offset;
+    [SerializeField] float maxDistance;
     [SerializeField] float turnSpeed;
     [SerializeField] float limitUpHeight;
     [SerializeField] float limitDownHeight;
@@ -14,8 +21,11 @@ public class CameraController : MonoBehaviour
 
     Camera cam;
 
+    float distanceToPlayer;
+
     float minView = 10f;
     float maxView = 45f;
+
 
     float bottomY;
 
@@ -25,12 +35,14 @@ public class CameraController : MonoBehaviour
 
     bool isControl = true;
 
+
     void Start()
     {
         cam = Camera.main;
         cam.fieldOfView = maxView;
 
-        camPos = offset;
+        distanceToPlayer = Mathf.Abs(maxDistance);
+        camPos = new Vector3(0f, 0f, distanceToPlayer);
     }
 
     private void Update()
@@ -46,6 +58,7 @@ public class CameraController : MonoBehaviour
         {
             bottomY = hit.point.y;
         }
+
     }
 
     void LateUpdate()
@@ -80,7 +93,6 @@ public class CameraController : MonoBehaviour
     {
         isControl = state;
     }
-
     void ChangeFieldOfView()
     {
         float wheel = Input.GetAxis("Mouse ScrollWheel");
@@ -92,4 +104,7 @@ public class CameraController : MonoBehaviour
 
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
     }
+
+
+
 }

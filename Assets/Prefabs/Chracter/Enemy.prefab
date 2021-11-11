@@ -57,69 +57,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee11d051540517468a765703bab83eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &5873527352408170941
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312882710274134082}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.6060424, y: 1.7876331, z: 0.5319423}
-  m_Center: {x: -0.027269661, y: 0.87698394, z: -0.029664367}
---- !u!114 &1314390195800482008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312882710274134082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1314390194677183956}
-  attackAble: {fileID: 0}
-  OnSendEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1734603099}
-        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
-        m_MethodName: OnEndGoToBack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnSendEvent2:
-    m_PersistentCalls:
-      m_Calls: []
-  OnSendEvent3:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1734603099}
-        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
-        m_MethodName: OnEndDamagedAnim
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnSendEvent4:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1314390194677183956
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +172,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 35
+  attackPercentage: 100
   rotateSpeed: 10
 --- !u!1 &1314390196481118247
 GameObject:
@@ -889,3 +826,66 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4040926419432438, guid: 7e6e29f21a00d5f499e21eb93d6fabaa, type: 3}
   m_PrefabInstance: {fileID: 1314390195257952862}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &5873527352408170941
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312882710274134082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6060424, y: 1.7876331, z: 0.5319423}
+  m_Center: {x: -0.027269661, y: 0.87698394, z: -0.029664367}
+--- !u!114 &1314390195800482008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312882710274134082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1314390194677183956}
+  attackAble: {fileID: 0}
+  OnSendEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1734603099}
+        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
+        m_MethodName: OnEndGoToBack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSendEvent2:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSendEvent3:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1734603099}
+        m_TargetAssemblyTypeName: NormalMonsterController, Assembly-CSharp
+        m_MethodName: OnEndDamagedAnim
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSendEvent4:
+    m_PersistentCalls:
+      m_Calls: []
