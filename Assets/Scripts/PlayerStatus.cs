@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Movement))]
 public class PlayerStatus : Status
 {
-    // 사용하나 ?
     Movement player;
 
     [SerializeField] int maxSP;
     [SerializeField] int maxStamina;
-
     [SerializeField] int aliveCount;        // 살아날수 있는 횟수 
 
+    DeadUIManager deadUiManager;
     StatusUiManager statusUIManager;
 
     int sp;
@@ -27,6 +27,12 @@ public class PlayerStatus : Status
         set
         {
             base.Hp = value;
+            if(Hp <= 0)
+            {
+                deadUiManager.AddDeadPlayer(transform.position);
+                deadUiManager.SetDeadUI(true, aliveCount);
+            }
+
             StatusUiManager.Instance.SetHpUI(hp, MaxHp);
         }
     }
@@ -80,7 +86,10 @@ public class PlayerStatus : Status
     {
         base.InitStatus();
 
+        player = Movement.Instance;
         statusUIManager = StatusUiManager.Instance;
+        deadUiManager = FindObjectOfType<DeadUIManager>();
+
         SP = 0;
         Stamina = maxStamina;
     }
@@ -124,10 +133,6 @@ public class PlayerStatus : Status
     {
         return aliveCount > 0;
     }
-    public void UseLife()
-    {
-        aliveCount--;
-    }
 
 
     // 마나 사용 (스킬사용시 마나 소비)
@@ -153,4 +158,17 @@ public class PlayerStatus : Status
         Hp -= damage;
     }
 
+
+    public void OnRevivePlayer()
+    {
+        if (aliveCount <= 0)
+            return;
+
+        // count 깍고 hp 체우고 
+        aliveCount--;
+        AddHp(MaxHp);
+
+        player.OnPlayerRevive();
+        deadUiManager.SetDeadUI(false);
+    }
 }

@@ -81,15 +81,6 @@ public class Movement : Singleton<Movement>
 
     void Update()
     {
-
-        if (!isAlive && status.isEnoughfLife() && Input.GetKeyDown(KeyCode.R))
-        {
-            isAlive = true;
-
-            status.UseLife();
-            PlayerGetUp(status.MaxHp);
-        }
-
         if (!isAlive || !isActive)
             return;
 
@@ -368,9 +359,9 @@ public class Movement : Singleton<Movement>
 
 
     // 외부에서 호출하기만 하면 됨
-    void PlayerGetUp(int _hp)
+    public void OnPlayerRevive()
     {
-        status.AddHp(_hp);
+        isAlive = true;
         anim.SetTrigger("OnAlive");
     }
 
