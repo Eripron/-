@@ -10,26 +10,26 @@ public class CameraController : MonoBehaviour
      raycast hit point를 사용할거임 
      */
 
-
+    
     [SerializeField] Transform target;
-    [SerializeField] float maxDistance;
+
+    [SerializeField] int maxDistance;
+
     [SerializeField] float turnSpeed;
+    [SerializeField] float viewInterval;
+
+    [SerializeField] float boundaryBottom;
     [SerializeField] float limitUpHeight;
     [SerializeField] float limitDownHeight;
-    [SerializeField] float boundaryBottom;
 
 
     Camera cam;
 
-    float distanceToPlayer;
+    float cameraDistance;
 
     float minView = 10f;
     float maxView = 45f;
-
-
     float bottomY;
-
-    [SerializeField] float viewInterval;
 
     Vector3 camPos;
 
@@ -41,8 +41,8 @@ public class CameraController : MonoBehaviour
         cam = Camera.main;
         cam.fieldOfView = maxView;
 
-        distanceToPlayer = Mathf.Abs(maxDistance);
-        camPos = new Vector3(0f, 0f, distanceToPlayer);
+        // 카메라와 플레이어까지의 거리 
+        SetCameraDistance(maxDistance);
     }
 
     private void Update()
@@ -72,15 +72,28 @@ public class CameraController : MonoBehaviour
         Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
         Quaternion rotateY = Quaternion.AngleAxis(y, Vector3.left);
 
-
         camPos = rotateX * rotateY * camPos;
 
         Vector3 finalPos = camPos + target.position;
+
+        Vector3 dir = (finalPos - target.position).normalized;
+        RaycastHit hitted;
+        if (Physics.Raycast(target.position, dir, out hitted, cameraDistance))
+        {
+            if (hitted.transform.gameObject.layer == (int)LAYER.LAYER_GROUND)
+                finalPos = hitted.point - (dir * 1.5f);
+        }
 
         finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
 
         transform.position = ClampBoundary(finalPos);
         transform.LookAt(target);
+    }
+
+    void SetCameraDistance(float _distance)
+    {
+        cameraDistance = Mathf.Abs(_distance);
+        camPos = new Vector3(0f, 0f, cameraDistance);
     }
 
     Vector3 ClampBoundary(Vector3 vector)
@@ -104,7 +117,6 @@ public class CameraController : MonoBehaviour
 
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
     }
-
 
 
 }

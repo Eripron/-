@@ -4,21 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class DeadUIManager : MonoBehaviour
+public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
 {
     [SerializeField] Text remainReviveCountText;
     [SerializeField] CanvasGroup daedUiGroup;
 
-    // 죽으면 생성할 help ui 프리팹 
-    [SerializeField] HelpUI helpUiPrefab;
+    [SerializeField] Transform parent;
+    Transform target;   // world position target
 
 
-    Transform target;
-
-
-    public void SetTarget(Transform _target)
+    public void OnSetTarget(Transform deadPlayer)
     {
-        target = _target;
+        target = deadPlayer;
     }
 
     // 활성화 
@@ -30,20 +27,15 @@ public class DeadUIManager : MonoBehaviour
             remainReviveCountText.text = string.Format("({0})회 가능", count);
 
             // help ui 생성 해야 한다
-            HelpUI helpUi = Instantiate(helpUiPrefab, transform.position, transform.rotation);
+            HelpUI helpUi = GetPool();
+            helpUi.ResetUI();
 
             if (target != null)
-            {
                 helpUi.SetWorldPosition(target);
-
-                // 임시 
-                // pool object 를 사용하면 편하게 할수있지 않을까 ?
-                helpUi.transform.SetParent(this.transform);
-            }
-
         }
         else
         {
+            Clear();
             daedUiGroup.alpha = 0;
         }
     }

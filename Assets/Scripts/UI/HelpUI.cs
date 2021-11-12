@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HelpUI : MonoBehaviour
+public class HelpUI : PoolObject<HelpUI>
 {
     Camera cam;
 
@@ -61,6 +61,11 @@ public class HelpUI : MonoBehaviour
         }
 
         isUp = !isUp;
+        isRunning = false;
+    }
+
+    public void ResetUI()
+    {
         isRunning = false;
     }
 }

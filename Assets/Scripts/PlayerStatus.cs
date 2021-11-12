@@ -19,7 +19,7 @@ public class PlayerStatus : Status
 
     bool isCheckStamina;
     bool isCharging;
-
+    bool isAlive = true;
 
     public override int Hp
     {
@@ -29,7 +29,12 @@ public class PlayerStatus : Status
             base.Hp = value;
             if(Hp <= 0)
             {
-                deadUiManager.SetTarget(transform);
+                if (!isAlive)
+                    return;
+
+                isAlive = false;
+
+                deadUiManager.OnSetTarget(transform);
                 deadUiManager.SetDeadUI(true, aliveCount);
             }
 
@@ -164,6 +169,7 @@ public class PlayerStatus : Status
         if (aliveCount <= 0)
             return;
 
+        isAlive = true;
         // count ±ï°í hp Ã¼¿ì°í 
         aliveCount--;
         AddHp(MaxHp);

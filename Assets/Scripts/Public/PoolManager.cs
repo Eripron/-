@@ -4,32 +4,42 @@ using UnityEngine;
 
 public interface IPool<T>
 {
-    void Setup(System.Action<T> OnReturnPool);      // 셋업.
-    void OnReturnForce();                           // 강제로 되돌리기.
+    void Setup(System.Action<T> OnReturnPool);
+    void OnReturnForce();
 }
 
+// 내가 pool manager로 쓰고 싶은 자료형은 singletone도 쓰고 싶어서 이렇게 표현 
 public class PoolManager<TargetObject, PoolObject> : Singleton<TargetObject>
     where TargetObject : MonoBehaviour
-    where PoolObject : MonoBehaviour, IPool<PoolObject>  // 제네릭 자료형 PoolObject는 MonoBehaviour를 상속하고 있어야 한다.
+    where PoolObject : MonoBehaviour, IPool<PoolObject>
 {
-    [SerializeField] PoolObject poolPrefab;     // 풀링할 오브젝트 프리팹.
-    [SerializeField] int initCount;             // 초기 생성 개수.
+    /*
+    Pool Manager의 역할 
+    - pool object의 자료형의 프리팹을 가지고 있다.
+    - start에서 어느정도 오브잭트를 만들어 놓는다. 
+    - 외부에서 달라고 요청하면 저장소를 보고 재고가 있다면 주고 없다면 만들어서 준다 
+    - 외부에서 다 사용이 끝난 거는 다시 저장소에 보관한다.
+     */
 
-    Stack<PoolObject> storage;                  // 저장소.
-    System.Action OnReturnAll;                  // 전부 저장소로 돌리는 이벤트.
+    [SerializeField] PoolObject poolPrefab;
+    [SerializeField] int initCount;
 
-    private new void Awake()
+    Stack<PoolObject> storage;
+    System.Action OnReturnAll;
+
+    new void Awake()
     {
         base.Awake();
 
-        storage = new Stack<PoolObject>();      // stack 변수 객체 생성.
-        for (int i = 0; i < initCount; i++)
+        storage = new Stack<PoolObject>();
+        for(int i=0; i<initCount; i++)
             CreatePool();
     }
 
     private void CreatePool()
     {
         PoolObject pool = Instantiate(poolPrefab, transform);
+
         pool.Setup(OnReturnPool);
         pool.gameObject.SetActive(false);
         storage.Push(pool);
@@ -39,6 +49,7 @@ public class PoolManager<TargetObject, PoolObject> : Singleton<TargetObject>
 
     protected PoolObject GetPool()
     {
+        // 외부에서 object 요청 
         if (storage.Count <= 0)
             CreatePool();
 
@@ -50,13 +61,17 @@ public class PoolManager<TargetObject, PoolObject> : Singleton<TargetObject>
         OnReturnAll.Invoke();
     }
 
+
     private void OnReturnPool(PoolObject pool)
     {
-        if (storage.Contains(pool))                             // 이미 저장소에 있는 풀은 리턴되지 않는다.
+        // 저장소에 프리팹을 만들어서 저장시에 각각의 오브젝트들은 이 함수들을 내부에 가지게 해서
+        // manager가 아닌 오브젝트가 콜 하면 이 함수가 불린다.
+        if (storage.Contains(pool))
             return;
 
-        pool.gameObject.SetActive(false);                       // 돌아온 pool을 끈다.
+        pool.gameObject.SetActive(false);
         pool.transform.SetParent(transform);
-        storage.Push(pool);                                     // 저장소에 push한다.
+        storage.Push(pool);
     }
+
 }
