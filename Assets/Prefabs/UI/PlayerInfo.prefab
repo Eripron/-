@@ -114,8 +114,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 14, y: -26.4822}
-  m_SizeDelta: {x: 183.9994, y: 3.6291}
+  m_AnchoredPosition: {x: 14, y: -26}
+  m_SizeDelta: {x: 230, y: 3.6}
   m_Pivot: {x: 0.000000023748726, y: 1.0000006}
 --- !u!222 &8229152260274219831
 CanvasRenderer:
@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 7565040993096999210}
   - component: {fileID: 6510863664283269598}
   - component: {fileID: 4145636892553276704}
+  - component: {fileID: 5606898668632338552}
   m_Layer: 5
   m_Name: PlayerInfo
   m_TagString: Untagged
@@ -291,7 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -307,3 +308,17 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5606898668632338552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8607419420736794403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f935ef5bc50ff45b29921015e75eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNameText: {fileID: 557373384445957172}
+  playerHpGageImage: {fileID: 8104665743745931423}
