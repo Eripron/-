@@ -35,6 +35,7 @@ public class Movement : Singleton<Movement>
 
     CharacterController controller;
     Camera cam;
+    CameraController camControl;
 
     PlayerStatus status;
 
@@ -74,6 +75,7 @@ public class Movement : Singleton<Movement>
         anim = GetComponentInChildren<Animator>();
         controller = GetComponent<CharacterController>();
         cam = Camera.main;
+        camControl = cam.GetComponent<CameraController>();
         status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
 
@@ -113,7 +115,7 @@ public class Movement : Singleton<Movement>
             StartCoroutine(StartGuardCoroutine());
         }
 
-        if((Input.GetKeyDown(KeyCode.K) || Input.GetMouseButtonDown(0)) && !isGuard && !isDash && !isDamaged)
+        if((Input.GetKeyDown(KeyCode.K) || Input.GetMouseButtonDown(0)) && !isGuard && !isDash && !isDamaged && camControl.CursorLockState())
         {
             Attack();
         }

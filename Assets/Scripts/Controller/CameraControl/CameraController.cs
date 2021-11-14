@@ -1,16 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
+    , IPointerClickHandler
 {
-    /*
-     camera 벽 뚫기 막기 
-    
-     raycast hit point를 사용할거임 
-     */
-
-    
     [SerializeField] Transform target;
 
     [SerializeField] int maxDistance;
@@ -35,6 +30,8 @@ public class CameraController : MonoBehaviour
 
     bool isControl = true;
 
+    bool mouseLocked = false;
+    public bool getMouseClick = false;
 
     void Start()
     {
@@ -45,10 +42,25 @@ public class CameraController : MonoBehaviour
         SetCameraDistance(maxDistance);
     }
 
+    public bool CursorLockState()
+    {
+        return Cursor.lockState == CursorLockMode.Locked;
+    }
+
     private void Update()
     {
-        if (!isControl)
-            return;
+        if(Input.GetKeyDown(KeyCode.Escape) && mouseLocked == true)
+        {
+            mouseLocked = false;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if (mouseLocked == false && getMouseClick == true)
+        {
+            getMouseClick = false;
+            mouseLocked = true;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
 
         ChangeFieldOfView();
 
@@ -58,21 +70,20 @@ public class CameraController : MonoBehaviour
         {
             bottomY = hit.point.y;
         }
-
     }
 
     void LateUpdate()
     {
-        if (!isControl)
-            return;
+        if (isControl && mouseLocked)
+        {
+            float x = Input.GetAxis("Mouse X") * turnSpeed;
+            float y = Input.GetAxis("Mouse Y") * turnSpeed;
 
-        float x = Input.GetAxis("Mouse X") * turnSpeed;
-        float y = Input.GetAxis("Mouse Y") * turnSpeed;
+            Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
+            Quaternion rotateY = Quaternion.AngleAxis(y, Vector3.left);
 
-        Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
-        Quaternion rotateY = Quaternion.AngleAxis(y, Vector3.left);
-
-        camPos = rotateX * rotateY * camPos;
+            camPos = rotateX * rotateY * camPos;
+        }
 
         Vector3 finalPos = camPos + target.position;
 
@@ -95,7 +106,6 @@ public class CameraController : MonoBehaviour
         cameraDistance = Mathf.Abs(_distance);
         camPos = new Vector3(0f, 0f, cameraDistance);
     }
-
     Vector3 ClampBoundary(Vector3 vector)
     {
         vector.y = Mathf.Clamp(vector.y, bottomY + boundaryBottom, limitUpHeight);
@@ -106,6 +116,7 @@ public class CameraController : MonoBehaviour
     {
         isControl = state;
     }
+
     void ChangeFieldOfView()
     {
         float wheel = Input.GetAxis("Mouse ScrollWheel");
@@ -118,5 +129,7 @@ public class CameraController : MonoBehaviour
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
     }
 
-
+    public void OnPointerClick(PointerEventData eventData)
+    {
+    }
 }
