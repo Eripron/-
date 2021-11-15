@@ -45,8 +45,6 @@ public class PlayerStatus : Status
         }
     }
 
-
-
     public int SP
     {
         get { return sp; }

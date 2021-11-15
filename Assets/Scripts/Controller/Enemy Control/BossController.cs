@@ -9,7 +9,6 @@ public class BossController : EnemyController, IDamaged
     bool isKnockDown = false;
     bool isCheck = false;
 
-
     int moveCount = 0;
     float originSpeed;
 
@@ -46,11 +45,11 @@ public class BossController : EnemyController, IDamaged
                 RotateToPlayer(true);
 
                 float percentage = Random.Range(0, 100);
-                if (percentage < attackPercentage && !isAttack)
+                if (percentage < attackPercentage && !isAttack && IsPlayerFront())
                 {
                     CoAttack = StartCoroutine(AttackCoroutine());
                 }
-                else
+                else if(IsPlayerFront())
                 {
                     StartCoroutine(IntimidateAnimCoroutine());
                 }
@@ -121,8 +120,14 @@ public class BossController : EnemyController, IDamaged
     public override void Dead()
     {
         base.Dead();
+
+        Invoke("ClearMap", 5f);
     }
 
+    void ClearMap()
+    {
+        GameManager.Instance.OnMapClear();
+    }
     
 
     // ³Ë´Ù¿î

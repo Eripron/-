@@ -49,7 +49,7 @@ public class NormalMonsterController : EnemyController
                     if(IsPlayerFront())
                         StartCoroutine(AttackCoroutine());
                 }
-                else
+                else if(IsPlayerFront())
                 {
                     if (coWaitMoment != null)
                         StopCoroutine(coWaitMoment);

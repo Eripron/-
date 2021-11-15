@@ -18,8 +18,14 @@ public class MapClearOrFailUI : MonoBehaviour
     - off ui           map info, skill ui
      */
 
+    [SerializeField] CanvasGroup canvasGroup;
+
     [SerializeField] GameObject clearImage;
     [SerializeField] GameObject failImage;
+
+    [SerializeField] GameObject[] offUIWindows;
+    //[SerializeField] GameObject[] offUis;
+
 
     [SerializeField] Button homeButton;
     [SerializeField] Button retryButton;
@@ -27,17 +33,57 @@ public class MapClearOrFailUI : MonoBehaviour
 
     void Start()
     {
-        homeButton.onClick.AddListener(Home);
-        retryButton.onClick.AddListener(Retry);
+        //homeButton.onClick.AddListener(Home);
+        //retryButton.onClick.AddListener(Retry);
     }
 
 
     private void Home()
     {
     }
+
     private void Retry()
     {
+
     }
 
 
+
+    public void OnMapClearOrFailUI(bool isClear)
+    {
+        this.gameObject.SetActive(true);
+
+        clearImage.gameObject.SetActive(isClear);
+        failImage.gameObject.SetActive(!isClear);
+
+        foreach (GameObject ui in offUIWindows)
+            ui.SetActive(false);
+
+        StartCoroutine(AppearUI());
+    }
+
+
+    void ResetUI()
+    {
+
+    }
+
+
+    // 1초동안 걸쳐서 알파값 1로 간다.
+    IEnumerator AppearUI()
+    {
+        float start = 0f;
+        float duration = 1f;
+
+        while ((start += Time.deltaTime) <= duration)
+        {
+            canvasGroup.alpha = start / duration;
+            yield return null;
+        }
+        canvasGroup.alpha = 1f;
+    }
+
+    
+
 }
+
