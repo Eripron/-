@@ -49,7 +49,7 @@ public class FadeManager : Singleton<FadeManager>
 
     IEnumerator FadeInCoroutine(bool isLoading, System.Action func)
     {
-        float duration = 2f;
+        float duration = 1f;
         float startTime = 0f;
 
         while ((startTime += Time.deltaTime) <= duration)

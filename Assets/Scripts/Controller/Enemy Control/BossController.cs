@@ -49,7 +49,7 @@ public class BossController : EnemyController, IDamaged
                 {
                     CoAttack = StartCoroutine(AttackCoroutine());
                 }
-                else if(IsPlayerFront())
+                else
                 {
                     StartCoroutine(IntimidateAnimCoroutine());
                 }

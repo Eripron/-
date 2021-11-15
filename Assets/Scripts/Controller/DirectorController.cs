@@ -16,18 +16,43 @@ public class DirectorController : MonoBehaviour
 
     PlayableDirector director;
     
-    bool isContacted = false;
+    bool isPlayed = false;
+    bool isSkip = true;
 
     void Start()
     {
         director = GetComponent<PlayableDirector>();     
     }
 
+    void Update()
+    {
+        // 컷신 실행중이고 스킵이 안되었으면 skip할 지 안할지 check한다.
+        if (isPlayed && isSkip)
+            return;
+
+        if(Input.GetKeyDown(KeyCode.Escape) && !isSkip)
+        {
+            isSkip = true;
+            FadeManager.Instance.FadeIn(false, SkipTimeline);
+        }
+
+    }
+
+    public void OnSkipAble()
+    {
+        isSkip = false;
+    }
+
+    void SkipTimeline()
+    {
+        director.time = 909.0f;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(!isContacted)
+        if(!isPlayed)
         {
-            isContacted = true;
+            isPlayed = true;
 
             if (director != null && other.gameObject.CompareTag("Player"))
             {
@@ -71,6 +96,8 @@ public class DirectorController : MonoBehaviour
 
         foreach (var ob in onObjects)
             ob.SetActive(!_state);
+
+        isSkip = true;
     }
 
 }

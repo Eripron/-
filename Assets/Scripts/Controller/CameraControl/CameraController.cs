@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
-    , IPointerClickHandler
 {
     [SerializeField] Transform target;
 
@@ -47,6 +46,14 @@ public class CameraController : MonoBehaviour
         return Cursor.lockState == CursorLockMode.Locked;
     }
 
+    public void OnMouseAble()
+    {
+        // 외부에서 호출하는 마우스 on 함수 
+        mouseLocked = false;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape) && mouseLocked == true)
@@ -61,7 +68,6 @@ public class CameraController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-
         ChangeFieldOfView();
 
         Ray ray = new Ray(transform.position, Vector3.down);
@@ -72,7 +78,29 @@ public class CameraController : MonoBehaviour
         }
     }
 
+
+    Vector2 input;
+
     void LateUpdate()
+    {
+        // new rotate
+
+        input.x = Input.GetAxis("Mouse X") * turnSpeed;
+        input.y = Input.GetAxis("Mouse Y") * turnSpeed;
+
+        if(input.magnitude != 0.0f)
+        {
+            Quaternion rotation = target.rotation;
+            rotation.eulerAngles = new Vector3(rotation.eulerAngles.x + input.y, rotation.eulerAngles.y + input.x, rotation.eulerAngles.z);
+            target.rotation = rotation;
+        }
+
+        transform.LookAt(target);
+
+    }
+
+    // 원래 회전방식 
+    void OriginRotate()
     {
         if (isControl && mouseLocked)
         {
@@ -84,6 +112,7 @@ public class CameraController : MonoBehaviour
 
             camPos = rotateX * rotateY * camPos;
         }
+
 
         Vector3 finalPos = camPos + target.position;
 
@@ -100,6 +129,7 @@ public class CameraController : MonoBehaviour
         transform.position = ClampBoundary(finalPos);
         transform.LookAt(target);
     }
+
 
     void SetCameraDistance(float _distance)
     {
@@ -129,7 +159,4 @@ public class CameraController : MonoBehaviour
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-    }
 }
