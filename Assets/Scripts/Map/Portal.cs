@@ -65,14 +65,17 @@ public class Portal : MonoBehaviour
         }
     }
 
+
     void Teleport()
     {
         if (destination == null)
             return;
 
         destination.OpenRegion();
+        destination.containedRegion.OnSetMinimapCamera();
         Movement.Instance.TeleportToPosition(destination.transform.position, destination.transform.rotation);
         CloseRegion();
     }
+
 
 }

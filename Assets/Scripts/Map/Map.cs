@@ -14,6 +14,7 @@ public class Map : MonoBehaviour
     [SerializeField] string mapDifficulty;
     [SerializeField] string mapName;
 
+
     [SerializeField] Transform startPoint;
     [SerializeField] RegionInfo[] allRegionHave;
 

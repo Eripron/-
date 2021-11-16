@@ -10,12 +10,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] int maxDistance;
 
     [SerializeField] float turnSpeed;
+    [SerializeField] float lerpSpeed;
     [SerializeField] float viewInterval;
 
     [SerializeField] float boundaryBottom;
     [SerializeField] float limitUpHeight;
     [SerializeField] float limitDownHeight;
-
 
     Camera cam;
 
@@ -95,6 +95,11 @@ public class CameraController : MonoBehaviour
             float x = Input.GetAxis("Mouse X") * turnSpeed;
             float y = Input.GetAxis("Mouse Y") * turnSpeed;
 
+            if(transform.eulerAngles.x > 20.0f && transform.eulerAngles.x < 180.0f && y < 0)
+                y = 0;
+            else if(transform.eulerAngles.x > 180.0f && transform.eulerAngles.x < 330.0f && y > 0)
+                y = 0;
+
             Quaternion rotateX = Quaternion.AngleAxis(x, Vector3.up);
             Quaternion rotateY;
 
@@ -120,7 +125,6 @@ public class CameraController : MonoBehaviour
             camPos = rotateX * rotateY * camPos;
         }
 
-
         Vector3 finalPos = camPos + target.position;
 
         Vector3 dir = (finalPos - target.position).normalized;
@@ -132,9 +136,7 @@ public class CameraController : MonoBehaviour
         }
 
         finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
-
-        transform.position = ClampBoundary(finalPos);
-
+        transform.position = Vector3.Slerp(transform.position, ClampBoundary(finalPos), Time.deltaTime * lerpSpeed);
         transform.LookAt(target);
     }
 
@@ -167,5 +169,4 @@ public class CameraController : MonoBehaviour
 
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
     }
-
 }

@@ -5,22 +5,19 @@ using UnityEngine;
 public class MinimapCameraContoller : MonoBehaviour
 {
     [SerializeField] float offsetY;
-
+    [SerializeField] Transform playerIcon;
 
     Transform _transform;
     Movement player;
 
-
-    Camera thisCam;
-
-
+    Camera minimapCam;
 
     void Start()
     {
         _transform = this.transform;
         player = Movement.Instance;
 
-        thisCam = GetComponent<Camera>();
+        minimapCam = GetComponent<Camera>();
     }
 
     void LateUpdate()
@@ -30,10 +27,12 @@ public class MinimapCameraContoller : MonoBehaviour
         _transform.position = new Vector3(x, offsetY, z);
     }
 
-    public void OnSetCameraFieldOfView(float viewValue)
+    public void OnSetMinimapCamera(float cameraSize, Vector3 iconSize)
     {
-        thisCam.fieldOfView = viewValue;
+        minimapCam.orthographicSize = cameraSize;
+        playerIcon.localScale = iconSize;
     }
+
 
 
 }
