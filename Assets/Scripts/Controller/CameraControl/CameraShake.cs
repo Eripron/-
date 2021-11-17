@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
+    [SerializeField] bool isDuration;
     [SerializeField] float duration;
+    [SerializeField] float rangeX;
+    [SerializeField] float rangeY;
     [SerializeField] float magnitude;
+
+    WaitForSeconds wait = new WaitForSeconds(0.01f);
 
     public void OnShake()
     {
@@ -16,17 +21,32 @@ public class CameraShake : MonoBehaviour
     {
         Vector3 origin = transform.localPosition;
 
-        float elapsd = 0.0f;
+        float x;
+        float y;
 
-        while (elapsd < duration)
+        if (isDuration)
         {
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-0.8f, 0.8f) * magnitude;
+            float elapsd = 0.0f;
+            while (elapsd < duration)
+            {
+                x = Random.Range(-rangeX, rangeX) * magnitude;
+                y = Random.Range(-rangeY, rangeY) * magnitude;
 
-            transform.localPosition = Vector3.Slerp(transform.localPosition, new Vector3(x, y, origin.z), Time.deltaTime * 10f);
+                transform.localPosition =
+                    new Vector3(origin.x + x, origin.y + y, origin.z);
 
-            elapsd += Time.deltaTime;
-            yield return null;
+                elapsd += Time.deltaTime;
+                yield return null;
+            }
+        }
+        else
+        {
+            x = Random.Range(-rangeX, rangeX) * magnitude;
+            y = Random.Range(-rangeY, rangeY) * magnitude;
+
+            transform.localPosition =
+                new Vector3(origin.x + x, origin.y + y, origin.z);
+            yield return wait;
         }
 
         transform.localPosition = origin;

@@ -10,14 +10,18 @@ public class PlayerAttackAble : MonoBehaviour
     [SerializeField] Transform endAttackPivot;
     [SerializeField] LayerMask enemyLayer;
 
+    [SerializeField] CameraShake mainCam;
+    [SerializeField] Transform effectPivot;
+
     PlayerStatus playerStatus;
+
 
     // 검색한 적 저장
     List<IDamaged> enemys = new List<IDamaged>();
 
     void Start()
     {
-        playerStatus = GetComponentInParent<PlayerStatus>();     
+        playerStatus = GetComponentInParent<PlayerStatus>();
     }
 
     public void OnCheckEnemyInAttackArea()
@@ -26,6 +30,7 @@ public class PlayerAttackAble : MonoBehaviour
 
         foreach(Collider col in colliders)
         {
+
             IDamaged enemy = col.gameObject.GetComponent<IDamaged>();
 
             if (enemy == null)
@@ -36,7 +41,10 @@ public class PlayerAttackAble : MonoBehaviour
             }
 
             if (!enemys.Contains(enemy))
+            {
+                HitEffectManager.Instance.OnPlayerHitEffect(effectPivot);
                 enemys.Add(enemy);
+            }
         }
     }
 
@@ -46,6 +54,8 @@ public class PlayerAttackAble : MonoBehaviour
         {
             if (enemy == null)
                 continue;
+
+            mainCam.OnShake();
 
             // 공격력 범위 
             int ranPower = Random.Range(playerStatus.AttackPower - playerStatus.AttackPower / 3, playerStatus.AttackPower + playerStatus.AttackPower / 3);
