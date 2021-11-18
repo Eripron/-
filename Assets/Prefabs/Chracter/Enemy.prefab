@@ -147,7 +147,7 @@ MonoBehaviour:
   characterName: Enemy1
   attackPower: 10
   defensePower: 5
-  maxHp: 100
+  maxHp: 10000
 --- !u!114 &1734603099
 MonoBehaviour:
   m_ObjectHideFlags: 0
