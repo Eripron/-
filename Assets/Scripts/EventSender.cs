@@ -6,8 +6,13 @@ using UnityEngine.Events;
 
 public class EventSender : MonoBehaviour
 {
+    // 공격 검 효과 
+    [SerializeField] GameObject attackEffect;
+    [SerializeField] GameObject footEffect;
+
     [SerializeField] GameObject target;
     [SerializeField] PlayerAttackAble attackAble;
+
 
     public UnityEvent OnSendEvent;
     public UnityEvent OnSendEvent2;
@@ -58,11 +63,24 @@ public class EventSender : MonoBehaviour
     public void OnStartCheckEnemyInAttack()
     {
         isCheck = true;
+
+        // 검신 효과 
+        attackEffect.SetActive(true);
     }
     public void OnEndCheckEnemyInAttack()
     {
         isCheck = false;
         attackAble.OnDamagedToEnemy();
+
+        attackEffect.SetActive(false);
+    }
+
+    public void OnFootEffect()
+    {
+        if(footEffect.activeSelf == true)
+            footEffect.SetActive(false);
+
+        footEffect.SetActive(true);
     }
 
 }

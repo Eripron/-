@@ -12,7 +12,6 @@ enum LAYER
 [RequireComponent(typeof(PlayerStatus))]
 public class Movement : Singleton<Movement>
 {
-
     // tmp  ------------------------------------------------
     //------------------------------------------------------
     public SkinnedMeshRenderer[] meshs;
