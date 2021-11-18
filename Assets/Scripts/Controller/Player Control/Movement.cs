@@ -14,8 +14,6 @@ public class Movement : Singleton<Movement>
 {
     // tmp  ------------------------------------------------
     //------------------------------------------------------
-    [SerializeField] GameObject attackEffect;
-
     public SkinnedMeshRenderer[] meshs;
 
     [Header("Ground Check")]
@@ -79,6 +77,7 @@ public class Movement : Singleton<Movement>
         camControl = cam.GetComponent<CameraController>();
         status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
+
     }
 
     void Update()
@@ -402,11 +401,4 @@ public class Movement : Singleton<Movement>
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundPivot.position, groundRadius);
     }
-
-
-    public void OnAttackEffect()
-    {
-
-    }
-
 }

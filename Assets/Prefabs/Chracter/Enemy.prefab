@@ -147,7 +147,7 @@ MonoBehaviour:
   characterName: Enemy1
   attackPower: 10
   defensePower: 5
-  maxHp: 10000
+  maxHp: 100000
 --- !u!114 &1734603099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -851,6 +851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackEffect: {fileID: 0}
+  footEffect: {fileID: 0}
   target: {fileID: 1314390194677183956}
   attackAble: {fileID: 0}
   OnSendEvent:
