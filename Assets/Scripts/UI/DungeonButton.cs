@@ -25,6 +25,7 @@ public class DungeonButton : MonoBehaviour
     public void OnDetailWindow()
     {
         datailWindow.OnDetailDungeonUI(this);
+        DungeonMapUI.Instance.OnOffDungeonSelectWin();
     }
 
 
