@@ -6,15 +6,15 @@ using UnityEngine.EventSystems;
 public class MouseBound : MonoBehaviour
     , IPointerClickHandler
 {
-    Camera cam;
+    CameraController cam;
 
     void Start()
     {
-        cam = Camera.main;    
+        cam = FindObjectOfType<CameraController>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        cam.GetComponent<CameraController>().getMouseClick = true;
+        cam.getMouseClick = true;
     }
 }

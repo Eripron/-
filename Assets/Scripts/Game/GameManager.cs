@@ -7,7 +7,6 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] MapClearOrFailUI clearOrFailUI; 
 
-
     new void Awake()
     {
         base.Awake();
@@ -21,6 +20,7 @@ public class GameManager : Singleton<GameManager>
 
         Camera.main.GetComponent<CameraController>().OnMouseAble();
     }
+
     public void OnMapFail()
     {
         // - 버튼 클릭시 호출하는 걸로만 하기  

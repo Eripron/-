@@ -14,14 +14,26 @@ public class DirectorController : MonoBehaviour
     [SerializeField] GameObject[] offObjects;
     [SerializeField] GameObject[] onObjects;
 
-    PlayableDirector director;
-    
+    [SerializeField] PlayableDirector director;
+
+    Camera objectToBind;
+    string trackName = "CamTrack";
+
     bool isPlayed = false;
     bool isSkip = true;
 
     void Start()
     {
-        director = GetComponent<PlayableDirector>();     
+        objectToBind = Camera.main;
+
+        foreach(var output in director.playableAsset.outputs)
+        {
+            if(output.streamName.Equals(trackName))
+            {
+                director.SetGenericBinding(output.sourceObject, objectToBind);
+                break;
+            }
+        }
     }
 
     void Update()

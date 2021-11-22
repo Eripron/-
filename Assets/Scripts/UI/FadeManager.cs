@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class FadeManager : Singleton<FadeManager>
 {
-    Movement player;
-    [SerializeField] CanvasGroup CG;
-
     [SerializeField] GameObject loadingBar;
     [SerializeField] Slider loadingSlider;
 
-    //
+    CanvasGroup CG;
+
+    // 존재 이유? 모르겠음 왜 적었지 
+    Movement player;
     CameraController mainCam;
 
     System.Action DelOnEvent;
@@ -22,27 +22,23 @@ public class FadeManager : Singleton<FadeManager>
     {
         base.Awake();
 
-        player = FindObjectOfType<Movement>();
-        ResetFade();
+        CG = GetComponent<CanvasGroup>();
+
+        InitFadeUI();
     }
 
-    [ContextMenu("Fade")]
     public void FadeIn(bool isLoading = true, System.Action func = null)
     {
-        // 페이딩 중이라면 실행 x
         if (isFading)
             return;
 
         isFading = true;
 
         if (func != null)
-        {
             DelOnEvent += func;
-            Debug.Log("함수 추가");
-        }
 
         // fade 중에는 플레이어 이동 불가로 만듬 
-        player.SetActive(false);
+        //player.SetActive(false);
 
         StartCoroutine(FadeInCoroutine(isLoading, func));
     }
@@ -59,6 +55,9 @@ public class FadeManager : Singleton<FadeManager>
         }
         CG.alpha = 1f;
 
+        // 함수 콜 
+        DelOnEvent?.Invoke();
+
         if (isLoading)
         {
             loadingBar.SetActive(true);
@@ -73,7 +72,6 @@ public class FadeManager : Singleton<FadeManager>
         }
 
         yield return new WaitForSeconds(1f);
-        isFading = false;
 
         FadeOut(func);
     }
@@ -81,33 +79,29 @@ public class FadeManager : Singleton<FadeManager>
 
     public void FadeOut(System.Action func)
     {
-        Debug.Log("함수 콜");
-        DelOnEvent?.Invoke();
-
         if (func != null)
-        {
             DelOnEvent -= func;
-            Debug.Log("함수 빼기");
-        }
 
         StartCoroutine(FadeOutCoroutine());
     }
 
     IEnumerator FadeOutCoroutine()
     {
-        yield return new WaitUntil(() => isFading == false);
+        InitFadeUI();
+        isFading = false;
 
-        player.SetActive(true);
-        ResetFade();
+        //player.SetActive(true);
+
+        yield return null;
     }
    
 
-    void ResetFade()
+    void InitFadeUI()
     {
-        CG.alpha = 0f;
-        loadingBar.SetActive(false);
         loadingSlider.value = 0f;
-    }
+        loadingBar.SetActive(false);
 
+        CG.alpha = 0f;
+    }
 
 }

@@ -12,7 +12,6 @@ public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
     [SerializeField] Transform parent;
     Transform target;   // world position target
 
-
     public void OnSetTarget(Transform deadPlayer)
     {
         target = deadPlayer;

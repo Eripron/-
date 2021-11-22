@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
@@ -27,12 +26,16 @@ public class PlayerStatus : Status
         set
         {
             base.Hp = value;
-            if(Hp <= 0)
+            if (Hp <= 0)
             {
                 if (!isAlive)
                     return;
 
                 isAlive = false;
+
+
+                if (deadUiManager == null)
+                    deadUiManager = FindObjectOfType<DeadUIManager>();
 
                 deadUiManager.OnSetTarget(transform);
                 deadUiManager.SetDeadUI(true, aliveCount);
@@ -40,8 +43,8 @@ public class PlayerStatus : Status
 
             StatusUiManager.Instance.SetHpUI(hp, MaxHp);
 
-
-            MapInfoUI.Instance.OnSetEachPlayerHpGage(Name, Hp, MaxHp);
+            // ------------- 고쳐야 한다.
+            //MapInfoUI.Instance.OnSetEachPlayerHpGage(Name, Hp, MaxHp);
         }
     }
 
@@ -92,7 +95,6 @@ public class PlayerStatus : Status
     {
         player = Movement.Instance;
         statusUIManager = StatusUiManager.Instance;
-        deadUiManager = FindObjectOfType<DeadUIManager>();
 
         base.InitStatus();
 

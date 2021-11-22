@@ -41,10 +41,12 @@ public class CameraController : MonoBehaviour
         SetCameraDistance(maxDistance);
     }
 
+
     public bool CursorLockState()
     {
         return Cursor.lockState == CursorLockMode.Locked;
     }
+
 
     public void OnMouseAble()
     {

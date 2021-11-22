@@ -22,6 +22,7 @@ public class PlayerAttackAble : MonoBehaviour
     void Start()
     {
         playerStatus = GetComponentInParent<PlayerStatus>();
+        mainCam = FindObjectOfType<CameraShake>();
     }
 
     public void OnCheckEnemyInAttackArea()
