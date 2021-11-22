@@ -18,6 +18,7 @@ public class EnemyGenerator : MonoBehaviour
 
     WaitForSeconds time = new WaitForSeconds(1f);
 
+    // this transform
     Transform _transform;
 
     [Header("Enemy Create")]
@@ -32,7 +33,6 @@ public class EnemyGenerator : MonoBehaviour
     List<NormalMonsterController> enemys = new List<NormalMonsterController>();
 
     int count = 0;
-
     bool isUpdate = false;
 
     void Start()
@@ -72,14 +72,13 @@ public class EnemyGenerator : MonoBehaviour
                 SetAllPortalInRegion(true);
 
                 for (int i = 0; i < createPos.Length; i++)
-                {
                     StartCoroutine(CreateMoster(createPos[i].position, createPos[i].rotation));
-                }
             }
 
         }
     }
 
+    // monstart 죽으면 외부에서 요청 
     public void OnChangeEnemyCount(NormalMonsterController enemy)
     {
         if(enemys.Contains(enemy))

@@ -17,7 +17,6 @@ public class MapInfoUI : Singleton<MapInfoUI>
 
     Dictionary<string, PlayerInfoUI> playerInfoUIs = new Dictionary<string, PlayerInfoUI>();
 
-
     new void Awake()
     {
         base.Awake();    
@@ -25,10 +24,8 @@ public class MapInfoUI : Singleton<MapInfoUI>
 
     public void OnSetMapInfoUI(Map mapInfo)
     {
-        Debug.Log("OnSetMapInfo");
-
-        mapNameText.text = mapInfo.MapName;
         mapLevelText.text = mapInfo.MapLevel;
+        mapNameText.text = mapInfo.MapName;
         mapImage.sprite = mapInfo.MapImage;
 
         PlayerStatus[] players = FindObjectsOfType<PlayerStatus>();
@@ -44,18 +41,16 @@ public class MapInfoUI : Singleton<MapInfoUI>
         }
     }
 
-    public void OnSetEachPlayerHpGage(string _playerName, int hp, int maxHp)
-    {
-        Debug.Log("OnSetEach");
 
+    public void OnChangePlayerHpGage(string _playerName, int hp, int maxHp)
+    {
         if (playerInfoUIs.ContainsKey(_playerName))
         {
             float fill = (float)hp / maxHp;
+            if (fill <= 0)
+                fill = 0;
+
             playerInfoUIs[_playerName].SetHpGage(fill);
-        }
-        else
-        {
-            Debug.Log("플레이어 정보 없음");
         }
     }
 

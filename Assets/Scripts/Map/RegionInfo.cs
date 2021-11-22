@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class RegionInfo : MonoBehaviour
 {
-
-    // temp
-    // 현재 이 지역을 비추는 미니맵 카메라의 뷰를 설정할 값을 가지고 있다.
     [SerializeField] float miniMapCameraSize;
     [SerializeField] Vector3 playerIconSize;
 
@@ -28,6 +26,9 @@ public class RegionInfo : MonoBehaviour
 
     public void OnSetMinimapCamera()
     {
+        if (minimapCam == null)
+            return;
+
         minimapCam.OnSetMinimapCamera(miniMapCameraSize, playerIconSize);
     }
 

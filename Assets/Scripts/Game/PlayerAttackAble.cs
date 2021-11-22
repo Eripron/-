@@ -43,7 +43,9 @@ public class PlayerAttackAble : MonoBehaviour
 
             if (!enemys.Contains(enemy))
             {
-                HitEffectManager.Instance.OnPlayerHitEffect(effectPivot);
+                if(HitEffectManager.Instance != null)
+                    HitEffectManager.Instance.OnPlayerHitEffect(effectPivot);
+
                 enemys.Add(enemy);
             }
         }

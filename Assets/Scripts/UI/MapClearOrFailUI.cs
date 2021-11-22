@@ -18,14 +18,17 @@ public class MapClearOrFailUI : MonoBehaviour
     - off ui           map info, skill ui
      */
 
-    [SerializeField] CanvasGroup canvasGroup;
+    CanvasGroup canvasGroup;
 
+    [Header("On/Off Objects")]
+    [SerializeField] GameObject uiWindow;
+    [SerializeField] GameObject[] offUIWindows;
+
+    [Header("Image")]
     [SerializeField] GameObject clearImage;
     [SerializeField] GameObject failImage;
 
-    [SerializeField] GameObject[] offUIWindows;
     //[SerializeField] GameObject[] offUis;
-
 
     [SerializeField] Button homeButton;
     [SerializeField] Button retryButton;
@@ -33,6 +36,9 @@ public class MapClearOrFailUI : MonoBehaviour
 
     void Start()
     {
+        canvasGroup = GetComponentInChildren<CanvasGroup>();
+        canvasGroup.alpha = 0f;
+
         //homeButton.onClick.AddListener(Home);
         //retryButton.onClick.AddListener(Retry);
     }
@@ -48,10 +54,9 @@ public class MapClearOrFailUI : MonoBehaviour
     }
 
 
-
     public void OnMapClearOrFailUI(bool isClear)
     {
-        this.gameObject.SetActive(true);
+        uiWindow.gameObject.SetActive(true);
 
         clearImage.gameObject.SetActive(isClear);
         failImage.gameObject.SetActive(!isClear);
@@ -82,7 +87,6 @@ public class MapClearOrFailUI : MonoBehaviour
         }
         canvasGroup.alpha = 1f;
     }
-
     
 
 }

@@ -10,6 +10,7 @@ public class Sparking : MonoBehaviour
 
     WaitForSeconds wait = new WaitForSeconds(0.8f);
 
+
     void Start()
     {
         state = sparkTarget.activeSelf;
@@ -17,10 +18,11 @@ public class Sparking : MonoBehaviour
         StartCoroutine(SparkCoroutine());
     }
 
+
     IEnumerator SparkCoroutine()
     {
-        sparkTarget.SetActive(!state);
         state = !state;
+        sparkTarget.SetActive(state);
         yield return wait;
 
         StartCoroutine(SparkCoroutine());

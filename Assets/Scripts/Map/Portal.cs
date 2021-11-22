@@ -11,25 +11,19 @@ public class Portal : MonoBehaviour
     }
 
     [SerializeField] Color[] portalColor;
-    [SerializeField] new SpriteRenderer renderer;
-
-
-    // [SerializeField] 나중에 지우면 됩니다 ---------------------------
-    // 이 포탈이 포함되어 있는 맵 object
-     RegionInfo containedRegion;
+    new SpriteRenderer renderer;
 
     // 이 포탈이 연결된 다음 포탈 
-     [SerializeField] Portal destination;
+    [SerializeField] Portal destination;
+
+     RegionInfo containedRegion;
      BoxCollider col;
-
-
-    // 상태 체크 
-    //bool isLock = false;
 
     void Awake()
     {
-        col = GetComponent<BoxCollider>();
         containedRegion = GetComponentInParent<RegionInfo>();
+        renderer = GetComponentInChildren<SpriteRenderer>();
+        col = GetComponent<BoxCollider>();
     }
 
     public void SetPortal(bool _isLock)
@@ -45,7 +39,6 @@ public class Portal : MonoBehaviour
             col.isTrigger = true;
             renderer.color = portalColor[(int)PORTAL_COLOR.UnlockColor];
         }
-
     }
 
     public void OpenRegion()
@@ -65,7 +58,6 @@ public class Portal : MonoBehaviour
         }
     }
 
-
     void Teleport()
     {
         if (destination == null)
@@ -76,6 +68,5 @@ public class Portal : MonoBehaviour
         Movement.Instance.TeleportToPosition(destination.transform.position, destination.transform.rotation);
         CloseRegion();
     }
-
 
 }

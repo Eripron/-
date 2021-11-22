@@ -46,7 +46,7 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
     new void Awake()
     {
         base.Awake();
-        SetActivation(false);
+        SetBossHpBarActive(false);
     }
 
     void Update()
@@ -57,10 +57,9 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
     // 체력바 초기화 
     public void OnInit(EnemyStatus _boss)
     {
-        SetActivation(true);
+        SetBossHpBarActive(true);
 
         bossInfo = _boss;
-
         SetBossNameText(bossInfo.Name);
 
         maxHpAmountOfOneBar = bossInfo.MaxHp / 10;
@@ -93,7 +92,7 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
 
             if (remainHpBarCount <= 0)
             {
-                SetActivation(false);
+                SetBossHpBarActive(false);
                 StartCoroutine(TimeDelayCoroutine());
             }
         }
@@ -156,21 +155,20 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
         bossNameText.text = bossName;
     }
     // boss hp 활성화 / 비활성화 
-    void SetActivation(bool _activation)
+    void SetBossHpBarActive(bool _activation)
     {
         bossHpWindow.SetActive(_activation);
     }
 
     public void OnDamaged(float damage)
     {
-        // 보스가 받은 데미지 양 
         receivedDamage += damage;
     }
 
     IEnumerator TimeDelayCoroutine()
     {
         Time.timeScale = 0.1f;
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1f;
     }
 }

@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    // 가지고 있어야 하는 정보 
-    // 던전 이름  
-    // 던전 단계 
-    // 던전 보스 sprite
-
     [Header("MapInfo")]
     [SerializeField] Sprite mapSprite;
     [SerializeField] string mapDifficulty;
     [SerializeField] string mapName;
-
 
     [SerializeField] Transform startPoint;
     [SerializeField] RegionInfo[] allRegionHave;
@@ -24,18 +18,17 @@ public class Map : MonoBehaviour
     public Sprite MapImage => mapSprite;
 
 
-    Movement player;
-
-
     void Start()
     {
-        player = FindObjectOfType<Movement>();
+        Movement player = Movement.Instance;
 
         for(int i=0; i<allRegionHave.Length; i++)
         {
             allRegionHave[i].OnOpenRegion();
 
-            if (i != 0)
+            if (i == 0)
+                allRegionHave[i].OnSetMinimapCamera();
+            else
                 allRegionHave[i].OnCloseRegion();
         }
 
@@ -46,7 +39,5 @@ public class Map : MonoBehaviour
         // MapUI set 보다 먼저 불려서 문제 였지만 null방지로 통해서 오류 해결 
         MapInfoUI.Instance.OnSetMapInfoUI(this);
     }
-
-    // init을 나중에 함수로  ㄱ 
 
 }

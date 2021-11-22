@@ -6,11 +6,18 @@ using UnityEngine.UI;
 
 public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
 {
-    [SerializeField] Text remainReviveCountText;
-    [SerializeField] CanvasGroup daedUiGroup;
-
+    [SerializeField] CanvasGroup deadUiWindow;
     [SerializeField] Transform parent;
+
+    // 플레이어 부활 가능 횟수 알려주는 정보 
+    [SerializeField] Text remainReviveCountText;
+
     Transform target;   // world position target
+
+    void Start()
+    {
+        deadUiWindow.alpha = 0f;     
+    }
 
     public void OnSetTarget(Transform deadPlayer)
     {
@@ -18,11 +25,12 @@ public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
     }
 
     // 활성화 
-    public void SetDeadUI(bool actication, int count = -1)
+    public void SetDeadUI(bool activeState, int count = -1)
     {
-        if(actication)
+        if(activeState)
         {
-            daedUiGroup.alpha = 1;
+            if (count <= 0)
+                count = 0;
             remainReviveCountText.text = string.Format("({0})회 가능", count);
 
             // help ui 생성 해야 한다
@@ -31,11 +39,13 @@ public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
 
             if (target != null)
                 helpUi.SetWorldPosition(target);
+
+            deadUiWindow.alpha = 1;
         }
         else
         {
             Clear();
-            daedUiGroup.alpha = 0;
+            deadUiWindow.alpha = 0;
         }
     }
 

@@ -8,6 +8,11 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField] Text playerNameText;
     [SerializeField] Image playerHpGageImage;
 
+    void Start()
+    {
+        if (playerHpGageImage != null)
+            playerHpGageImage.fillAmount = 1f;     
+    }
 
     public void OnSetPlayerInfoUI(string _playerName, int hp, int maxHp)
     {

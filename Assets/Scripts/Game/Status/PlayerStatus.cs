@@ -33,18 +33,21 @@ public class PlayerStatus : Status
 
                 isAlive = false;
 
-
                 if (deadUiManager == null)
-                    deadUiManager = FindObjectOfType<DeadUIManager>();
+                    deadUiManager = DeadUIManager.Instance;
 
-                deadUiManager.OnSetTarget(transform);
-                deadUiManager.SetDeadUI(true, aliveCount);
+                if (deadUiManager)
+                {
+                    deadUiManager.OnSetTarget(transform);
+                    deadUiManager.SetDeadUI(true, aliveCount);
+                }
             }
 
             StatusUiManager.Instance.SetHpUI(hp, MaxHp);
 
             // ------------- 고쳐야 한다.
-            //MapInfoUI.Instance.OnSetEachPlayerHpGage(Name, Hp, MaxHp);
+            if(MapInfoUI.Instance != null)
+                MapInfoUI.Instance.OnChangePlayerHpGage(Name, Hp, MaxHp);
         }
     }
 

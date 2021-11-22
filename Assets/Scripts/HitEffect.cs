@@ -23,5 +23,4 @@ public class HitEffect : PoolObject<HitEffect>
         }
     }
 
-
 }
