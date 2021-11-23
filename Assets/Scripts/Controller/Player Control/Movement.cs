@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 enum LAYER
 {
     LAYER_GROUND = 6,
@@ -36,15 +37,17 @@ public class Movement : Singleton<Movement>
     Camera cam;
     CameraController camControl;
 
+    EventSender eventSender;
+
     PlayerStatus status;
 
 
-    float x;                    
+    float x;
     float z;
     float gravity = (-9.81f * 3f);
 
     int CountAttackClick = 0;
-    
+
 
     Vector3 cameraForward;                  // 카메라가 바라보는 정면 방향 
     Vector3 direction;                      // 캐릭터 이동 방향 
@@ -67,9 +70,15 @@ public class Movement : Singleton<Movement>
 
     public bool IsTown { get; set; }
 
+    static int count = 0;
+    public int Num {get;set;}
+
     new void Awake()
     {
-        base.Awake(); 
+        Debug.Log("player awake");
+
+        base.Awake();
+        Num = ++count;
     }
     void Start()
     {
@@ -79,7 +88,7 @@ public class Movement : Singleton<Movement>
         camControl = cam.GetComponent<CameraController>();
         status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
-
+        eventSender = GetComponentInChildren<EventSender>();
     }
 
     void Update()
@@ -144,6 +153,9 @@ public class Movement : Singleton<Movement>
     {
         StopAllCoroutines();
         StopMove();
+
+        // 검 효과 끄기 
+        eventSender.OnOffAttackEffect();
 
         isDamaged = true;
         isDash = false;
@@ -398,6 +410,7 @@ public class Movement : Singleton<Movement>
 
     public void TeleportToPosition(Vector3 destination, Quaternion rotation)
     {
+        Debug.Log("텔레포트");
         transform.position = destination;
         transform.rotation = rotation;
     }

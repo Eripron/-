@@ -78,7 +78,6 @@ public class EventSender : MonoBehaviour
 
     public void OnOffAttackEffect()
     {
-        Debug.Log("off effect");
         attackEffect.SetActive(false);
     }
 

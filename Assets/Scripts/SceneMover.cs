@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneMover : Singleton<SceneMover>
 {
+    [SerializeField] DontDestroyManager DDM;
+
     public enum SCENE
     {
         None = -1,
@@ -22,7 +24,6 @@ public class SceneMover : Singleton<SceneMover>
     new void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(this);
     }
 
 
