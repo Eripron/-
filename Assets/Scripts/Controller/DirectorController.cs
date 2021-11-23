@@ -27,8 +27,8 @@ public class DirectorController : MonoBehaviour
 
     void Start()
     {
-        SetCameraToTrack();
-        offObjects.Add(Movement.Instance.gameObject);
+        //SetCameraToTrack();
+        //offObjects.Add(Movement.Instance.gameObject);
     }
 
     private void SetCameraToTrack()

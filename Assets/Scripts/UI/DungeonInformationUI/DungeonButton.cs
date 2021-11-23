@@ -12,7 +12,7 @@ public class DungeonButton : MonoBehaviour
     [SerializeField] Sprite bossSprite;
     [SerializeField] Sprite goalSprite;
 
-    [SerializeField] string dungeonName;
+    string dungeonName;
     [SerializeField] string goal;
     [SerializeField] string story;
 
@@ -24,6 +24,11 @@ public class DungeonButton : MonoBehaviour
     public Sprite BossSprite => bossSprite;
     public Sprite GoalSprite => goalSprite;
     public SceneMover.SCENE ConnectScene => connectScene;
+
+    void Start()
+    {
+        dungeonName = gameObject.name;     
+    }
 
     public void OnClickDungeonButton()
     {

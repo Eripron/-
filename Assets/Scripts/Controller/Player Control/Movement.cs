@@ -196,7 +196,8 @@ public class Movement : Singleton<Movement>
 
     void SetCharacterDirection()
     {
-        isAccel = Input.GetKey(KeyCode.LeftShift);
+        if(!IsTown)
+            isAccel = Input.GetKey(KeyCode.LeftShift);
 
         x = Input.GetAxisRaw("Horizontal");
         z = Input.GetAxisRaw("Vertical");
@@ -208,6 +209,7 @@ public class Movement : Singleton<Movement>
 
         isStanding = direction != Vector3.zero ? false : true;
     }
+
     void SetCameraForwardDirection()
     {
         cameraForward = cam.transform.rotation * Vector3.forward;
