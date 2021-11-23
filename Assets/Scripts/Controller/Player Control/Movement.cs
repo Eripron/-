@@ -65,6 +65,8 @@ public class Movement : Singleton<Movement>
     bool isAlive = true;
     bool isActive = true;
 
+    public bool IsTown { get; set; }
+
     new void Awake()
     {
         base.Awake(); 
@@ -98,6 +100,8 @@ public class Movement : Singleton<Movement>
 
         Rotation(direction);
 
+        if (IsTown)
+            return;
 
         if (Input.GetKeyDown(KeyCode.Space) && !isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
@@ -200,8 +204,15 @@ public class Movement : Singleton<Movement>
     }
     void Move()
     {
-        isWalk = (!isStanding && !isAccel) ? true : false;
-        isRun = (!isStanding && isAccel) ? true : false;
+        if (IsTown)
+        {
+            isWalk = (!isStanding) ? true : false;
+        }
+        else
+        {
+            isWalk = (!isStanding && !isAccel) ? true : false;
+            isRun = (!isStanding && isAccel) ? true : false;
+        }
 
         anim.SetBool("IsWalk", isWalk);
         anim.SetBool("IsRun", isRun);

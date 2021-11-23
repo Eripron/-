@@ -12,6 +12,8 @@ public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
     // 플레이어 부활 가능 횟수 알려주는 정보 
     [SerializeField] Text remainReviveCountText;
 
+    [SerializeField] Button reviveButton;
+
     Transform target;   // world position target
 
     void Start()
@@ -49,4 +51,12 @@ public class DeadUIManager : PoolManager<DeadUIManager, HelpUI>
         }
     }
 
+
+    public void ReviveButton()
+    {
+        PlayerStatus player = Movement.Instance.GetComponent<PlayerStatus>();
+
+        if (player != null)
+            player.OnRevivePlayer();
+    }
 }

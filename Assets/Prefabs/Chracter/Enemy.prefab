@@ -145,9 +145,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Enemy1
-  attackPower: 1000
+  attackPower: 100
   defensePower: 5
-  maxHp: 100000
+  maxHp: 100
 --- !u!114 &1734603099
 MonoBehaviour:
   m_ObjectHideFlags: 0

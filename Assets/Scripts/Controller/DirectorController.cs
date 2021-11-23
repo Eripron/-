@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
+interface IDirector
+{
+    void SetActive(bool _active);
+}
+
 public class DirectorController : MonoBehaviour
 {
     /*
@@ -11,24 +16,30 @@ public class DirectorController : MonoBehaviour
     화면 페이딩 -> 캐릭터 ui 등 꺼야하는 ui를 끄고 캐릭터를 끈다. 켜야하는건 켜야한다.
     -> timeline 재생 -> 끝나면 캐릭터 다시 반전 
      */
-    [SerializeField] GameObject[] offObjects;
-    [SerializeField] GameObject[] onObjects;
+    [SerializeField] List<GameObject> offObjects;
+    [SerializeField] List<GameObject> onObjects;
 
     [SerializeField] PlayableDirector director;
 
-    Camera objectToBind;
-    string trackName = "CamTrack";
 
     bool isPlayed = false;
     bool isSkip = true;
 
     void Start()
     {
-        objectToBind = Camera.main;
+        SetCameraToTrack();
+        offObjects.Add(Movement.Instance.gameObject);
+    }
 
-        foreach(var output in director.playableAsset.outputs)
+    private void SetCameraToTrack()
+    {
+        // gameobject 로 넣지 않으면 오류 뜬다.
+        GameObject objectToBind = Camera.main.gameObject;
+        string trackName = "CamTrack";
+
+        foreach (var output in director.playableAsset.outputs)
         {
-            if(output.streamName.Equals(trackName))
+            if (output.streamName.Equals(trackName))
             {
                 director.SetGenericBinding(output.sourceObject, objectToBind);
                 break;
@@ -40,9 +51,13 @@ public class DirectorController : MonoBehaviour
     {
         // 컷신 실행중이고 스킵이 안되었으면 skip할 지 안할지 check한다.
         if (isPlayed && isSkip)
+        {
+            Debug.Log("skip 안됨");
             return;
+        }
 
-        if(Input.GetKeyDown(KeyCode.Escape) && !isSkip)
+        Debug.Log("스킵 가능");
+        if (Input.GetKeyDown(KeyCode.Escape) && !isSkip)
         {
             isSkip = true;
             FadeManager.Instance.FadeIn(false, SkipTimeline);
@@ -50,11 +65,11 @@ public class DirectorController : MonoBehaviour
 
     }
 
+    // 컷신 어느정도 나오기 전에 스킵하는걸 방지용으로 만듬
     public void OnSkipAble()
     {
         isSkip = false;
     }
-
     void SkipTimeline()
     {
         director.time = 909.0f;
@@ -62,11 +77,10 @@ public class DirectorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!isPlayed)
+        if(other.gameObject.CompareTag("Player") && !isPlayed)
         {
             isPlayed = true;
-
-            if (director != null && other.gameObject.CompareTag("Player"))
+            if (director != null)
             {
                 FadeManager.Instance.FadeIn(false, SwitchObject);
                 ColseAllPortal();
@@ -98,7 +112,6 @@ public class DirectorController : MonoBehaviour
 
         StartCoroutine(SwitchObjectCoroutine(state));
     }
-
     IEnumerator SwitchObjectCoroutine(bool _state)
     {
         yield return new WaitUntil(() => director.state != PlayState.Playing);

@@ -6,6 +6,6 @@ public class DontDestory : MonoBehaviour
 {
     void Awake()
     {
-        DontDestroyOnLoad(this);    
+        DontDestroyOnLoad(this);
     }
 }

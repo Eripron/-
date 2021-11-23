@@ -37,8 +37,11 @@ public class FadeManager : Singleton<FadeManager>
         if (func != null)
             DelOnEvent += func;
 
-        // fade 중에는 플레이어 이동 불가로 만듬 
-        //player.SetActive(false);
+        if(player == null)
+            player = Movement.Instance;
+
+        if(player != null)
+            player.SetActive(false);
 
         StartCoroutine(FadeInCoroutine(isLoading, func));
     }
@@ -90,7 +93,8 @@ public class FadeManager : Singleton<FadeManager>
         InitFadeUI();
         isFading = false;
 
-        //player.SetActive(true);
+        if(player != null)
+            player.SetActive(true);
 
         yield return null;
     }

@@ -30,6 +30,7 @@ public class MapClearOrFailUI : MonoBehaviour
 
     //[SerializeField] GameObject[] offUis;
 
+    // 필요없을지도
     [SerializeField] Button homeButton;
     [SerializeField] Button retryButton;
 
@@ -42,17 +43,6 @@ public class MapClearOrFailUI : MonoBehaviour
         //homeButton.onClick.AddListener(Home);
         //retryButton.onClick.AddListener(Retry);
     }
-
-
-    private void Home()
-    {
-    }
-
-    private void Retry()
-    {
-
-    }
-
 
     public void OnMapClearOrFailUI(bool isClear)
     {
@@ -67,7 +57,6 @@ public class MapClearOrFailUI : MonoBehaviour
         StartCoroutine(AppearUI());
     }
 
-
     void ResetUI()
     {
 
@@ -77,6 +66,8 @@ public class MapClearOrFailUI : MonoBehaviour
     // 1초동안 걸쳐서 알파값 1로 간다.
     IEnumerator AppearUI()
     {
+        canvasGroup.alpha = 0f;
+
         float start = 0f;
         float duration = 1f;
 

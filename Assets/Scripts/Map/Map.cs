@@ -33,7 +33,10 @@ public class Map : MonoBehaviour
         }
 
         if (player != null)
+        {
             player.TeleportToPosition(startPoint.position, startPoint.rotation);
+            player.IsTown = false;
+        }
 
         // 문제 될수도 있다 start의 순서에 따라서 
         // MapUI set 보다 먼저 불려서 문제 였지만 null방지로 통해서 오류 해결 

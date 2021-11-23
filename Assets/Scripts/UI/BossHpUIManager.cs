@@ -72,6 +72,8 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
         SetRemainHpBarCountText(remainHpBarCount);
     }
 
+    Coroutine timeCoroutine;
+
     void DrawHP()
     {
         if (receivedDamage <= 0.0f)
@@ -93,7 +95,9 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
             if (remainHpBarCount <= 0)
             {
                 SetBossHpBarActive(false);
-                StartCoroutine(TimeDelayCoroutine());
+
+                if(timeCoroutine == null)
+                    timeCoroutine = StartCoroutine(TimeDelayCoroutine());
             }
         }
 
@@ -167,8 +171,8 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
 
     IEnumerator TimeDelayCoroutine()
     {
-        Time.timeScale = 0.1f;
-        yield return new WaitForSecondsRealtime(1f);
+        Time.timeScale = 0.2f;
+        yield return new WaitForSeconds(1f);
         Time.timeScale = 1f;
     }
 }

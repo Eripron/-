@@ -13,6 +13,9 @@ public class Town : MonoBehaviour
         player = Movement.Instance;
 
         if (player != null && respawnPoint != null)
+        {
             player.TeleportToPosition(respawnPoint.position, respawnPoint.rotation);
+            player.IsTown = true;
+        }
     }
 }

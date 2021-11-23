@@ -17,7 +17,6 @@ public class GameManager : Singleton<GameManager>
     {
         // boss 죽으면 호출 
         clearOrFailUI.OnMapClearOrFailUI(true);
-
         Camera.main.GetComponent<CameraController>().OnMouseAble();
     }
 
@@ -25,17 +24,6 @@ public class GameManager : Singleton<GameManager>
     {
         // - 버튼 클릭시 호출하는 걸로만 하기  
         clearOrFailUI.OnMapClearOrFailUI(false);
-    }
-
-
-    public void OnRetryMap()
-    {
-        // scene mover
-        SceneManager.LoadScene("Main");
-    }
-    public void OnGoBackHome()
-    {
-        // scene mover
     }
 
 
