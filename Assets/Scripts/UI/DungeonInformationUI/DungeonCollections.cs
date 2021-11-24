@@ -12,7 +12,6 @@ public class DungeonCollections : MonoBehaviour
     public string ContainMapName => containedMapName;
 
 
-
     public void OnSetActive(bool active)
     {
         gameObject.SetActive(active);
