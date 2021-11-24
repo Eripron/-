@@ -89,6 +89,8 @@ public class CameraController : MonoBehaviour
         OriginRotate();
     }
 
+    Vector3 beforeHit;
+
     // 원래 회전방식 
     void OriginRotate()
     {
@@ -97,6 +99,7 @@ public class CameraController : MonoBehaviour
             float x = Input.GetAxis("Mouse X") * turnSpeed;
             float y = Input.GetAxis("Mouse Y") * turnSpeed;
 
+            // x축에 대한 회전 제한
             if(transform.eulerAngles.x > 20.0f && transform.eulerAngles.x < 180.0f && y < 0)
                 y = 0;
             else if(transform.eulerAngles.x > 180.0f && transform.eulerAngles.x < 330.0f && y > 0)
@@ -131,10 +134,19 @@ public class CameraController : MonoBehaviour
 
         Vector3 dir = (finalPos - target.position).normalized;
         RaycastHit hitted;
-        if (Physics.Raycast(target.position, dir, out hitted, cameraDistance))
+        if (Physics.Raycast(target.position, dir, out hitted, Mathf.Abs(maxDistance)))
         {
             if (hitted.transform.gameObject.layer == (int)LAYER.LAYER_GROUND)
-                finalPos = hitted.point - (dir * 1.2f);
+            {
+                float dis = Vector3.Distance(target.position, hitted.point);
+                if(dis >= 1.5f)
+                {
+                    beforeHit = hitted.point;
+                }
+
+                finalPos = beforeHit;
+            }
+
         }
 
         finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);

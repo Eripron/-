@@ -37,10 +37,10 @@ public class FadeManager : Singleton<FadeManager>
         if (func != null)
             DelOnEvent += func;
 
-        if(player == null)
+        if (player == null)
             player = Movement.Instance;
 
-        if(player != null)
+        if (player != null && player.gameObject.activeSelf)
             player.SetActive(false);
 
         StartCoroutine(FadeInCoroutine(isLoading, func));
@@ -93,7 +93,7 @@ public class FadeManager : Singleton<FadeManager>
         InitFadeUI();
         isFading = false;
 
-        if(player != null)
+        if (player != null && player.gameObject.activeSelf)
             player.SetActive(true);
 
         yield return null;

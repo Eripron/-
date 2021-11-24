@@ -31,7 +31,7 @@ public class DirectorController : MonoBehaviour
         //offObjects.Add(Movement.Instance.gameObject);
     }
 
-    private void SetCameraToTrack()
+    /*private void SetCameraToTrack()
     {
         // gameobject 로 넣지 않으면 오류 뜬다.
         GameObject objectToBind = Camera.main.gameObject;
@@ -45,24 +45,20 @@ public class DirectorController : MonoBehaviour
                 break;
             }
         }
-    }
+    }*/
 
     void Update()
     {
-        // 컷신 실행중이고 스킵이 안되었으면 skip할 지 안할지 check한다.
-        if (isPlayed && isSkip)
-        {
-            Debug.Log("skip 안됨");
+        if (!isPlayed)
             return;
-        }
 
         Debug.Log("스킵 가능");
         if (Input.GetKeyDown(KeyCode.Escape) && !isSkip)
         {
+            Debug.Log("ESC");
             isSkip = true;
             FadeManager.Instance.FadeIn(false, SkipTimeline);
         }
-
     }
 
     // 컷신 어느정도 나오기 전에 스킵하는걸 방지용으로 만듬
@@ -115,6 +111,7 @@ public class DirectorController : MonoBehaviour
     IEnumerator SwitchObjectCoroutine(bool _state)
     {
         yield return new WaitUntil(() => director.state != PlayState.Playing);
+        Debug.Log("컷신 종료 Change");
 
         foreach (var ob in offObjects)
             ob.SetActive(_state);
