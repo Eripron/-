@@ -40,7 +40,7 @@ public class Movement : Singleton<Movement>
     EventSender eventSender;
 
     PlayerStatus status;
-
+    SoundManager soundManager;
 
     float x;
     float z;
@@ -73,6 +73,8 @@ public class Movement : Singleton<Movement>
     static int count = 0;
     public int Num {get;set;}
 
+    const string AttackSFXName = "Sword2";
+
     new void Awake()
     {
         Debug.Log("player awake");
@@ -89,6 +91,8 @@ public class Movement : Singleton<Movement>
         status = GetComponent<PlayerStatus>();
         meshs = GetComponentsInChildren<SkinnedMeshRenderer>();
         eventSender = GetComponentInChildren<EventSender>();
+
+        soundManager = SoundManager.Instance;
     }
 
     void Update()
@@ -247,6 +251,8 @@ public class Movement : Singleton<Movement>
             isAttack = true;
             anim.SetInteger("intAttackPhase", 1);
             status.UseStamina(attackStaminaUsage);
+
+            soundManager.PlaySFX(AttackSFXName);
         }
         else
         {
@@ -282,6 +288,8 @@ public class Movement : Singleton<Movement>
                 anim.SetInteger("intAttackPhase", 2);
 
                 status.UseStamina(attackStaminaUsage);
+
+                soundManager.PlaySFX(AttackSFXName);
             }
             else
                 ResetAttackPhase();
@@ -294,6 +302,8 @@ public class Movement : Singleton<Movement>
                 anim.SetInteger("intAttackPhase", 3);
 
                 status.UseStamina(attackStaminaUsage);
+
+                soundManager.PlaySFX(AttackSFXName);
             }
             else
                 ResetAttackPhase();

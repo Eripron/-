@@ -120,6 +120,8 @@ public class DirectorController : MonoBehaviour
             ob.SetActive(!_state);
 
         isSkip = true;
+
+        SoundManager.Instance.PlayBGM(BGM.BGM_BOSS.ToString());
     }
 
 }

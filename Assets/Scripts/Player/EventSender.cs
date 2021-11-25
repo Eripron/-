@@ -64,8 +64,7 @@ public class EventSender : MonoBehaviour
     {
         isCheck = true;
 
-        // 검신 효과 
-        Debug.Log("on");
+        // 검 효과 
         attackEffect.SetActive(true);
     }
     public void OnEndCheckEnemyInAttack()

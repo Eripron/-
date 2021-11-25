@@ -6,7 +6,7 @@ public class DontDestory : MonoBehaviour
 {
     static int count = 0;
 
-    public string ddName;
+    [HideInInspector] public string ddName;
     int num = 0;
 
     private void Awake()
