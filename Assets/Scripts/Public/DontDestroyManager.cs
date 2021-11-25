@@ -13,12 +13,12 @@ public class DontDestroyManager : MonoBehaviour
         Debug.Log("Awake");
         if (instance == null)
         {
+            instance = this;
             DontDestroyOnLoad(gameObject);
             notDesList = new List<string>();
         }
         else
             Destroy(gameObject);
-
     }
 
 

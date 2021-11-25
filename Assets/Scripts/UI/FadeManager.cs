@@ -23,7 +23,6 @@ public class FadeManager : Singleton<FadeManager>
         base.Awake();
 
         CG = GetComponent<CanvasGroup>();
-
         InitFadeUI();
     }
 
