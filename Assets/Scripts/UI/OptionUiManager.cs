@@ -19,6 +19,9 @@ public class OptionUiManager : MonoBehaviour
         // юс╫ц 
         bgmSlider.value = 1.0f;
         sfxSlider.value = 1.0f;
+
+        SoundManager.Instance.ChangeBGMVolume(1.0f);
+        SoundManager.Instance.ChangeSFXVolume(1.0f);
     }
 
     void Update()
