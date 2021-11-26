@@ -51,4 +51,9 @@ public class SceneMover : Singleton<SceneMover>
         scene = SCENE.None;
     }
 
+    public string CurSceneName()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
+
 }
