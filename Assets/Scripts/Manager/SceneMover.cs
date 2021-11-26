@@ -38,6 +38,7 @@ public class SceneMover : Singleton<SceneMover>
         if (_scene == SCENE.None || fadeManager == null)
             return;
 
+        SoundManager.Instance.StopBGM();
         scene = _scene;
         fadeManager.FadeIn(true, MoveScene);
     }
@@ -45,6 +46,7 @@ public class SceneMover : Singleton<SceneMover>
     // Fade경우 중간에 부르기 위해서 
     private void MoveScene()
     {
+
         SceneManager.LoadScene(scene.ToString());
         scene = SCENE.None;
     }

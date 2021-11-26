@@ -5,8 +5,7 @@ using UnityEngine;
 enum BGM
 {
     BGM_BOSS,
-
-
+    BGM_BOSS_CELAR,     // 없음
 }
 
 public class SoundManager : PoolManager<SoundManager, SFXObject>
@@ -15,8 +14,19 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
     [SerializeField] AudioClip[] bgmClips;
     [SerializeField] AudioClip[] sfxClips;
 
-    public void PlayBGM(string bgmName)
+    public float BGMVolume { get; set; }
+    public float SFXVolume { get; set; }
+
+
+    private float bgmVolume;
+    private float sfxVolume;
+
+    public void PlayBGM(string bgmName, bool isLoop = false)
     {
+        if (bgmAudio.isPlaying)
+            bgmAudio.Stop();
+
+        bgmAudio.loop = isLoop;
         for(int i=0; i<bgmClips.Length; i++)
         {
             if(bgmName.Equals(bgmClips[i].name))
@@ -30,7 +40,10 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
         Debug.Log("BGM PLAY");
         bgmAudio.Play();
     }
-
+    public void StopBGM()
+    {
+        bgmAudio.Stop();
+    }
 
     public void PlaySFX(string sfxName)
     {
@@ -38,13 +51,22 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
         {
             if(sfxName.Equals(sfxClips[i].name))
             {
-                Debug.Log($"SFX Clip 넣기  -->  {sfxName} 찾음 Clip 넣음");
                 SFXObject sfx = GetPool();
-                sfx.OnPlaySFX(sfxClips[i]);
+                sfx.OnPlaySFX(sfxClips[i], sfxVolume);
                 break;
             }
         }
     }
 
+    public void ChangeBGMVolume(float value)
+    {
+        bgmVolume = Mathf.Clamp(value, 0.0f, 1.0f);
+        bgmAudio.volume = bgmVolume;
+    }
+    public void ChangeSFXVolume(float value)
+    {
+        Debug.Log(value);
+        sfxVolume = Mathf.Clamp(value, 0.0f, 1.0f);
+    }
 
 }

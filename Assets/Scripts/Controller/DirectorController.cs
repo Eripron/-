@@ -121,7 +121,7 @@ public class DirectorController : MonoBehaviour
 
         isSkip = true;
 
-        SoundManager.Instance.PlayBGM(BGM.BGM_BOSS.ToString());
+        SoundManager.Instance.PlayBGM(BGM.BGM_BOSS.ToString(), true);
     }
 
 }

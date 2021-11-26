@@ -16,6 +16,8 @@ public class GameManager : Singleton<GameManager>
     public void OnMapClear()
     {
         // boss Á×À¸¸é È£Ãâ 
+        //SoundManager.Instance.PlayBGM(BGM.BGM_BOSS_CELAR.ToString());
+        SoundManager.Instance.StopBGM();
         clearOrFailUI.OnMapClearOrFailUI(true);
         Camera.main.GetComponent<CameraController>().OnMouseAble();
     }

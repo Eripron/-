@@ -7,10 +7,10 @@ public class SFXObject : PoolObject<SFXObject>
 {
     [SerializeField] AudioSource speaker;
 
-    public void OnPlaySFX(AudioClip _clip)
+    public void OnPlaySFX(AudioClip _clip, float _volume)
     {
-        Debug.Log("SFX PLAY");
         speaker.clip = _clip;
+        speaker.volume = _volume;
         speaker.Play();
 
         StartCoroutine(PlaySFX());

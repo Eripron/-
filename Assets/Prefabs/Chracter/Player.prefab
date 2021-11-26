@@ -332,6 +332,7 @@ MonoBehaviour:
   dashSpeed: 15
   dashStaminaUsage: 10
   attackStaminaUsage: 2
+  attackClip: {fileID: 8300000, guid: 6fa62fc24ce40644d98aa60773c3f9cc, type: 3}
 --- !u!114 &1351178689
 MonoBehaviour:
   m_ObjectHideFlags: 0

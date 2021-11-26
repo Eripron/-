@@ -73,6 +73,7 @@ public class Movement : Singleton<Movement>
     static int count = 0;
     public int Num {get;set;}
 
+    [SerializeField] AudioClip attackClip;
     const string AttackSFXName = "Sword2";
 
     new void Awake()
@@ -252,7 +253,7 @@ public class Movement : Singleton<Movement>
             anim.SetInteger("intAttackPhase", 1);
             status.UseStamina(attackStaminaUsage);
 
-            soundManager.PlaySFX(AttackSFXName);
+            soundManager.PlaySFX(attackClip.name);
         }
         else
         {
@@ -289,7 +290,7 @@ public class Movement : Singleton<Movement>
 
                 status.UseStamina(attackStaminaUsage);
 
-                soundManager.PlaySFX(AttackSFXName);
+                soundManager.PlaySFX(attackClip.name);
             }
             else
                 ResetAttackPhase();
@@ -303,7 +304,7 @@ public class Movement : Singleton<Movement>
 
                 status.UseStamina(attackStaminaUsage);
 
-                soundManager.PlaySFX(AttackSFXName);
+                soundManager.PlaySFX(attackClip.name);
             }
             else
                 ResetAttackPhase();
