@@ -41,7 +41,6 @@ public class CameraController : MonoBehaviour
         SetCameraDistance(maxDistance);
     }
 
-
     public bool CursorLockState()
     {
         return Cursor.lockState == CursorLockMode.Locked;
@@ -88,6 +87,16 @@ public class CameraController : MonoBehaviour
     {
         OriginRotate();
     }
+
+    public void SetCameraToPlayerBack()
+    {
+        Vector3 player = target.position;
+        Vector3 backPos = player + (-target.forward * 15f);
+        Vector3 normalPos = new Vector3(backPos.x - player.x, backPos.y - player.y, backPos.z - player.z);
+
+        camPos = normalPos;
+    }
+
 
     Vector3 beforeHit;
 

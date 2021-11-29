@@ -9,24 +9,27 @@ public class OptionUiManager : Singleton<OptionUiManager>
 
     [SerializeField] Slider bgmSlider;
     [SerializeField] Slider sfxSlider;
-
-    SceneMover sm;
+    [SerializeField] SoundManager soundManager;
+    [SerializeField] SceneMover sm;
 
     bool state = false;
 
-    void Start()
+    new void Awake()
     {
+        base.Awake();
+
         optionWindow.SetActive(state);
 
-        // юс╫ц 
         bgmSlider.value = 1.0f;
         sfxSlider.value = 1.0f;
 
-        SoundManager.Instance.ChangeBGMVolume(1.0f);
-        SoundManager.Instance.ChangeSFXVolume(1.0f);
+        soundManager.ChangeBGMVolume(1.0f);
+        soundManager.ChangeSFXVolume(1.0f);
 
-        sm = FindObjectOfType<SceneMover>();
+        sm.AddCloseWindowFun(OnOffOptionWindow);
     }
+
+
 
     void Update()
     {
@@ -35,6 +38,7 @@ public class OptionUiManager : Singleton<OptionUiManager>
             SetActive();
         }
     }
+
 
     public void SetActive()
     {
@@ -48,11 +52,12 @@ public class OptionUiManager : Singleton<OptionUiManager>
                 cam.OnMouseAble();
         }
     }
-
     public void OnOffOptionWindow()
     {
         state = false;
         optionWindow.SetActive(state);
     }
+
+
 
 }

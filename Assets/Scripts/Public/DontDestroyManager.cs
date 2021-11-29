@@ -4,38 +4,14 @@ using UnityEngine;
 
 public class DontDestroyManager : MonoBehaviour
 {
-    private static DontDestroyManager instance = null;
-
-    List<string> notDesList; 
-
     void Awake()
     {
-        Debug.Log("Awake");
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            notDesList = new List<string>();
-        }
-        else
-            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
-
-    public void AddDontDestroyObject(DontDestory dd)
+    void Start()
     {
-        if(!notDesList.Contains(dd.gameObject.name))
-        {
-            Debug.Log("요청 승인");
-            notDesList.Add(dd.ddName);
-            dd.OnSetParent(transform);
-        }
-        else
-        {
-            dd.OnBreakGo();
-            Debug.Log("요청 불허");
-        }
-
+        SceneMover.Instance.OnMoveScene(SceneMover.SCENE.Menu);     
     }
 
 }

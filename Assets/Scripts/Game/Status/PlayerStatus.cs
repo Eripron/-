@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class PlayerStatus : Status
 {
+    PlayerData playerData;
     Movement player;
 
     [SerializeField] int maxSP;
@@ -93,16 +94,23 @@ public class PlayerStatus : Status
         }
     }
 
+
     // 초기화 
     new void InitStatus()
     {
-        player = Movement.Instance;
+        playerData = PlayerData.Instance;
         statusUIManager = StatusUiManager.Instance;
+        player = GetComponent<Movement>();
 
-        base.InitStatus();
-
+        MaxHp = playerData.MaxHp;
+        Hp = MaxHp;
+        maxSP = playerData.MaxSp;
         SP = 0;
-        Stamina = maxStamina;
+
+        maxStamina = playerData.MaxStamina;
+        Stamina = maxStamina; ;
+
+        aliveCount = playerData.AliveCount;
     }
 
     // stamina 사용과 회복 

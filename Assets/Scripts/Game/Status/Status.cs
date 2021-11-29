@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class Status : MonoBehaviour
 {
-    /*
-     player, monster, boss
-    - 공통 : name, mapHp, attackPower, defencePower
-
-    - player만 
-        : maxMp, maxStamina, aliveCount, movement, 
-     */
-
     [SerializeField] string characterName;
 
     [SerializeField] int attackPower;
@@ -19,12 +11,16 @@ public class Status : MonoBehaviour
 
     [SerializeField] int maxHp;
 
+
     protected int hp;
 
-    // player 인가?
-
     public string Name => characterName;
-    public int MaxHp => maxHp;
+    public int MaxHp 
+    {
+        get { return maxHp; }
+        set { maxHp = value; } 
+    }
+
     public virtual int Hp
     {
         get 

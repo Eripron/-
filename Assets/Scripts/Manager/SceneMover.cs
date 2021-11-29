@@ -6,7 +6,18 @@ using UnityEngine.SceneManagement;
 public class SceneMover : Singleton<SceneMover>
 {
     [SerializeField] DontDestroyManager DDM;
-    FadeManager fadeManager;
+    [SerializeField] FadeManager fadeManager;
+
+    // scene 전환시 ui 창들을 끈다 
+    System.Action DelCloseUIWindow;
+
+    string curScene;
+
+    public void AddCloseWindowFun(System.Action fun)
+    {
+        // 꺼야하는 창들의 함수를 받아온다.
+        DelCloseUIWindow += fun;
+    }
 
     public enum SCENE
     {
@@ -15,6 +26,7 @@ public class SceneMover : Singleton<SceneMover>
         Menu,
         Town,
         Main,
+        Start,
 
         Scene_Count,
     }
@@ -25,20 +37,23 @@ public class SceneMover : Singleton<SceneMover>
     new void Awake()
     {
         base.Awake();
-    }
 
-    void Start()
-    {
-        fadeManager = FindObjectOfType<FadeManager>();     
+        curScene = SceneManager.GetActiveScene().name;
     }
 
 
     public void OnMoveScene(SCENE _scene)
     {
+        // scene 정보가 없는 경우 
         if (_scene == SCENE.None || fadeManager == null)
             return;
 
-        SoundManager.Instance.StopBGM();
+        if (_scene == SCENE.Menu && curScene == _scene.ToString())
+            return;
+
+        curScene = _scene.ToString();
+
+        //SoundManager.Instance.StopBGM();
         scene = _scene;
         fadeManager.FadeIn(true, MoveScene);
     }
@@ -46,7 +61,7 @@ public class SceneMover : Singleton<SceneMover>
     // Fade경우 중간에 부르기 위해서 
     private void MoveScene()
     {
-
+        DelCloseUIWindow?.Invoke();
         SceneManager.LoadScene(scene.ToString());
         scene = SCENE.None;
     }

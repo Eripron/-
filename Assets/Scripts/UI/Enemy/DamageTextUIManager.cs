@@ -7,6 +7,8 @@ public class DamageTextUIManager : Singleton<DamageTextUIManager>
     [SerializeField] DamageText textPrefab;             // text prefab
     [SerializeField] int initCount;                     // 최초 생성 갯수 
 
+    [SerializeField] Color[] colors;
+
     Stack<DamageText> storage;                          // 저장소 
 
 
@@ -32,7 +34,7 @@ public class DamageTextUIManager : Singleton<DamageTextUIManager>
     }
 
 
-    public DamageText GetDamageText()
+    DamageText GetDamageText()
     {
         if (storage.Count <= 0)
             CreateText();
@@ -40,6 +42,11 @@ public class DamageTextUIManager : Singleton<DamageTextUIManager>
         return storage.Pop();
     }
 
+    public void PlayDamageText(float damage, Vector3 pos, int colorNum)
+    {
+        DamageText dt = GetDamageText();
+        dt.OnInit(damage, pos, colors[colorNum]);
+    }
 
     public void ReturnText(DamageText text)
     {

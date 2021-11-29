@@ -64,7 +64,7 @@ public class PlayerAttackAble : MonoBehaviour
             int ranPower = Random.Range(playerStatus.AttackPower - playerStatus.AttackPower / 3, playerStatus.AttackPower + playerStatus.AttackPower / 3);
             enemy.Damaged(ranPower);
 
-            DamageTextUIManager.Instance.GetDamageText().OnInit(ranPower, enemy.GetEnemyPos());
+            DamageTextUIManager.Instance.PlayDamageText(ranPower, enemy.GetEnemyPos(), 0);
             playerStatus.AddSp(ranPower / 8);
         }
 

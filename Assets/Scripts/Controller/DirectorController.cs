@@ -21,7 +21,7 @@ public class DirectorController : MonoBehaviour
 
     [SerializeField] PlayableDirector director;
 
-
+    int count = 0;
     bool isPlayed = false;
     bool isSkip = true;
 
@@ -52,7 +52,6 @@ public class DirectorController : MonoBehaviour
         if (!isPlayed)
             return;
 
-        Debug.Log("½ºÅµ °¡´É");
         if (Input.GetKeyDown(KeyCode.Escape) && !isSkip)
         {
             Debug.Log("ESC");
@@ -68,14 +67,17 @@ public class DirectorController : MonoBehaviour
     }
     void SkipTimeline()
     {
+        Debug.Log("Skip");
         director.time = 909.0f;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player") && !isPlayed)
+        if(other.gameObject.CompareTag("Player") && count <= 0)
         {
+            count++;
             isPlayed = true;
+            other.GetComponent<Movement>().PlayerStateReset();
             if (director != null)
             {
                 FadeManager.Instance.FadeIn(false, SwitchObject);
@@ -120,6 +122,7 @@ public class DirectorController : MonoBehaviour
             ob.SetActive(!_state);
 
         isSkip = true;
+        isPlayed = false;
 
         SoundManager.Instance.PlayBGM(BGM.BGM_BOSS.ToString(), true);
     }

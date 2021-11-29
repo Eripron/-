@@ -40,7 +40,9 @@ public class FadeManager : Singleton<FadeManager>
             player = Movement.Instance;
 
         if (player != null && player.gameObject.activeSelf)
+        {
             player.SetActive(false);
+        }
 
         StartCoroutine(FadeInCoroutine(isLoading, func));
     }
@@ -59,6 +61,9 @@ public class FadeManager : Singleton<FadeManager>
 
         // ÇÔ¼ö ÄÝ 
         DelOnEvent?.Invoke();
+
+        if(player != null)
+            player.SetCamPos();
 
         if (isLoading)
         {
@@ -93,7 +98,9 @@ public class FadeManager : Singleton<FadeManager>
         isFading = false;
 
         if (player != null && player.gameObject.activeSelf)
+        {
             player.SetActive(true);
+        }
 
         yield return null;
     }

@@ -42,7 +42,8 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
     }
     public void StopBGM()
     {
-        bgmAudio.Stop();
+        //if(bgmAudio.isPlaying)
+        //    bgmAudio.Stop();
     }
 
     public void PlaySFX(string sfxName)
@@ -65,7 +66,6 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
     }
     public void ChangeSFXVolume(float value)
     {
-        Debug.Log(value);
         sfxVolume = Mathf.Clamp(value, 0.0f, 1.0f);
     }
 

@@ -140,6 +140,11 @@ public class Movement : Singleton<Movement>
         Gravity();
     }
 
+    public void SetCamPos()
+    {
+        camControl.SetCameraToPlayerBack();
+    }
+
     public void SetActive(bool _isActive)
     {
         if (!_isActive)
@@ -147,9 +152,15 @@ public class Movement : Singleton<Movement>
             StopMove();
             anim.Rebind();
             PlayerStateReset();
+
+            camControl.SetCameraControlState(false);
         }
         else
+        {
             StartMove();
+
+            camControl.SetCameraControlState(true);
+        }
 
         isActive = _isActive;
     }
@@ -193,12 +204,10 @@ public class Movement : Singleton<Movement>
 
         anim.SetTrigger("OnDead");
     }
-
     public void OnEndDamage()
     {
         isDamaged = false;
     }
-
     void SetCharacterDirection()
     {
         if(!IsTown)
@@ -261,13 +270,10 @@ public class Movement : Singleton<Movement>
         }
     }
 
-
     public void StopMove()
     {
         isControl = false;
         isStanding = true;
-
-        //anim.Rebind();
 
         x = 0;
         z = 0;
@@ -317,7 +323,6 @@ public class Movement : Singleton<Movement>
             }
         }
     }
-
     void ResetAttackPhase()
     {
         CountAttackClick = 0;
@@ -402,12 +407,15 @@ public class Movement : Singleton<Movement>
         anim.SetTrigger("OnAlive");
     }
 
-    void PlayerStateReset()
+    public void PlayerStateReset()
     {
         isControl = true;
-        isDamaged = false;
+        isActive = true;
+
         isDash = false;
+        isDamaged = false;
         isGuard = false;
+
         ResetAttackPhase();
         controller.detectCollisions = true;
     }
@@ -423,7 +431,6 @@ public class Movement : Singleton<Movement>
 
     public void TeleportToPosition(Vector3 destination, Quaternion rotation)
     {
-        Debug.Log("텔레포트");
         transform.position = destination;
         transform.rotation = rotation;
     }

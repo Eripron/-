@@ -7,7 +7,6 @@ public class Manual : MonoBehaviour
 {
     private static bool isClose = false;
 
-
     [SerializeField] Button XButton;
 
     Movement player;

@@ -27,8 +27,10 @@ public class DamageText : MonoBehaviour
         }
     }
 
-    public void OnInit(float _damage, Vector3 worldPos)
+    public void OnInit(float _damage, Vector3 worldPos, Color _color)
     {
+        damageText.color = _color;
+
         startTime = 0.0f;
         this.transform.position = Camera.main.WorldToScreenPoint(worldPos);
         damageText.text = ((int)_damage).ToString();
