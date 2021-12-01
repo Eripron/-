@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "Item Data", menuName = "Create Item/New Item Data")]
-public class Item : ScriptableObject
+public class Item : MonoBehaviour
 {
     [SerializeField] string itemName;
     [SerializeField] string itemDescription;
@@ -14,38 +13,51 @@ public class Item : ScriptableObject
     [SerializeField] int amount;
 
 
-    int count = -1; 
-
     public string Itemame => itemName;
     public string ItemDescription => itemDescription;
     public Sprite ItemImage => itemImage;
     public int WaitTime => waitTime;
+    public int Amount { get; set; }
 
-
+    
     public void PressQuickSlot()
     {
         Debug.Log($"Use {itemName}");
         UsePortion();
     }
 
-
     bool isCanUse = true;
-
 
     private void UsePortion()
     {
-        Debug.Log(count);
-
-        if (count == -1)
-            count = amount;
-
-        if (!isCanUse || count <= 0)
+        if (!isCanUse || amount <= 0)
+        {
+            Debug.Log("쿨타임......");
             return;
+        }
 
-        //isCanUse = false;
-        count--;
+        Debug.Log("아이템 사용 시작");
+        isCanUse = false;
+        amount--;
 
-        Debug.Log("hp 회복");
+        StartCoroutine(CoolDownCoroutine());
+    }
+
+    WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
+
+    IEnumerator CoolDownCoroutine()
+    {
+        int count = WaitTime;
+
+        while (count > 0)
+        {
+            count--;
+            Debug.Log($"remain {count} sec");
+            yield return oneSecond;
+        }
+
+        Debug.Log("쿨타임 끝 !!!");
+        isCanUse = true;
     }
 
 

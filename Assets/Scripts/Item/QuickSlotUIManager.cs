@@ -9,6 +9,10 @@ public class QuickSlotUIManager : MonoBehaviour
     [SerializeField] QuickSlot[] quickSlots;
 
 
+    int currentSlotNum;
+    int nextSlotNum;
+
+
     void Update()
     {
         #region Input_Key
@@ -33,6 +37,39 @@ public class QuickSlotUIManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha0))
             quickSlots[0].PressedQuickSlot();
         #endregion
+    }
+
+    // quick slot 클릭하면 manager에게 현재 slot num저장.
+    public void SetCurSlotNum(int slotNum)
+    {
+        currentSlotNum = slotNum;
+    }
+
+
+    // quick slot 드래그 끝난 지점이 같은 슬롯인가 아닌가.
+    public bool IsDiffrentSlot(int slotNum)
+    {
+        // -1은 item이 없는 슬롯으로 부터 왔다는 것을 표시 
+        if (currentSlotNum == -1)
+            return false;
+
+        nextSlotNum = slotNum;
+        return currentSlotNum != nextSlotNum;
+    }
+
+    // 특정 slot에 item이 있는가 ?
+    public bool IsEmptySlot(int slotNum)
+    {
+        return quickSlots[slotNum].ItemInSlot == null;
+    }
+
+    public void MoveSlotToSlot(Item item)
+    {
+        Debug.Log(item);
+        Debug.Log($"{currentSlotNum}, {nextSlotNum}");
+
+        quickSlots[nextSlotNum].SetQuickSlot(item);
+        quickSlots[currentSlotNum].ResetQuickSlot();
     }
 
 }
