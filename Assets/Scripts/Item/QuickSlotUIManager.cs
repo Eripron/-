@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class QuickSlotUIManager : MonoBehaviour
+public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
 {
     // 퀵 슬롯 전체를 가지고 있고 해당 key 입력을 받아서 해당 슬롯에 알린다.
     [SerializeField] QuickSlot[] quickSlots;
@@ -11,6 +11,18 @@ public class QuickSlotUIManager : MonoBehaviour
 
     int currentSlotNum;
     int nextSlotNum;
+
+    private new void Awake()
+    {
+        base.Awake();
+        gameObject.SetActive(false);
+    }
+
+    public void OnQuickSlotUI()
+    {
+        Debug.Log("on quick slot");
+        gameObject.SetActive(true);
+    }
 
 
     void Update()
@@ -54,22 +66,27 @@ public class QuickSlotUIManager : MonoBehaviour
             return false;
 
         nextSlotNum = slotNum;
+        Debug.Log($"{slotNum}이랑 비교");
         return currentSlotNum != nextSlotNum;
     }
 
     // 특정 slot에 item이 있는가 ?
     public bool IsEmptySlot(int slotNum)
     {
+        Debug.Log($"{slotNum} 비었다");
         return quickSlots[slotNum].ItemInSlot == null;
     }
 
-    public void MoveSlotToSlot(Item item)
+
+    public void MoveSlotToSlot()
     {
-        Debug.Log(item);
         Debug.Log($"{currentSlotNum}, {nextSlotNum}");
 
-        quickSlots[nextSlotNum].SetQuickSlot(item);
+        Item moveItem = quickSlots[currentSlotNum].ItemInSlot;
+
         quickSlots[currentSlotNum].ResetQuickSlot();
+        quickSlots[nextSlotNum].SetQuickSlot(moveItem);
     }
+
 
 }

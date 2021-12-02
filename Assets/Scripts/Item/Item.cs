@@ -9,30 +9,49 @@ public class Item : MonoBehaviour
     [SerializeField] string itemDescription;
     [SerializeField] Sprite itemImage;
 
-    [SerializeField] int waitTime;
+    [SerializeField] int coolTime;
     [SerializeField] int amount;
 
+
+
+    QuickSlot connectedQuickSlot;
 
     public string Itemame => itemName;
     public string ItemDescription => itemDescription;
     public Sprite ItemImage => itemImage;
-    public int WaitTime => waitTime;
-    public int Amount { get; set; }
+    public int CoolTime => coolTime;
+    public int Amount
+    {
+        get
+        {
+            return amount;
+        }
+        set
+        {
+        }
+    }
 
+    public bool IsConnectedToSlot()
+    {
+        return connectedQuickSlot != null;
+    }
+
+    public void OnSetSlotDataToItem(QuickSlot slotData)
+    {
+        connectedQuickSlot = slotData;
+    }
     
     public void PressQuickSlot()
     {
-        Debug.Log($"Use {itemName}");
         UsePortion();
     }
 
-    bool isCanUse = true;
+    public bool isCanUse = true;
 
     private void UsePortion()
     {
         if (!isCanUse || amount <= 0)
         {
-            Debug.Log("ÄðÅ¸ÀÓ......");
             return;
         }
 
@@ -40,25 +59,20 @@ public class Item : MonoBehaviour
         isCanUse = false;
         amount--;
 
-        StartCoroutine(CoolDownCoroutine());
-    }
-
-    WaitForSeconds oneSecond = new WaitForSeconds(1.0f);
-
-    IEnumerator CoolDownCoroutine()
-    {
-        int count = WaitTime;
-
-        while (count > 0)
+        if (amount <= 0)
         {
-            count--;
-            Debug.Log($"remain {count} sec");
-            yield return oneSecond;
+            connectedQuickSlot.ResetQuickSlot();
+            return;
         }
 
-        Debug.Log("ÄðÅ¸ÀÓ ³¡ !!!");
-        isCanUse = true;
+        // quick slot update
+        connectedQuickSlot.UpdateQuickSlot();
+        connectedQuickSlot.OnCoolTime(CoolTime);
     }
 
+    public void OnCanUseItem()
+    {
+        isCanUse = true;
+    }
 
 }
