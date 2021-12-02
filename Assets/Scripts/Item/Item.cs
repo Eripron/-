@@ -12,11 +12,9 @@ public class Item : MonoBehaviour
     [SerializeField] int coolTime;
     [SerializeField] int amount;
 
-
-
     QuickSlot connectedQuickSlot;
 
-    public string Itemame => itemName;
+    public string ItemName => itemName;
     public string ItemDescription => itemDescription;
     public Sprite ItemImage => itemImage;
     public int CoolTime => coolTime;
@@ -58,6 +56,9 @@ public class Item : MonoBehaviour
         Debug.Log("아이템 사용 시작");
         isCanUse = false;
         amount--;
+
+        // 아이템 사용 효과 여기서 맞나?
+        Movement.Instance.AddHpToPlayer(200);
 
         if (amount <= 0)
         {

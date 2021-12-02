@@ -17,7 +17,7 @@ public class MenuButtonUI : MonoBehaviour
     public void ExitGame()
     {
         Debug.Log("game Á¾·á");
-        //Application.Quit();
+        Application.Quit();
     }
 
 }

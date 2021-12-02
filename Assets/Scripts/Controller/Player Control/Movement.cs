@@ -445,4 +445,9 @@ public class Movement : Singleton<Movement>
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundPivot.position, groundRadius);
     }
+
+    public void AddHpToPlayer(int addHp)
+    {
+        status.AddHp(addHp);
+    }
 }

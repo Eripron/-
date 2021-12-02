@@ -128,11 +128,36 @@ public class EnemyController : MonoBehaviour, IDamaged
         string animName = attackAnimName[randomNum];
         anim.Play(animName);
 
+
         int waitTime;
         if(isBoss)
-            waitTime = Random.Range(3, 5);
+        {
+            waitTime = Random.Range(0, 10);
+            switch(waitTime)
+            {
+                case 0:
+                    waitTime = 0;
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    waitTime = 1;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    waitTime = 3;
+                    break;
+                default:
+                    waitTime = 3;
+                    break;
+            }
+        }
         else
-            waitTime = Random.Range(2, 4);
+            waitTime = Random.Range(3, 5);
 
         yield return new WaitForSeconds(waitTime);
 

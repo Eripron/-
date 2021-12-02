@@ -12,6 +12,7 @@ public class SceneMover : Singleton<SceneMover>
     System.Action DelCloseUIWindow;
 
     string curScene;
+    SCENE enumCurScene;
 
     public void AddCloseWindowFun(System.Action fun)
     {
@@ -23,10 +24,10 @@ public class SceneMover : Singleton<SceneMover>
     {
         None = -1,
 
+        Start,
         Menu,
         Town,
         Main,
-        Start,
 
         Scene_Count,
     }
@@ -52,6 +53,7 @@ public class SceneMover : Singleton<SceneMover>
             return;
 
         curScene = _scene.ToString();
+        enumCurScene = _scene;
 
         //SoundManager.Instance.StopBGM();
         scene = _scene;
@@ -71,4 +73,8 @@ public class SceneMover : Singleton<SceneMover>
         return SceneManager.GetActiveScene().name;
     }
 
+    public SCENE CurSceneEnum()
+    {
+        return enumCurScene;
+    }
 }

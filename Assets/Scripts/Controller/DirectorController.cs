@@ -27,6 +27,8 @@ public class DirectorController : MonoBehaviour
 
     void Start()
     {
+        offObjects.Add(QuickSlotUIManager.Instance.gameObject);
+
         //SetCameraToTrack();
         //offObjects.Add(Movement.Instance.gameObject);
     }

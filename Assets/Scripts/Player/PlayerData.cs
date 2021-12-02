@@ -13,6 +13,7 @@ public class PlayerData : Singleton<PlayerData>
     [SerializeField] int aliveCount;
 
 
+    public int Power => attackPower;
     public int MaxHp => maxHP;
     public int MaxStamina => maxStamina;
     public int MaxSp => maxSp;
@@ -22,9 +23,5 @@ public class PlayerData : Singleton<PlayerData>
     {
         base.Awake();    
     }
-
-
-
-
 
 }

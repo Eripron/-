@@ -101,12 +101,16 @@ public class PlayerStatus : Status
         playerData = PlayerData.Instance;
         statusUIManager = StatusUiManager.Instance;
         player = GetComponent<Movement>();
+
         QuickSlotUIManager.Instance.OnQuickSlotUI();
+
+        AttackPower = playerData.Power;
 
         MaxHp = playerData.MaxHp;
         Hp = MaxHp;
         maxSP = playerData.MaxSp;
         SP = 0;
+
 
         maxStamina = playerData.MaxStamina;
         Stamina = maxStamina; ;

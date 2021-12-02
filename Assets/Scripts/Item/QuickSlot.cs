@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class QuickSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class QuickSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler
+    , IPointerExitHandler
 {
     [SerializeField] int slotNumber;
     [SerializeField] Text slotNumText;
@@ -191,10 +192,24 @@ public class QuickSlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         coolTimeText.text = string.Empty;
         CoolTime = 0;
         curCoolTime = 0;
+        coolTimeImage.fillAmount = 0.0f;
 
         if (itemInSlot != null)
             itemInSlot.OnCanUseItem();
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (itemInSlot != null)
+        {
+            slotManager.OnDescription(slotNumber, eventData.position);
+        }
+        else
+            Debug.Log("item is null");
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        slotManager.OffDescription();
+    }
 
 }

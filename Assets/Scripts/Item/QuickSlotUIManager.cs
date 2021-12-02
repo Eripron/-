@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
 {
     // 퀵 슬롯 전체를 가지고 있고 해당 key 입력을 받아서 해당 슬롯에 알린다.
     [SerializeField] QuickSlot[] quickSlots;
 
+    [SerializeField] RectTransform desUI;
+    [SerializeField] Text desNameText;
+    [SerializeField] Text desText;
+
+    Movement connectedPlayer;
 
     int currentSlotNum;
     int nextSlotNum;
@@ -27,6 +32,12 @@ public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
 
     void Update()
     {
+        if (SceneMover.Instance.CurSceneEnum() == SceneMover.SCENE.Town)
+        {
+            Debug.Log("can't use quick slot ui ");
+            return;
+        }
+
         #region Input_Key
         if (Input.GetKeyDown(KeyCode.Alpha1))
             quickSlots[1].PressedQuickSlot();
@@ -50,6 +61,7 @@ public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
             quickSlots[0].PressedQuickSlot();
         #endregion
     }
+
 
     // quick slot 클릭하면 manager에게 현재 slot num저장.
     public void SetCurSlotNum(int slotNum)
@@ -88,5 +100,21 @@ public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
         quickSlots[nextSlotNum].SetQuickSlot(moveItem);
     }
 
+    Vector2 newPos;
 
+    public void OnDescription(int slotNum, Vector2 position)
+    {
+        newPos = (Vector2.up * 100f) + position;
+        desUI.transform.position = newPos;
+
+        desNameText.text = quickSlots[slotNum].ItemInSlot.ItemName;
+        desText.text = quickSlots[slotNum].ItemInSlot.ItemDescription;
+
+        desUI.gameObject.SetActive(true);
+    }
+
+    public void OffDescription()
+    {
+        desUI.gameObject.SetActive(false);
+    }
 }

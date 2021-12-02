@@ -32,7 +32,7 @@ public class Status : MonoBehaviour
             hp = Mathf.Clamp(value, 0, maxHp);
         }
     }
-    public int AttackPower => attackPower;
+    public int AttackPower { get { return attackPower; } set { attackPower = value; } }
     public int DefecsePower => defensePower;
 
 
