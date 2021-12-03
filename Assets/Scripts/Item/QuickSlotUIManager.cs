@@ -20,7 +20,7 @@ public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
     private new void Awake()
     {
         base.Awake();
-        gameObject.SetActive(false);
+        OffQuickSlotUI();
     }
 
     public void OnQuickSlotUI()
@@ -28,13 +28,24 @@ public class QuickSlotUIManager : Singleton<QuickSlotUIManager>
         Debug.Log("on quick slot");
         gameObject.SetActive(true);
     }
+    private void OffQuickSlotUI()
+    {
+        gameObject.SetActive(false);
+    }
 
+    SceneMover.SCENE _scene;
 
     void Update()
     {
-        if (SceneMover.Instance.CurSceneEnum() == SceneMover.SCENE.Town)
+        _scene = SceneMover.Instance.CurSceneEnum();
+        if (_scene == SceneMover.SCENE.Town)
         {
             Debug.Log("can't use quick slot ui ");
+            return;
+        }
+        else if(_scene == SceneMover.SCENE.Menu)
+        {
+            OffQuickSlotUI();
             return;
         }
 

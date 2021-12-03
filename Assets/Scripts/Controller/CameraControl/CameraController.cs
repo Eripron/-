@@ -57,19 +57,20 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && mouseLocked == true)
+        if (Input.GetKeyDown(KeyCode.Escape) && mouseLocked == true)
         {
             mouseLocked = false;
             Cursor.lockState = CursorLockMode.None;
         }
         else if (mouseLocked == false && getMouseClick == true)
         {
-            getMouseClick = false;
             mouseLocked = true;
+            getMouseClick = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        ChangeFieldOfView();
+        if (isControl && mouseLocked)
+            ChangeFieldOfView();
 
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
@@ -185,9 +186,9 @@ public class CameraController : MonoBehaviour
     {
         float wheel = Input.GetAxis("Mouse ScrollWheel");
 
-        if(wheel > 0f)
+        if (wheel > 0f)
             cam.fieldOfView -= viewInterval;
-        else if(wheel < 0f)
+        else if (wheel < 0f)
             cam.fieldOfView += viewInterval;
 
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, minView, maxView);
