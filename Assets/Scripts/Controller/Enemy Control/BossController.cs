@@ -121,13 +121,10 @@ public class BossController : EnemyController, IDamaged
     {
         base.Dead();
 
+        GameManager.Instance.OnMapClear();
         Invoke("ClearMap", 5f);
     }
 
-    void ClearMap()
-    {
-        GameManager.Instance.OnMapClear();
-    }
     
 
     // ³Ë´Ù¿î

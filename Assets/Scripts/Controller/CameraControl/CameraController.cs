@@ -159,7 +159,6 @@ public class CameraController : MonoBehaviour
 
         }
 
-        finalPos.y = Mathf.Clamp(finalPos.y, target.position.y - limitDownHeight, target.position.y + limitUpHeight);
         transform.position = Vector3.Slerp(transform.position, ClampBoundary(finalPos), Time.deltaTime * lerpSpeed);
         transform.LookAt(target);
     }
@@ -173,7 +172,7 @@ public class CameraController : MonoBehaviour
 
     Vector3 ClampBoundary(Vector3 vector)
     {
-        vector.y = Mathf.Clamp(vector.y, bottomY + boundaryBottom, limitUpHeight);
+        vector.y = Mathf.Clamp(vector.y, bottomY + boundaryBottom, limitUpHeight + target.transform.position.y);
         return vector;
     }
 

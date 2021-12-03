@@ -5,7 +5,9 @@ using UnityEngine;
 enum BGM
 {
     BGM_BOSS,
-    BGM_BOSS_CELAR,     // 없음
+    BGM_CLEAR,
+    BGM_MENU,
+    BGM_TOWN,
 }
 
 public class SoundManager : PoolManager<SoundManager, SFXObject>
@@ -13,6 +15,8 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
     [SerializeField] AudioSource bgmAudio;
     [SerializeField] AudioClip[] bgmClips;
     [SerializeField] AudioClip[] sfxClips;
+
+    [SerializeField] FadeManager fadeManager;
 
     public float BGMVolume { get; set; }
     public float SFXVolume { get; set; }
@@ -23,29 +27,13 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
 
     public void PlayBGM(string bgmName, bool isLoop = false)
     {
-        if (bgmAudio.isPlaying)
-            bgmAudio.Stop();
-
-        bgmAudio.loop = isLoop;
-        for(int i=0; i<bgmClips.Length; i++)
-        {
-            if(bgmName.Equals(bgmClips[i].name))
-            {
-                Debug.Log($"BGM Clip 넣기  -->  {bgmName} 찾음 Clip 넣음");
-                bgmAudio.clip = bgmClips[i];
-                break;
-            }
-        }
-
-        Debug.Log("BGM PLAY");
-        bgmAudio.Play();
+        StartCoroutine(WaitUntilFadeOut(bgmName, isLoop));
     }
     public void StopBGM()
     {
-        //if(bgmAudio.isPlaying)
-        //    bgmAudio.Stop();
+        if (bgmAudio.isPlaying)
+            bgmAudio.Stop();
     }
-
     public void PlaySFX(string sfxName)
     {
         for(int i=0; i<sfxClips.Length; i++)
@@ -69,4 +57,27 @@ public class SoundManager : PoolManager<SoundManager, SFXObject>
         sfxVolume = Mathf.Clamp(value, 0.0f, 1.0f);
     }
 
+
+    IEnumerator WaitUntilFadeOut(string bgmName, bool isLoop)
+    {
+        Debug.Log("대기중 fade out");
+        yield return new WaitUntil(()=> fadeManager.isFading == false);
+
+        if (bgmAudio.isPlaying)
+            bgmAudio.Stop();
+
+        bgmAudio.loop = isLoop;
+        for (int i = 0; i < bgmClips.Length; i++)
+        {
+            if (bgmName.Equals(bgmClips[i].name))
+            {
+                Debug.Log($"BGM Clip 넣기  -->  {bgmName} 찾음 Clip 넣음");
+                bgmAudio.clip = bgmClips[i];
+                break;
+            }
+        }
+
+        Debug.Log("BGM PLAY");
+        bgmAudio.Play();
+    }
 }

@@ -30,6 +30,7 @@ public class MapClearOrFailUI : MonoBehaviour
 
     //[SerializeField] GameObject[] offUis;
 
+
     // 필요없을지도
     [SerializeField] Button homeButton;
     [SerializeField] Button retryButton;
@@ -46,6 +47,8 @@ public class MapClearOrFailUI : MonoBehaviour
 
     public void OnMapClearOrFailUI(bool isClear)
     {
+        SoundManager.Instance.StopBGM();
+
         uiWindow.gameObject.SetActive(true);
 
         clearImage.gameObject.SetActive(isClear);
@@ -55,11 +58,6 @@ public class MapClearOrFailUI : MonoBehaviour
             ui.SetActive(false);
 
         StartCoroutine(AppearUI());
-    }
-
-    void ResetUI()
-    {
-
     }
 
 

@@ -6,6 +6,7 @@ public class Town : MonoBehaviour
 {
     [SerializeField] Transform respawnPoint;
     [SerializeField] int minimapCamSize;
+    [SerializeField] BGM townBgm;
 
     void Start()
     {
@@ -18,5 +19,7 @@ public class Town : MonoBehaviour
         }
 
         FindObjectOfType<MinimapCameraContoller>().GetComponent<Camera>().orthographicSize = minimapCamSize;
+
+        SoundManager.Instance.PlayBGM(townBgm.ToString());
     }
 }

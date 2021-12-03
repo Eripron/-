@@ -26,6 +26,7 @@ public class FadeManager : Singleton<FadeManager>
         InitFadeUI();
     }
 
+
     public void FadeIn(bool isLoading = true, System.Action func = null)
     {
         if (isFading)
@@ -91,6 +92,7 @@ public class FadeManager : Singleton<FadeManager>
 
         StartCoroutine(FadeOutCoroutine());
     }
+
 
     IEnumerator FadeOutCoroutine()
     {

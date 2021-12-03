@@ -7,6 +7,8 @@ public class SceneMover : Singleton<SceneMover>
 {
     [SerializeField] DontDestroyManager DDM;
     [SerializeField] FadeManager fadeManager;
+    [SerializeField] SoundManager soundManager;
+
 
     // scene 전환시 ui 창들을 끈다 
     System.Action DelCloseUIWindow;
@@ -55,7 +57,8 @@ public class SceneMover : Singleton<SceneMover>
         curScene = _scene.ToString();
         enumCurScene = _scene;
 
-        //SoundManager.Instance.StopBGM();
+        soundManager.StopBGM();
+
         scene = _scene;
         fadeManager.FadeIn(true, MoveScene);
     }

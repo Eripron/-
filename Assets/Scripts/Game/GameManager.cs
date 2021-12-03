@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] MapClearOrFailUI clearOrFailUI; 
+    [SerializeField] MapClearOrFailUI clearOrFailUI;
+
+    [SerializeField] BGM clearBGM;
+
 
     new void Awake()
     {
@@ -14,11 +17,11 @@ public class GameManager : Singleton<GameManager>
     }
 
 
+
     public void OnMapClear()
     {
         // boss 죽으면 호출 
-        //SoundManager.Instance.PlayBGM(BGM.BGM_BOSS_CELAR.ToString());
-        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.PlayBGM(clearBGM.ToString());
         clearOrFailUI.OnMapClearOrFailUI(true);
         Camera.main.GetComponent<CameraController>().OnMouseAble();
     }
@@ -26,6 +29,7 @@ public class GameManager : Singleton<GameManager>
     public void OnMapFail()
     {
         // - 버튼 클릭시 호출하는 걸로만 하기  
+        SoundManager.Instance.StopBGM();
         clearOrFailUI.OnMapClearOrFailUI(false);
     }
 

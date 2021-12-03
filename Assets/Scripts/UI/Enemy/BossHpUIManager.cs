@@ -171,8 +171,8 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
 
     IEnumerator TimeDelayCoroutine()
     {
-        Time.timeScale = 0.2f;
-        yield return new WaitForSeconds(1f);
+        Time.timeScale = 0.1f;
+        yield return new WaitForSeconds(1.5f);
         Time.timeScale = 1f;
     }
 }

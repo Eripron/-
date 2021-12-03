@@ -2704,9 +2704,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -3916,9 +3928,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -7169,9 +7193,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -7235,9 +7271,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -8104,6 +8152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnPoint: {fileID: 1958211008}
   minimapCamSize: 20
+  townBgm: 3
 --- !u!1 &565415969
 GameObject:
   m_ObjectHideFlags: 0
@@ -8850,9 +8899,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -13221,7 +13282,7 @@ GameObject:
   - component: {fileID: 880426208}
   - component: {fileID: 880426210}
   - component: {fileID: 880426209}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13236,7 +13297,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880426207}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: -24.07}
+  m_LocalPosition: {x: -2, y: 0, z: -27.19}
   m_LocalScale: {x: 57.39347, y: 7.5230546, z: 0.5251471}
   m_Children: []
   m_Father: {fileID: 1946609525}
@@ -13447,6 +13508,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1278341294}
     m_Modifications:
+    - target: {fileID: 178940, guid: 5a318dfcecda8d840adfe5cb4233410d, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 486068, guid: 5a318dfcecda8d840adfe5cb4233410d, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -17569,9 +17634,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -20090,9 +20167,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -22092,7 +22181,7 @@ GameObject:
   - component: {fileID: 1536873330}
   - component: {fileID: 1536873332}
   - component: {fileID: 1536873331}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22107,7 +22196,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1536873329}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 6.44}
+  m_LocalPosition: {x: -2, y: 0, z: 9.7}
   m_LocalScale: {x: 57.39347, y: 7.5230546, z: 0.5251471}
   m_Children: []
   m_Father: {fileID: 1946609525}
@@ -26066,9 +26155,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -26879,9 +26980,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder
@@ -31154,9 +31267,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 586370252}
     m_Modifications:
+    - target: {fileID: 121436, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_Name
       value: brick_wall_1 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 137896, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 151942, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 472690, guid: ad8fe0235a8670d4c83f451033ac0a20, type: 3}
       propertyPath: m_RootOrder

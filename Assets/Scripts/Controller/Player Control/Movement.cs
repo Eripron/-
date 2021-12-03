@@ -158,7 +158,6 @@ public class Movement : Singleton<Movement>
         else
         {
             StartMove();
-
             camControl.SetCameraControlState(true);
         }
 
