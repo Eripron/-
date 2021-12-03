@@ -4088,9 +4088,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: "\uCF78\uD14C\uC774\uB77D"
-  attackPower: 33
+  attackPower: 480
   defensePower: 10
-  maxHp: 1000
+  maxHp: 4500
 --- !u!1 &2957874221732770755
 GameObject:
   m_ObjectHideFlags: 0
