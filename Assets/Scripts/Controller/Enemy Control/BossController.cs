@@ -134,6 +134,7 @@ public class BossController : EnemyController, IDamaged
         isKnockDown = true;
 
         anim.SetTrigger("OnKnockDown");
+
         yield return new WaitUntil(() => isKnockDown == false);
 
         activation = true;
@@ -143,6 +144,8 @@ public class BossController : EnemyController, IDamaged
         isKnockDown = false;
     }
 
+
+    WaitForSeconds wait = new WaitForSeconds(0.8f);
     // À§Çù °ü·Ã
     IEnumerator IntimidateAnimCoroutine()
     {
@@ -152,6 +155,14 @@ public class BossController : EnemyController, IDamaged
         isIntimidate = true;
 
         anim.SetTrigger("OnIntimidate");
+
+        for(int i=0; i<3; i++)
+        {
+            Vector3 targetPos = target.position;
+            yield return wait;
+            BossSkillContoller.Instance.OnSkill(targetPos);
+        }
+
         yield return new WaitUntil(() => isIntimidate == false);
 
         activation = true;

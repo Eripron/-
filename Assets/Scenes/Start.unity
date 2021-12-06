@@ -4283,7 +4283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPower: 150
   defensePower: 50
-  maxHP: 2000
+  maxHP: 1000000
   maxStamina: 180
   maxSp: 1250
   aliveCount: 3
@@ -5195,7 +5195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaea574dd7506b0408234b99d473fb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemEffect: {fileID: 0}
   itemName: "HP \uD3EC\uC158"
   itemDescription: "\uCCB4\uB825\uC744 200\uB9CC\uD07C \uD68C\uBCF5\uD55C\uB2E4."
   itemImage: {fileID: 21300000, guid: 6fabe6b18a7a5344db51b2e1b4ceb3b8, type: 3}
