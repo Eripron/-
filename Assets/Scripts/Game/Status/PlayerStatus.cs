@@ -7,6 +7,8 @@ public class PlayerStatus : Status
     PlayerData playerData;
     Movement player;
 
+    [SerializeField] ParticleSystem healEffect;
+
     [SerializeField] int maxSP;
     [SerializeField] int maxStamina;
     [SerializeField] int aliveCount;        // 살아날수 있는 횟수 
@@ -195,5 +197,13 @@ public class PlayerStatus : Status
 
         player.OnPlayerRevive();
         deadUiManager.SetDeadUI(false);
+    }
+
+    public void AddHp(int _hp, bool isItem = false)
+    {
+        if (isItem)
+            healEffect.Play();
+
+        Hp += _hp;
     }
 }

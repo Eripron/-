@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7770061181916188803}
   - component: {fileID: 7573315354655157919}
   - component: {fileID: 7575002793644809237}
+  - component: {fileID: 8354467097266736935}
   m_Layer: 0
   m_Name: FootPrintEffect
   m_TagString: FxTemporaire
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7773032362471363505}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 3.192, z: -0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &7573315354655157919
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4712,3 +4713,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8354467097266736935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773032362471363505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c21cc255c3a73b4429b4554ce7dbc7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -6,9 +6,10 @@ using UnityEngine.Events;
 
 public class EventSender : MonoBehaviour
 {
+    [SerializeField] PlayerEffectManager PEM;
+
     // 공격 검 효과 
     [SerializeField] GameObject attackEffect;
-    [SerializeField] GameObject footEffect;
 
     [SerializeField] GameObject target;
     [SerializeField] PlayerAttackAble attackAble;
@@ -82,10 +83,6 @@ public class EventSender : MonoBehaviour
 
     public void OnFootEffect()
     {
-        if(footEffect.activeSelf == true)
-            footEffect.SetActive(false);
-
-        footEffect.SetActive(true);
+        PEM.OnFootEffect();
     }
-
 }

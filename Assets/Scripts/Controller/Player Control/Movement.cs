@@ -445,8 +445,8 @@ public class Movement : Singleton<Movement>
         Gizmos.DrawWireSphere(groundPivot.position, groundRadius);
     }
 
-    public void AddHpToPlayer(int addHp)
+    public void AddHpToPlayer(int addHp, bool isItem = false)
     {
-        status.AddHp(addHp);
+        status.AddHp(addHp, isItem);
     }
 }

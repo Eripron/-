@@ -58,7 +58,7 @@ public class Item : MonoBehaviour
         amount--;
 
         // 아이템 사용 효과 여기서 맞나?
-        Movement.Instance.AddHpToPlayer(200);
+        Movement.Instance.AddHpToPlayer(200, true);
 
         if (amount <= 0)
         {

@@ -47,11 +47,6 @@ public class Status : MonoBehaviour
         characterName = name;
     }
 
-    public void AddHp(int _hp)
-    {
-        Hp += _hp;
-    }
-
     public virtual void OnDamaged(int damage)
     {
         Hp -= damage;
