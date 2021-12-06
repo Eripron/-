@@ -56,7 +56,6 @@ public class DirectorController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) && !isSkip)
         {
-            Debug.Log("ESC");
             isSkip = true;
             FadeManager.Instance.FadeIn(false, SkipTimeline);
         }
@@ -69,7 +68,6 @@ public class DirectorController : MonoBehaviour
     }
     void SkipTimeline()
     {
-        Debug.Log("Skip");
         director.time = 909.0f;
     }
 
@@ -115,7 +113,6 @@ public class DirectorController : MonoBehaviour
     IEnumerator SwitchObjectCoroutine(bool _state)
     {
         yield return new WaitUntil(() => director.state != PlayState.Playing);
-        Debug.Log("ÄÆ½Å Á¾·á Change");
 
         foreach (var ob in offObjects)
             ob.SetActive(_state);

@@ -8,7 +8,8 @@ public class EnemyAttackAble : MonoBehaviour
 
     void Start()
     {
-        enemyStat = GetComponentInParent<EnemyStatus>();     
+        if(enemyStat == null)
+            enemyStat = GetComponentInParent<EnemyStatus>();     
     }
 
     private void OnTriggerEnter(Collider other)
@@ -32,7 +33,13 @@ public class EnemyAttackAble : MonoBehaviour
         {
             player.OnBlockAttack();
         }
+    }
 
+
+    public void SetEnemyStatus(EnemyStatus _stat)
+    {
+        if(enemyStat == null)
+            enemyStat = _stat;
     }
 
 }

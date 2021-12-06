@@ -78,8 +78,6 @@ public class Movement : Singleton<Movement>
 
     new void Awake()
     {
-        Debug.Log("player awake");
-
         base.Awake();
         Num = ++count;
     }
@@ -124,8 +122,6 @@ public class Movement : Singleton<Movement>
                 StartCoroutine(StartDashCoroutine());
                 status.UseStamina(10);
             }
-            else
-                Debug.Log("스테미나 부족");
         }
         else if (Input.GetKeyDown(KeyCode.Space) && isStanding && !isGuard && !isDash && !isAttack && !isDamaged)
         {
@@ -164,15 +160,21 @@ public class Movement : Singleton<Movement>
         isActive = _isActive;
     }
 
+    Coroutine damagedCoroutine;
     public void Damaged(int damage)
     {
-        StopAllCoroutines();
+        if (damagedCoroutine != null)
+        {
+            StopCoroutine(damagedCoroutine);
+            anim.Rebind();
+        }
+
+        isDamaged = true;
         StopMove();
 
         // 검 효과 끄기 
         eventSender.OnOffAttackEffect();
 
-        isDamaged = true;
         isDash = false;
         isGuard = false;
         ResetAttackPhase();
@@ -185,12 +187,13 @@ public class Movement : Singleton<Movement>
             Dead();
         }
 
-        StartCoroutine(DamagedCoroutine());
+        damagedCoroutine = StartCoroutine(DamagedCoroutine());
     }
 
     IEnumerator DamagedCoroutine()
     {
         yield return new WaitUntil(() => isDamaged == false);
+        damagedCoroutine = null;
         StartMove();
     }
 
@@ -231,6 +234,8 @@ public class Movement : Singleton<Movement>
     }
     void Move()
     {
+    
+
         if (IsTown)
         {
             isWalk = (!isStanding) ? true : false;

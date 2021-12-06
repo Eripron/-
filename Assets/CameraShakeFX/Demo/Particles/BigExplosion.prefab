@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 198917022394846920}
   - component: {fileID: 199630755385234010}
   - component: {fileID: 127499590067608322}
+  - component: {fileID: 6836866740997908996}
+  - component: {fileID: -9061606306185839423}
   m_Layer: 0
   m_Name: BigExplosion
   m_TagString: Untagged
@@ -28,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1121192042590650}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 6.15, y: 1.88, z: -32.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 4564415660777050}
   - {fileID: 4657243524966140}
@@ -4930,7 +4932,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillEffect: {fileID: 198917022394846920}
-  render: {fileID: 3924863296751901850}
+  rangeImage: {fileID: 8318113084028253909}
+--- !u!136 &6836866740997908996
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121192042590650}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  m_Radius: 1.2
+  m_Height: 0.000020000005
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-9061606306185839423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121192042590650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ee11d051540517468a765703bab83eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1123476242953952
 GameObject:
   m_ObjectHideFlags: 0
@@ -38875,7 +38903,7 @@ Transform:
   m_GameObject: {fileID: 8318113084028253909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 4388947112716342}
   m_RootOrder: 5

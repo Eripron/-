@@ -8,32 +8,56 @@ public class BossSkill : PoolObject<BossSkill>
 
     Transform parent;
     [SerializeField] ParticleSystem skillEffect;
+    [SerializeField] GameObject rangeImage;
 
-    [SerializeField] SpriteRenderer render; 
+    new CapsuleCollider collider;
 
-    Color color = Color.red;
+    //[SerializeField] SpriteRenderer render; 
 
-    public void OnSkill()
+    void Start()
     {
-        color.a = 0;
-        render.color = color;
-
-        StartCoroutine(OnSkillEffect());
+        collider = GetComponent<CapsuleCollider>();
     }
 
-    IEnumerator OnSkillEffect()
+    Vector3 scale;
+    float value = 1f;
+    public void OnSkill()
     {
-        while (color.a >= 0.8f)
+        collider.enabled = false;
+
+        transform.parent = null;
+
+        scale = new Vector3(value, value, value);
+        transform.localScale = scale;
+
+        StartCoroutine(OnSkillRange());
+    }
+
+    WaitForSeconds wait = new WaitForSeconds(0.1f);
+    IEnumerator OnSkillRange()
+    {
+        rangeImage.SetActive(true);
+
+        while (value < 10f)
         {
-            Debug.Log($"{color.a}");
-            color.a += 0.1f;
-            render.color = color;
-            yield return null;
+            value += 1f;
+            scale = new Vector3(value, value, value);
+            transform.localScale = scale;
+            yield return wait;
         }
 
-        skillEffect.Play();
+        value = 3f;
+        scale = new Vector3(value, value, value);
+        transform.localScale = scale;
+        rangeImage.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f);
+        skillEffect.Play();
+        collider.enabled = true;
+
+        yield return new WaitUntil(() => skillEffect.isPlaying == false);
+        collider.enabled = false;
+
+        yield return new WaitForSeconds(2f);
         OnReturnForce();
     }
 

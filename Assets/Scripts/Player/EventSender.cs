@@ -49,7 +49,6 @@ public class EventSender : MonoBehaviour
 
     public void ChangeTag(string tagName)
     {
-        Debug.Log(tagName);
         target.tag = tagName;
     }
     public void GetUpPlayer()
@@ -58,7 +57,6 @@ public class EventSender : MonoBehaviour
         if (player == null)
             return;
 
-        Debug.Log("call reset");
         player.AllReset();
     }
     public void OnStartCheckEnemyInAttack()

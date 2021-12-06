@@ -145,7 +145,7 @@ public class BossController : EnemyController, IDamaged
     }
 
 
-    WaitForSeconds wait = new WaitForSeconds(0.8f);
+    WaitForSeconds wait = new WaitForSeconds(0.5f);
     // À§Çù °ü·Ã
     IEnumerator IntimidateAnimCoroutine()
     {
