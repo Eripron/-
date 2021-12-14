@@ -113,7 +113,7 @@ public class EnemyController : MonoBehaviour, IDamaged
     protected void CheckDistanceToPlayer()
     {
         float distance = Vector3.Distance(target.position, transform.position);
-        isFar = (distance > nav.stoppingDistance) ? true : false;
+        isFar = (distance <= nav.stoppingDistance) ? false : true;
     }
 
     // attack
@@ -129,35 +129,7 @@ public class EnemyController : MonoBehaviour, IDamaged
         anim.Play(animName);
 
 
-        int waitTime;
-        if(isBoss)
-        {
-            waitTime = Random.Range(0, 10);
-            switch(waitTime)
-            {
-                case 0:
-                    waitTime = 0;
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    waitTime = 1;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    waitTime = 3;
-                    break;
-                default:
-                    waitTime = 3;
-                    break;
-            }
-        }
-        else
-            waitTime = Random.Range(3, 5);
+        int waitTime = Random.Range(3, 5);
 
         yield return new WaitForSeconds(waitTime);
 
@@ -178,7 +150,7 @@ public class EnemyController : MonoBehaviour, IDamaged
         {
             PlayerStatus p1 = hit.transform.GetComponent<PlayerStatus>();
 
-            if (Physics.SphereCast(checkPivot2.position, checkRadius2, checkPivot2.forward, out hit2, float.MaxValue))
+            if (Physics.SphereCast(checkPivot2.position, checkRadius2, checkPivot2.forward, out hit2, float.MaxValue, playerMask))
             {
                 PlayerStatus p2 = hit2.transform.GetComponent<PlayerStatus>();
 

@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.6879862, y: 0.58141756, z: 2.018767}
-  m_Center: {x: -0.13725413, y: -0.08110501, z: 1.2756495}
+  m_Size: {x: 1.0741332, y: 1.2825559, z: 2.5777338}
+  m_Center: {x: 0.05582981, y: -0.043595407, z: 1.5551236}
 --- !u!114 &284818221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,9 +145,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Enemy1
-  attackPower: 200
+  attackPower: 195
   defensePower: 5
-  maxHp: 1
+  maxHp: 750
 --- !u!114 &1734603099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,7 +172,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 45
+  attackPercentage: 50
   rotateSpeed: 10
 --- !u!1 &1314390196481118247
 GameObject:
@@ -851,8 +851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PEM: {fileID: 0}
   attackEffect: {fileID: 0}
-  footEffect: {fileID: 0}
   target: {fileID: 1314390194677183956}
   attackAble: {fileID: 0}
   OnSendEvent:

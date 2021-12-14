@@ -47,7 +47,7 @@ public class MapClearOrFailUI : MonoBehaviour
 
     public void OnMapClearOrFailUI(bool isClear)
     {
-        SoundManager.Instance.StopBGM();
+        //SoundManager.Instance.StopBGM();
 
         uiWindow.gameObject.SetActive(true);
 

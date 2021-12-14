@@ -8,7 +8,6 @@ public class BossSkillContoller : PoolManager<BossSkillContoller, BossSkill>
 
     public void OnSkill(Vector3 instantPos)
     {
-
         BossSkill skill = GetPool();
 
         skill.GetComponent<EnemyAttackAble>().SetEnemyStatus(boss);

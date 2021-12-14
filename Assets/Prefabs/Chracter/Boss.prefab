@@ -3946,6 +3946,7 @@ GameObject:
   - component: {fileID: 244026655}
   - component: {fileID: 426201799}
   - component: {fileID: 426201800}
+  - component: {fileID: 701491266}
   m_Layer: 9
   m_Name: Boss
   m_TagString: Enemy
@@ -4073,7 +4074,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  attackPercentage: 90
+  attackPercentage: 66
   rotateSpeed: 20
 --- !u!114 &426201800
 MonoBehaviour:
@@ -4088,9 +4089,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: "\uCF78\uD14C\uC774\uB77D"
-  attackPower: 250
+  attackPower: 210
   defensePower: 10
   maxHp: 5000
+--- !u!114 &701491266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957874221732770753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 917e06b8ee6c99744a7e07b5ddd53fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolPrefab: {fileID: 127499590067608322, guid: f2bf0d92afe45204995b7779f6e31d0b, type: 3}
+  initCount: 5
+  boss: {fileID: 426201800}
 --- !u!1 &2957874221732770755
 GameObject:
   m_ObjectHideFlags: 0

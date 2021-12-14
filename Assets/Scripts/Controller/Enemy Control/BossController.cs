@@ -31,7 +31,6 @@ public class BossController : EnemyController, IDamaged
         CheckDistanceToPlayer();
         SetSpeed();
 
-
         if (!isAttack && !isFar && !isIntimidate && !isKnockDown)
             RotateToPlayer();
 
@@ -49,7 +48,7 @@ public class BossController : EnemyController, IDamaged
                 {
                     CoAttack = StartCoroutine(AttackCoroutine());
                 }
-                else
+                else if(IsPlayerFront())
                 {
                     StartCoroutine(IntimidateAnimCoroutine());
                 }
@@ -145,7 +144,7 @@ public class BossController : EnemyController, IDamaged
     }
 
 
-    WaitForSeconds wait = new WaitForSeconds(0.5f);
+    WaitForSeconds wait = new WaitForSeconds(0.8f);
     // À§Çù °ü·Ã
     IEnumerator IntimidateAnimCoroutine()
     {

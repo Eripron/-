@@ -172,7 +172,9 @@ public class BossHpUIManager : Singleton<BossHpUIManager>
     IEnumerator TimeDelayCoroutine()
     {
         Time.timeScale = 0.1f;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         Time.timeScale = 1f;
+
+        GameManager.Instance.MapClearUI();
     }
 }

@@ -47,7 +47,10 @@ public class NormalMonsterController : EnemyController
                 if (percentage < attackPercentage && !isAttack)
                 {
                     if(IsPlayerFront())
+                    {
+                        Debug.Log("is player");
                         StartCoroutine(AttackCoroutine());
+                    }
                 }
                 else if(IsPlayerFront())
                 {

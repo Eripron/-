@@ -15,15 +15,18 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
     }
-
-
+    
 
     public void OnMapClear()
     {
         // boss Á×À¸¸é È£Ãâ 
         SoundManager.Instance.PlayBGM(clearBGM.ToString());
-        clearOrFailUI.OnMapClearOrFailUI(true);
         Camera.main.GetComponent<CameraController>().OnMouseAble();
+    }
+
+    public void MapClearUI()
+    {
+        clearOrFailUI.OnMapClearOrFailUI(true);
     }
 
     public void OnMapFail()

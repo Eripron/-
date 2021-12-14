@@ -36,7 +36,7 @@ public class OptionUiManager : Singleton<OptionUiManager>
         // ----
         resolutions = Screen.resolutions;
 
-        int currentResolutionIndex = 0;
+        int currentResolutionIndex = 15;
         resolutionDropdown.ClearOptions();
 
         List<string> options = new List<string>();
@@ -44,12 +44,6 @@ public class OptionUiManager : Singleton<OptionUiManager>
         {
             string option = resolutions[i].width + " x " + resolutions[i].height + " " + resolutions[i].refreshRate + "hz";
             options.Add(option);
-
-            if(resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
-            {
-                currentResolutionIndex = i;
-            }
         }
 
         resolutionDropdown.AddOptions(options);

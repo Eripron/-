@@ -14,15 +14,14 @@ public class BossSkill : PoolObject<BossSkill>
 
     //[SerializeField] SpriteRenderer render; 
 
-    void Start()
-    {
-        collider = GetComponent<CapsuleCollider>();
-    }
 
     Vector3 scale;
     float value = 1f;
     public void OnSkill()
     {
+        if(collider == null)
+            collider = GetComponent<CapsuleCollider>();
+
         collider.enabled = false;
 
         transform.parent = null;
@@ -51,10 +50,10 @@ public class BossSkill : PoolObject<BossSkill>
         transform.localScale = scale;
         rangeImage.SetActive(false);
 
-        skillEffect.Play();
         collider.enabled = true;
+        skillEffect.Play();
 
-        yield return new WaitUntil(() => skillEffect.isPlaying == false);
+        yield return new WaitForSeconds(0.5f);
         collider.enabled = false;
 
         yield return new WaitForSeconds(2f);

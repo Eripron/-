@@ -390,10 +390,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648c8663b5198494db6077e583b5ff98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: "\uC560\uB9AC\uD504\uB7F0"
+  characterName: "\uD50C\uB808\uC774\uC5B4"
   attackPower: 1000
   defensePower: 10
   maxHp: 6000
+  healEffect: {fileID: 0}
   maxSP: 1250
   maxStamina: 200
   aliveCount: 3
@@ -2930,6 +2931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0719091e64123b48ba03c6f48981ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PEM: {fileID: 0}
   attackEffect: {fileID: 3521068624976169066}
   target: {fileID: 5875463019204317126}
   attackAble: {fileID: 1320697844}
